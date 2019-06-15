@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.Linq;
 using System.Drawing;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,9 @@ namespace AgricoveBilling
         NumericUpDown[] qtyBox;
         NumericUpDown[] uBox;
         Label[] tBox;
+        const int VK_TAB = 0x09; //up key
+        const uint KEYEVENTF_KEYUP = 0x0002;
+        const uint KEYEVENTF_EXTENDEDKEY = 0x0001;
 
         public AgricoveBilling()
         {
@@ -38,7 +42,12 @@ namespace AgricoveBilling
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
         [System.Runtime.InteropServices.DllImport("user32.dll")]
+        public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, uint dwExtraInfo);
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
         public static extern bool ReleaseCapture();
+
+        private PrintDocument printDocument1 = new PrintDocument();
+        Bitmap memoryImage;
 
         private void AgricoveBilling_MouseDown(object sender, MouseEventArgs e)
         {
@@ -48,25 +57,71 @@ namespace AgricoveBilling
                 SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
             }
         }
-
-        private void AgricoveBilling_Load(object sender, EventArgs e)
+        private void cleanform()
         {
+            Action<Control.ControlCollection> func = null;
 
+            func = (controls) =>
+            {
+                foreach (Control control in controls)
+                    if (control is TextBox)
+                        (control as TextBox).Clear();
+                    else if (control is NumericUpDown)
+                        (control as NumericUpDown).Value = 0;
+                    else
+                        func(control.Controls);
+            };
+
+            func(Controls);
+        }
+        private void disable_rows()
+        {
+            foreach(var desc in descBox)
+            {
+                desc.Enabled = false;
+            }
+            foreach (var q in qtyBox)
+            {
+                q.Enabled = false;
+            }
+            foreach (var u in uBox)
+            {
+                u.Enabled = false;
+            }
+            descBox1.Enabled = true;
+        }
+        private void form_load()
+        {
             //vScrollBar1.Enabled = true;
-            invno.Text = "#INV" + System.DateTime.Now.Date.ToString("dd") + System.DateTime.Now.Date.ToString("MM") + System.DateTime.Now.Date.ToString("yy");
+            //invno.Text = "#INV" + System.DateTime.Now.Date.ToString("dd") + System.DateTime.Now.Date.ToString("MM") + System.DateTime.Now.Date.ToString("yy");
             //invdt.Text = System.DateTime.Now.Date.ToString("dd/MM/yy");
+            DateTime foo = DateTime.UtcNow;
+            long unixTime = ((DateTimeOffset)foo).ToUnixTimeSeconds();
+            invno.Text = "#INV" + unixTime.ToString();
+            populate_list();
+            disctype.SelectedIndex = 0;
+            discval.Controls[0].Visible = false;
+            txrt.Controls[0].Visible = false;
+            cleanform();
+            disable_rows();
+            save.Enabled = false;
+            print.Enabled = false;
+            this.ActiveControl = descBox1;
+        }
+        private void initiate_label()
+        {
             label_agri_addr.Text = ConfigurationManager.AppSettings["address"];
             label_agri_url.Text = ConfigurationManager.AppSettings["website"];
             label_agri_email.Text = ConfigurationManager.AppSettings["email"];
             label_ph.Text = ConfigurationManager.AppSettings["phone"];
             label_terms1.Text = ConfigurationManager.AppSettings["terms1"];
             label_terms2.Text = ConfigurationManager.AppSettings["terms2"];
-            populate_list();
-            disctype.SelectedIndex = 0;
-            discval.Controls[0].Visible = false;
-            txrt.Controls[0].Visible = false;
-            this.ActiveControl = descBox1;
-
+        }
+        private void AgricoveBilling_Load(object sender, EventArgs e)
+        {
+            form_load();
+            initiate_label();
+            printDocument1.PrintPage += new PrintPageEventHandler(printDocument1_PrintPage);
         }
         private void populate_list()
         {
@@ -197,7 +252,42 @@ namespace AgricoveBilling
             save_invoice();
         }
 
-        private void descBox_TextChanged(object sender, EventArgs e)
+        private void recursive_up(int i)
+        {
+            if (descBox[i + 1].Text.Length > 0)
+            {
+                descBox[i].Text = descBox[i + 1].Text;
+                qtyBox[i].Value = qtyBox[i + 1].Value;
+                uBox[i].Value = uBox[i + 1].Value;
+                tBox[i].Text = tBox[i + 1].Text;
+                descBox[i + 1].Clear();
+                qtyBox[i + 1].Value = 0;
+                uBox[i + 1].Value = 0;
+                tBox[i + 1].Text = "0.00";
+
+                descBox[i].Enabled = true;
+                qtyBox[i].Enabled = true;
+                uBox[i].Enabled = true;
+
+                descBox[i+1].Enabled = true;
+                qtyBox[i+1].Enabled = false;
+                uBox[i+1].Enabled = false;
+
+                try
+                {
+                    descBox[i + 2].Enabled = false;
+                }
+                catch
+                {
+                    return;
+                }
+
+                recursive_up(i + 1);
+            }
+
+
+        }
+        private void descBox_LostFocus(object sender, EventArgs e)
         {
             int i = Int32.Parse((sender as TextBox).Tag.ToString());
             uBox[i].Value = fetch_price(descBox[i].Text);
@@ -207,7 +297,11 @@ namespace AgricoveBilling
             {
                 qtyBox[i].Enabled = true;
                 uBox[i].Enabled = true;
-                descBox[i + 1].Enabled = true;
+                try
+                {
+                    descBox[i + 1].Enabled = true;
+                }
+                catch { }
                 qtyBox[i].Focus();
             }
             else
@@ -216,6 +310,12 @@ namespace AgricoveBilling
                 uBox[i].Value = 0;
                 qtyBox[i].Enabled = false;
                 uBox[i].Enabled = false;
+                try
+                {
+                    descBox[i + 1].Enabled = false;
+                    recursive_up(i);
+                }
+                catch { }
             }
         }
         private void qtyBox_ValueChanged(object sender, EventArgs e)
@@ -240,12 +340,12 @@ namespace AgricoveBilling
             subtotal.Text = sum.ToString();
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
+        private void close_Click_1(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void button2_Click_1(object sender, EventArgs e)
+        private void minimise_Click_1(object sender, EventArgs e)
         {
             WindowState = FormWindowState.Minimized;
         }
@@ -302,14 +402,69 @@ namespace AgricoveBilling
         {
             if (e.Control && e.KeyCode == Keys.P)
             {
+                print_Click(sender ,e);
+            }
+            if (e.Control && e.KeyCode == Keys.S)
+            {                
                 Form dlg1 = new Form();
                 dlg1.ShowDialog();
             }
-            if (e.Control && e.KeyCode == Keys.S)
+            if (e.Control && e.KeyCode == Keys.N)
+            {
+                newinv_Click(sender, e);
+            }
+            if (e.Control && e.KeyCode == Keys.F)
             {
                 Form dlg1 = new Form();
                 dlg1.ShowDialog();
             }
+            if (e.Control && e.KeyCode == Keys.C)
+            {
+                Close();
+            }
+        }
+
+        private void newinv_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            form_load();
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void tableLayoutPanel1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                keybd_event((byte)VK_TAB, 0, KEYEVENTF_EXTENDEDKEY | 0, 0);
+                return;
+            }
+        }
+
+        private void find_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void print_Click(object sender, EventArgs e)
+        {
+            CaptureScreen();
+            printDocument1.Print();
+        }
+
+
+        private void CaptureScreen()
+        {
+            Graphics myGraphics = this.CreateGraphics();
+            Size s = this.Size;
+            memoryImage = new Bitmap(s.Width, s.Height, myGraphics);
+            Graphics memoryGraphics = Graphics.FromImage(memoryImage);
+            memoryGraphics.CopyFromScreen(this.Location.X, this.Location.Y, 0, 0, s);
+        }
+
+        private void printDocument1_PrintPage(System.Object sender,
+               System.Drawing.Printing.PrintPageEventArgs e)
+        {
+            e.Graphics.DrawImage(memoryImage, 0, 0);
         }
     }
 }

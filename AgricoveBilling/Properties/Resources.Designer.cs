@@ -63,9 +63,39 @@ namespace AgricoveBilling.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap agricove {
+        internal static System.Drawing.Bitmap agricove4 {
             get {
-                object obj = ResourceManager.GetObject("agricove", resourceCulture);
+                object obj = ResourceManager.GetObject("agricove4", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap agricoveback1 {
+            get {
+                object obj = ResourceManager.GetObject("agricoveback1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap crossmark {
+            get {
+                object obj = ResourceManager.GetObject("crossmark", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap minimummark {
+            get {
+                object obj = ResourceManager.GetObject("minimummark", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

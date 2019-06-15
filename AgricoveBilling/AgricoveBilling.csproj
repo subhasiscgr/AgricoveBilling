@@ -195,7 +195,16 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\agricove.png" />
+    <None Include="Resources\agricove4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\crossmark.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\minimummark.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\agricoveback1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.13\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets" Condition="Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.13\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets')" />
