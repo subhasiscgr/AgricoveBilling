@@ -46,8 +46,12 @@ namespace AgricoveBilling
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         public static extern bool ReleaseCapture();
 
+        DataGridViewButtonColumn ButtonColumn = new DataGridViewButtonColumn();
+
+        //Print
         private PrintDocument printDocument1 = new PrintDocument();
         Bitmap memoryImage;
+        //
 
         private void AgricoveBilling_MouseDown(object sender, MouseEventArgs e)
         {
@@ -94,7 +98,7 @@ namespace AgricoveBilling
         {
             //vScrollBar1.Enabled = true;
             //invno.Text = "#INV" + System.DateTime.Now.Date.ToString("dd") + System.DateTime.Now.Date.ToString("MM") + System.DateTime.Now.Date.ToString("yy");
-            //invdt.Text = System.DateTime.Now.Date.ToString("dd/MM/yy");
+            //invdt.Text = System.DateTime.Now.Date.ToString("dd/MM/yyyy");
             DateTime foo = DateTime.UtcNow;
             long unixTime = ((DateTimeOffset)foo).ToUnixTimeSeconds();
             invno.Text = "#INV" + unixTime.ToString();
@@ -107,6 +111,7 @@ namespace AgricoveBilling
             save.Enabled = false;
             print.Enabled = false;
             this.ActiveControl = descBox1;
+            searchpanel.Visible = false;
         }
         private void initiate_label()
         {
@@ -117,11 +122,87 @@ namespace AgricoveBilling
             label_terms1.Text = ConfigurationManager.AppSettings["terms1"];
             label_terms2.Text = ConfigurationManager.AppSettings["terms2"];
         }
+        private void datagridview_style(DataGridView d)
+        {
+            d.BorderStyle = BorderStyle.None;
+            d.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(238, 239, 249);
+            d.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            d.DefaultCellStyle.SelectionBackColor = Color.DarkTurquoise;
+            d.DefaultCellStyle.SelectionForeColor = Color.WhiteSmoke;
+            d.BackgroundColor = Color.White;
+
+            d.EnableHeadersVisualStyles = false;
+            d.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+            d.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(20, 25, 72);
+            d.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            d.RowHeadersVisible = false;
+        }
+        private void add_tag(TextBox[] t)
+        {
+            int i = 0;
+            foreach (var v in t)
+            {
+                v.Tag = i.ToString();
+                i = i + 1;
+            }
+        }
+        private void add_tag(Label[] t)
+        {
+            int i = 0;
+            foreach (var v in t)
+            {
+                v.Tag = i.ToString();
+                i = i + 1;
+            }
+        }
+        private void add_tag(NumericUpDown[] t)
+        {
+            int i = 0;
+            foreach (var v in t)
+            {
+                v.Tag = i.ToString();
+                i = i + 1;
+            }
+        }
+        private void add_context(TextBox[] T)
+        {
+            foreach(var v in T)
+            {
+                v.ContextMenuStrip = copypastemenu;
+            }
+        }
         private void AgricoveBilling_Load(object sender, EventArgs e)
         {
+            add_tag(descBox);
+            add_tag(qtyBox);
+            add_tag(uBox);
+            add_tag(tBox);
             form_load();
             initiate_label();
+
+            //Print
             printDocument1.PrintPage += new PrintPageEventHandler(printDocument1_PrintPage);
+            printDocument1.DefaultPageSettings.Landscape = true;
+            /*PrinterSettings ps = new PrinterSettings();
+            printDocument1.PrinterSettings = ps;
+            IEnumerable<PaperSize> paperSizes = ps.PaperSizes.Cast<PaperSize>();
+            PaperSize sizeA4 = paperSizes.First<PaperSize>(size => size.Kind == PaperKind.A4); // setting paper size to A4 size
+            */
+            printDocument1.DefaultPageSettings.PaperSize = new PaperSize("Custom", (this.Height + 20), (this.Width + 47));
+            //
+
+            datestart.Enabled = false;
+            dateend.Enabled = false;
+            dtrange.Checked = false;
+            add_context(descBox);
+            find_gridview.Columns.Add(ButtonColumn);
+            datasrc.Items.Add("Invoice");
+            datasrc.Items.Add("Items");
+            //datasrc.SelectedIndex = 0;
+            ButtonColumn.Text = "deledit";
+            ButtonColumn.Name = "deledit";
+            ButtonColumn.UseColumnTextForButtonValue = true;
+            datagridview_style(find_gridview);
         }
         private void populate_list()
         {
@@ -131,19 +212,23 @@ namespace AgricoveBilling
                 var desc = items.Select(t => Tuple.Create(t.ItemName)).ToList();
                 foreach (var descval in desc)
                 {
-                    descBox1.AutoCompleteCustomSource.Add(descval.Item1);
-                    descBox2.AutoCompleteCustomSource.Add(descval.Item1);
-                    descBox3.AutoCompleteCustomSource.Add(descval.Item1);
-                    descBox4.AutoCompleteCustomSource.Add(descval.Item1);
-                    descBox5.AutoCompleteCustomSource.Add(descval.Item1);
-                    descBox6.AutoCompleteCustomSource.Add(descval.Item1);
-                    descBox7.AutoCompleteCustomSource.Add(descval.Item1);
-                    descBox8.AutoCompleteCustomSource.Add(descval.Item1);
-                    descBox9.AutoCompleteCustomSource.Add(descval.Item1);
-                    descBox10.AutoCompleteCustomSource.Add(descval.Item1);
-                    descBox11.AutoCompleteCustomSource.Add(descval.Item1);
+                    foreach (var dBox in descBox)
+                    {
+                        dBox.AutoCompleteCustomSource.Add(descval.Item1);
+                    }
                 }
-                dataContext.SaveChanges();                
+                var invoice = dataContext.Invoice.ToList();
+                var names = invoice.Select(n => Tuple.Create(n.BillToName)).ToList();
+                var adds = invoice.Select(a => Tuple.Create(a.BillToAdd)).ToList();
+                foreach (var name in names)
+                {
+                    billname.AutoCompleteCustomSource.Add(name.Item1);
+                }
+                foreach (var add in adds)
+                {
+                    billaddr.AutoCompleteCustomSource.Add(add.Item1);
+                }
+                //dataContext.SaveChanges();                
             }
         }
         private decimal fetch_price(string s)
@@ -159,7 +244,7 @@ namespace AgricoveBilling
                 }
                 catch
                 { }
-                dataContext.SaveChanges();
+                //dataContext.SaveChanges();
             }
             return price;
         }
@@ -174,7 +259,7 @@ namespace AgricoveBilling
                 {
                     if (v.Text.Length > 0)
                     {
-                        Items item = (from x in items
+                        var item = (from x in items
                                       where x.ItemName == v.Text
                                       select x).FirstOrDefault();
                         if (item != null)
@@ -198,6 +283,12 @@ namespace AgricoveBilling
         {
             using (var dataContext = new DBConnection())
             {
+                var invoices = dataContext.Invoice.ToList();
+                var invoice = (from x in invoices where x.InvoiceNo == invno.Text select x).FirstOrDefault();
+                if(invoice != null)
+                {
+                    dataContext.Invoice.Remove(invoice);
+                }
                 dataContext.Invoice.Add(new Invoice() {
                     InvoiceNo = invno.Text,
                     InvoiceDt = invdt.Text,
@@ -240,8 +331,9 @@ namespace AgricoveBilling
                     DiscountValue = discval.Value,
                     DiscountType = disctype.SelectedIndex,
                     TaxRate = txrt.Value,
-                    Paid = paid.Value
-                });
+                    Paid = paid.Value,
+                    Due = decimal.Parse(balancedue.Text.ToString())
+                }); ;
                 dataContext.SaveChanges();
             }
         }
@@ -415,10 +507,9 @@ namespace AgricoveBilling
             }
             if (e.Control && e.KeyCode == Keys.F)
             {
-                Form dlg1 = new Form();
-                dlg1.ShowDialog();
+                find_Click(sender, e);
             }
-            if (e.Control && e.KeyCode == Keys.C)
+            if (e.Alt && e.KeyCode == Keys.F4)
             {
                 Close();
             }
@@ -439,14 +530,93 @@ namespace AgricoveBilling
                 return;
             }
         }
+        private void gridview_format(DataGridView d, string s)
+        {
+            try
+            {
+                if (s == "invoice")
+                {
+                    d.Columns[0].HeaderText = "";
+                    ButtonColumn.Text = "Edit";
+                    d.Columns[1].HeaderText = "Invoice No.";
+                    d.Columns[2].HeaderText = "Invoice Date";
+                    d.Columns[3].HeaderText = "Due Date";
+                    d.Columns[4].HeaderText = "Customer Name";
+                    d.Columns[4].Width = 200;
+                    d.Columns[5].HeaderText = "Due";
+                    d.Columns[5].DefaultCellStyle.Format = "0.00##";
+                    d.AllowUserToDeleteRows = false;
 
+                }
+                else if (s == "items")
+                {
+                    d.Columns[0].HeaderText = "";
+                    ButtonColumn.Text = "Delete";
+                    d.Columns[1].HeaderText = "Item Name";
+                    d.Columns[1].Width = 500;
+                    d.Columns[2].HeaderText = "Item Price";
+                    d.Columns[2].Width = 100;
+                    d.AllowUserToDeleteRows = true;
+                }
+            }
+            catch { }
+        }
+        private void gridview_load(DataGridView d, string s)
+        {
+            using (var dataContext = new DBConnection())
+            {
+                if (s == "invoice")
+                {
+                    var invoice = dataContext.Invoice.ToList();
+                    var data = invoice
+                                //.Where( x => x.Due > 0 )
+                                .Select( x => new { x.InvoiceNo, x.InvoiceDt, x.DueDt, x.BillToName, x.Due }).ToList(); 
+                    d.DataSource = data;
+                    gridview_format(d, "invoice");
+                }
+                else if( s == "items")
+                {
+                    var items = dataContext.Items.ToList();
+                    var data = items.Select(x => new { x.ItemName, x.ItemPrice }).ToList();
+                    d.DataSource = data;
+                    gridview_format(d, "items");
+                }
+            }
+        }
         private void find_Click(object sender, EventArgs e)
         {
-
+            if(searchpanel.Visible)
+            {
+                searchpanel.Visible = false;
+                save.Enabled = true;
+                print.Enabled = true;
+                search.Text = "&Find";
+                newinv.Enabled = true;
+                this.AcceptButton = null;
+                find_gridview.DataSource = null;
+                descBox1.Focus();
+            }
+            else
+            {
+                searchpanel.Visible = true;
+                save.Enabled = false;
+                print.Enabled = false;
+                search.Text = "Back";
+                newinv.Enabled = false;
+                this.AcceptButton = search_btn;
+                search_inv_box.Focus();
+                if (datasrc.SelectedIndex == 0)
+                {
+                    gridview_load(find_gridview, "invoice");
+                }
+                datasrc.SelectedIndex = 0;
+            }
         }
 
+        //Print
         private void print_Click(object sender, EventArgs e)
         {
+            save_invoice();
             CaptureScreen();
             printDocument1.Print();
         }
@@ -461,10 +631,289 @@ namespace AgricoveBilling
             memoryGraphics.CopyFromScreen(this.Location.X, this.Location.Y, 0, 0, s);
         }
 
-        private void printDocument1_PrintPage(System.Object sender,
-               System.Drawing.Printing.PrintPageEventArgs e)
+        private void printDocument1_PrintPage(System.Object sender, System.Drawing.Printing.PrintPageEventArgs e)
         {
             e.Graphics.DrawImage(memoryImage, 0, 0);
+        }
+        //
+
+        private void Dtrange_CheckedChanged(object sender, EventArgs e)
+        {
+            if (dtrange.Checked)
+            {
+                datestart.Enabled = true;
+                dateend.Enabled = true;
+                search_inv_box.Enabled = false;
+                search_inv_box.Text = "";
+            }
+            else
+            {
+                datestart.Enabled = false;
+                dateend.Enabled = false;
+                search_inv_box.Enabled = true;
+            }
+        }
+
+        private void Datasrc_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(datasrc.SelectedIndex == 0)
+            {
+                name_search_label.Text = "Client Name";
+                search_name_box.Width = 262;
+                invno_search_label.Visible = true;
+                search_inv_box.Visible = true;
+                dtrange.Visible = true;
+                datestart.Visible = true;
+                dateend.Visible = true;
+                dtrange.Checked = false;
+                datestart.Enabled = false;
+                dateend.Enabled = false;
+                gridview_load(find_gridview, "invoice");
+            }
+            else
+            {
+                name_search_label.Text = "Item Name";
+                search_name_box.Width = 540;
+                invno_search_label.Visible = false;
+                search_inv_box.Visible = false;
+                dtrange.Visible = false;
+                datestart.Visible = false;
+                dateend.Visible = false;
+                gridview_load(find_gridview, "items");
+            }
+        }
+        private void search_fill(DataGridView d)
+        {
+            using (var dataContext = new DBConnection())
+            {  
+                if (datasrc.SelectedIndex == 0)
+                {
+                    var dts = datestart.Value;
+                    var dte = dateend.Value;
+                    if (search_inv_box.Text.Length > 0)
+                    {
+                        var var_invno = search_inv_box.Text.ToString();
+
+                        var invoice = dataContext.Invoice.ToList();
+                        var data = invoice.Where(x => x.InvoiceNo == var_invno)
+                                        .Select(x => new { x.InvoiceNo, x.InvoiceDt, x.DueDt, x.BillToName, x.Due }).ToList();
+
+                        d.DataSource = data;
+                    }
+                    else if (search_name_box.Text.Length > 0)
+                    {
+                        var var_name = search_name_box.Text.ToString();
+                        if (dtrange.Checked)
+                        {
+                            var invoice = dataContext.Invoice.ToList();
+                            var data = invoice.Where(x => x.BillToName.ToLower().Contains(var_name.ToLower()))
+                                            .Where(x => DateTime.ParseExact(x.InvoiceDt, "dd/MM/yyyy", null) >= dts)
+                                            .Where(x => DateTime.ParseExact(x.InvoiceDt, "dd/MM/yyyy", null) <= dte)
+                                            .Select(x => new { x.InvoiceNo, x.InvoiceDt, x.DueDt, x.BillToName, x.Due }).ToList();
+                            d.DataSource = data;
+                        }
+                        else
+                        {
+                            var invoice = dataContext.Invoice.ToList();
+                            var data = invoice.Where(x => x.BillToName.ToLower().Contains(var_name.ToLower()))
+                                            .Select(x => new { x.InvoiceNo, x.InvoiceDt, x.DueDt, x.BillToName, x.Due }).ToList();
+                            d.DataSource = data;
+                        }
+                    }
+                    else
+                    {
+                        if (dtrange.Checked)
+                        {
+                            var invoice = dataContext.Invoice.ToList();
+                            var data = invoice
+                                        .Where(x => DateTime.ParseExact(x.InvoiceDt, "dd/MM/yyyy", null) >= dts)
+                                        .Where(x => DateTime.ParseExact(x.InvoiceDt, "dd/MM/yyyy", null) <= dte)
+                                        .Select(x => new { x.InvoiceNo, x.InvoiceDt, x.DueDt, x.BillToName, x.Due }).ToList();
+                            d.DataSource = data;
+                        }
+                        else
+                        {
+                            var invoice = dataContext.Invoice.ToList();
+                            var data = invoice.Select(x => new { x.InvoiceNo, x.InvoiceDt, x.DueDt, x.BillToName, x.Due }).ToList();
+                            d.DataSource = data;
+                        }
+                    }
+                    gridview_format(d, "invoice");
+                }
+                else
+                {
+                    var items = dataContext.Items.ToList();
+                    var data = items.Where(x => x.ItemName.ToLower().Contains(search_name_box.Text.ToLower()))
+                                .Select(x => new { x.ItemName, x.ItemPrice }).ToList();
+                    d.DataSource = data;
+                    gridview_format(d, "items");
+                }
+            }
+        }
+        private void Search_btn_Click(object sender, EventArgs e)
+        {
+            search_fill(find_gridview);
+        }
+
+        private void Search_name_box_Enter(object sender, EventArgs e)
+        {
+            search_inv_box.Text = "";
+        }
+
+        private void Search_inv_box_Enter(object sender, EventArgs e)
+        {
+            search_name_box.Text = "";
+        }
+        private void load_data(Invoice inv)
+        {
+            invno.Text = inv.InvoiceNo;
+            invdt.Value = DateTime.ParseExact(inv.InvoiceDt, "dd/MM/yyyy", null);
+            ddt.Value = DateTime.ParseExact(inv.DueDt, "dd/MM/yyyy", null); 
+            billname.Text = inv.BillToName;
+            billaddr.Text = inv.BillToAdd;
+            descBox1.Text = inv.ItemID1Name;
+            uBox1.Value = inv.ItemID1Price;
+            qtyBox1.Value = inv.ItemID1Qty;
+            descBox2.Text = inv.ItemID2Name;
+            uBox2.Value = inv.ItemID2Price;
+            qtyBox2.Value = inv.ItemID2Qty;
+            descBox3.Text = inv.ItemID3Name;
+            uBox3.Value = inv.ItemID3Price;
+            qtyBox3.Value = inv.ItemID3Qty;
+            descBox4.Text = inv.ItemID4Name;
+            uBox4.Value = inv.ItemID4Price;
+            qtyBox4.Value = inv.ItemID4Qty;
+            descBox5.Text = inv.ItemID5Name;
+            uBox5.Value = inv.ItemID5Price;
+            qtyBox5.Value = inv.ItemID5Qty;
+            descBox6.Text = inv.ItemID6Name;
+            uBox6.Value = inv.ItemID6Price;
+            qtyBox6.Value = inv.ItemID6Qty;
+            descBox7.Text = inv.ItemID7Name;
+            uBox7.Value = inv.ItemID7Price;
+            qtyBox7.Value = inv.ItemID7Qty;
+            descBox8.Text = inv.ItemID8Name;
+            uBox8.Value = inv.ItemID8Price;
+            qtyBox8.Value = inv.ItemID8Qty;
+            descBox9.Text = inv.ItemID9Name;
+            uBox9.Value = inv.ItemID9Price;
+            qtyBox9.Value = inv.ItemID9Qty;
+            descBox10.Text = inv.ItemID10Name;
+            uBox10.Value = inv.ItemID10Price;
+            qtyBox10.Value = inv.ItemID10Qty;
+            descBox11.Text = inv.ItemID11Name;
+            uBox11.Value = inv.ItemID11Price;
+            qtyBox11.Value = inv.ItemID11Qty;
+                    
+            disctype.SelectedIndex = inv.DiscountType;
+            discval.Value = inv.DiscountValue;
+            txrt.Value = inv.TaxRate;
+            paid.Value = inv.Paid;
+        }
+        private void find_gridview_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var senderGrid = (DataGridView)sender;
+
+            if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn &&
+                e.RowIndex >= 0)
+            {
+                //TODO - Button Clicked - Execute Code Here
+                if (datasrc.SelectedIndex == 0)
+                {
+                    using (var dataContext = new DBConnection())
+                    {
+                        var invoice = dataContext.Invoice.ToList();
+                        var inv = (from x in invoice
+                                    where x.InvoiceNo == find_gridview.Rows[e.RowIndex].Cells[1].Value.ToString()
+                                    select x).FirstOrDefault();
+                        load_data(inv);
+                        find_Click(sender, e);
+                    }
+                }
+                else
+                {
+                    using (var dataContext = new DBConnection())
+                    {
+                        var items = dataContext.Items.ToList();
+                        var item = (from x in items
+                                    where x.ItemName == find_gridview.Rows[e.RowIndex].Cells[1].Value.ToString()
+                                    where x.ItemPrice == find_gridview.Rows[e.RowIndex].Cells[2].Value.ToString()
+                                    select x).FirstOrDefault();
+                        dataContext.Items.Remove(item);
+                        dataContext.SaveChanges();
+                        gridview_load(find_gridview, "items");
+                    }
+                }
+            }
+        }
+
+        private void refresh_search_Click(object sender, EventArgs e)
+        {
+            Datasrc_SelectedIndexChanged(sender, e);
+        }
+
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripItem item = (sender as ToolStripItem);
+            if (item != null)
+            {
+                ContextMenuStrip owner = item.Owner as ContextMenuStrip;
+                if (owner != null)
+                {
+                    Clipboard.SetText(owner.SourceControl.Text);
+                }
+            }
+        }
+
+        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripItem item = (sender as ToolStripItem);
+            if (item != null)
+            {
+                ContextMenuStrip owner = item.Owner as ContextMenuStrip;
+                if (owner != null)
+                {
+                    TextBox sourceControl = owner.SourceControl as TextBox;
+                    sourceControl.SelectedText = Clipboard.GetText();
+                }
+            }
+        }
+
+        private void copyToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            ToolStripItem item = (sender as ToolStripItem);
+            if (item != null)
+            {
+                ContextMenuStrip owner = item.Owner as ContextMenuStrip;
+                if (owner != null)
+                {
+                    DataGridView dg = owner.SourceControl as DataGridView;
+                    if (dg.CurrentCell.RowIndex != 0)
+                    {
+                        Clipboard.SetText(dg.CurrentCell.Value.ToString());
+                    }
+                }
+            }
+        }
+
+        private void find_gridview_DataSourceChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                find_gridview.CurrentCell = find_gridview.Rows[0].Cells[1];
+            }
+            catch { }
+        }
+
+        private void searchbar_Enter(object sender, EventArgs e)
+        {
+            //MessageBox.Show("0");
+            this.AcceptButton = search_btn;
+        }
+
+        private void searchbar_Leave(object sender, EventArgs e)
+        {
+            this.AcceptButton = null;
         }
     }
 }

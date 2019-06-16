@@ -21,7 +21,9 @@ namespace AgricoveBilling
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionbuilder)
         {
-            optionbuilder.UseSqlite(@"Data Source=c:\AgricoveBilling.db");
+            //optionbuilder.UseSqlite(@"Data Source=c:\AgricoveBilling.db");
+            //optionbuilder.UseSqlite(@"Data Source=%USERPROFILE%\AgricoveBilling.db");
+            optionbuilder.UseSqlite(@"Data Source=..\AgricoveBilling.db");
         }
 
         public DbSet<Invoice> Invoice { get; set; }

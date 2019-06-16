@@ -121,13 +121,16 @@
   <data name="agricove4" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\agricove4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="agricoveback1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\agricoveback1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="minimummark" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\minimummark.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="crossmark" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\crossmark.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="agricoveback1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\agricoveback1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="refresh" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\refresh.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

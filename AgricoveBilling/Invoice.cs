@@ -51,6 +51,7 @@ namespace AgricoveBilling
         public int DiscountType { get; set; }
         public decimal TaxRate { get; set; }
         public decimal Paid { get; set; }
+        public decimal Due { get; set; }
     }
     
 }
