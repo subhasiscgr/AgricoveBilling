@@ -32,8 +32,8 @@ namespace AgricoveBilling
             uBox = new NumericUpDown[] { uBox1, uBox2, uBox3, uBox4, uBox5, uBox6, uBox7, uBox8, uBox9, uBox10, uBox11 };
             tBox = new Label[] { tBox1, tBox2, tBox3, tBox4, tBox5, tBox6, tBox7, tBox8, tBox9, tBox10, tBox11 };
 
-            this.AutoScroll = true;
-            this.AutoSize = true;
+            //this.AutoScroll = true;
+            this.AutoSize = false;
         }
 
         public const int WM_NCLBUTTONDOWN = 0xA1;
@@ -80,7 +80,7 @@ namespace AgricoveBilling
         }
         private void disable_rows()
         {
-            foreach(var desc in descBox)
+            foreach (var desc in descBox)
             {
                 desc.Enabled = false;
             }
@@ -166,11 +166,28 @@ namespace AgricoveBilling
         }
         private void add_context(TextBox[] T)
         {
-            foreach(var v in T)
+            foreach (var v in T)
             {
                 v.ContextMenuStrip = copypastemenu;
             }
         }
+
+        //Print
+        public static PaperSize GetPaperSize(string Name)
+        {
+            PaperSize size1 = null;
+            Name = Name.ToUpper();
+            PrinterSettings settings = new PrinterSettings();
+            foreach (PaperSize size in settings.PaperSizes)
+                if (size.Kind.ToString().ToUpper() == Name)
+                {
+                    size1 = size;
+                    break;
+                }
+            return size1;
+        }
+        //
+
         private void AgricoveBilling_Load(object sender, EventArgs e)
         {
             add_tag(descBox);
@@ -188,7 +205,8 @@ namespace AgricoveBilling
             IEnumerable<PaperSize> paperSizes = ps.PaperSizes.Cast<PaperSize>();
             PaperSize sizeA4 = paperSizes.First<PaperSize>(size => size.Kind == PaperKind.A4); // setting paper size to A4 size
             */
-            printDocument1.DefaultPageSettings.PaperSize = new PaperSize("Custom", (this.Height + 20), (this.Width + 47));
+            //printDocument1.DefaultPageSettings.PaperSize = new PaperSize("Custom", (this.Height + 20), (this.Width + 47));
+            printDocument1.DefaultPageSettings.PaperSize = GetPaperSize("A4");
             //
 
             datestart.Enabled = false;
@@ -255,13 +273,13 @@ namespace AgricoveBilling
             {
                 var items = dataContext.Items.ToList();
                 int i = 0;
-                foreach(var v in descBox)
+                foreach (var v in descBox)
                 {
                     if (v.Text.Length > 0)
                     {
                         var item = (from x in items
-                                      where x.ItemName == v.Text
-                                      select x).FirstOrDefault();
+                                    where x.ItemName == v.Text
+                                    select x).FirstOrDefault();
                         if (item != null)
                         {
                             item.ItemPrice = uBox[i].Value.ToString();
@@ -276,7 +294,14 @@ namespace AgricoveBilling
                     }
                     i = i + 1;
                 }
-                dataContext.SaveChanges();
+                try
+                {
+                    dataContext.SaveChanges();
+                }
+                catch
+                {
+                    MessageBox.Show("       Database write permission not available.     ");
+                }
             }
         }
         private void save_invoice()
@@ -285,11 +310,12 @@ namespace AgricoveBilling
             {
                 var invoices = dataContext.Invoice.ToList();
                 var invoice = (from x in invoices where x.InvoiceNo == invno.Text select x).FirstOrDefault();
-                if(invoice != null)
+                if (invoice != null)
                 {
                     dataContext.Invoice.Remove(invoice);
                 }
-                dataContext.Invoice.Add(new Invoice() {
+                dataContext.Invoice.Add(new Invoice()
+                {
                     InvoiceNo = invno.Text,
                     InvoiceDt = invdt.Text,
                     DueDt = ddt.Text,
@@ -332,12 +358,19 @@ namespace AgricoveBilling
                     DiscountType = disctype.SelectedIndex,
                     TaxRate = txrt.Value,
                     Paid = paid.Value,
-                    Due = decimal.Parse(balancedue.Text.ToString())
-                }); ;
-                dataContext.SaveChanges();
+                    //Due = decimal.Parse(balancedue.Text.ToString())
+                });;
+                try
+                {
+                    dataContext.SaveChanges();
+                }
+                catch
+                {
+                    MessageBox.Show("       Database write permission not available.     ");
+                }
             }
         }
-        
+
         private void save_Click(object sender, EventArgs e)
         {
             save_item();
@@ -361,9 +394,9 @@ namespace AgricoveBilling
                 qtyBox[i].Enabled = true;
                 uBox[i].Enabled = true;
 
-                descBox[i+1].Enabled = true;
-                qtyBox[i+1].Enabled = false;
-                uBox[i+1].Enabled = false;
+                descBox[i + 1].Enabled = true;
+                qtyBox[i + 1].Enabled = false;
+                uBox[i + 1].Enabled = false;
 
                 try
                 {
@@ -425,7 +458,7 @@ namespace AgricoveBilling
         private void tBox_TextChanged(object sender, EventArgs e)
         {
             float sum = 0;
-            foreach ( var v in tBox )
+            foreach (var v in tBox)
             {
                 sum = sum + float.Parse(v.Text);
             }
@@ -446,7 +479,7 @@ namespace AgricoveBilling
 
         private void disctype_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(disctype.SelectedIndex == 0)
+            if (disctype.SelectedIndex == 0)
             {
                 discval.Value = 0;
                 discval.DecimalPlaces = 2;
@@ -486,18 +519,21 @@ namespace AgricoveBilling
 
         private void balancedue_TextChanged(object sender, EventArgs e)
         {
-            save.Enabled = true;
-            print.Enabled = true;
+            if (balancedue.Text.Length > 0)
+            {
+                save.Enabled = true;
+                print.Enabled = true;
+            }
         }
 
         private void AgricoveBilling_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Control && e.KeyCode == Keys.P)
             {
-                print_Click(sender ,e);
+                print_Click(sender, e);
             }
             if (e.Control && e.KeyCode == Keys.S)
-            {                
+            {
                 Form dlg1 = new Form();
                 dlg1.ShowDialog();
             }
@@ -561,6 +597,10 @@ namespace AgricoveBilling
             }
             catch { }
         }
+        private decimal calc_due(decimal paid, decimal price1, int qty1, decimal price2, int qty2, decimal price3, int qty3, decimal price4, int qty4, decimal price5, int qty5, decimal price6, int qty6, decimal price7, int qty7, decimal price8, int qty8, decimal price9, int qty9, decimal price10, int qty10, decimal price11, int qty11)
+        {
+            return ((price1 * qty1) + (price2 * qty2) + (price3 * qty3) + (price4 * qty4) + (price5 * qty5) + (price6 * qty6) + (price7 * qty7) + (price8 * qty8) + (price9 * qty9) + (price10 * qty10) + (price11 * qty11) - paid);
+        }
         private void gridview_load(DataGridView d, string s)
         {
             using (var dataContext = new DBConnection())
@@ -570,11 +610,18 @@ namespace AgricoveBilling
                     var invoice = dataContext.Invoice.ToList();
                     var data = invoice
                                 //.Where( x => x.Due > 0 )
-                                .Select( x => new { x.InvoiceNo, x.InvoiceDt, x.DueDt, x.BillToName, x.Due }).ToList(); 
+                                .Select(x => new
+                                {
+                                    x.InvoiceNo,
+                                    x.InvoiceDt,
+                                    x.DueDt,
+                                    x.BillToName,
+                                    due = calc_due(x.Paid, x.ItemID1Price, x.ItemID1Qty, x.ItemID2Price, x.ItemID2Qty, x.ItemID3Price, x.ItemID3Qty, x.ItemID4Price, x.ItemID4Qty, x.ItemID5Price, x.ItemID5Qty, x.ItemID6Price, x.ItemID6Qty, x.ItemID7Price, x.ItemID7Qty, x.ItemID8Price, x.ItemID8Qty, x.ItemID9Price, x.ItemID9Qty, x.ItemID10Price, x.ItemID10Qty, x.ItemID11Price, x.ItemID11Qty)
+                                }).ToList();
                     d.DataSource = data;
                     gridview_format(d, "invoice");
                 }
-                else if( s == "items")
+                else if (s == "items")
                 {
                     var items = dataContext.Items.ToList();
                     var data = items.Select(x => new { x.ItemName, x.ItemPrice }).ToList();
@@ -585,11 +632,14 @@ namespace AgricoveBilling
         }
         private void find_Click(object sender, EventArgs e)
         {
-            if(searchpanel.Visible)
+            if (searchpanel.Visible)
             {
                 searchpanel.Visible = false;
-                save.Enabled = true;
-                print.Enabled = true;
+                if (balancedue.Text.Length > 0)
+                {
+                    save.Enabled = true;
+                    print.Enabled = true;
+                }
                 search.Text = "&Find";
                 newinv.Enabled = true;
                 this.AcceptButton = null;
@@ -605,6 +655,8 @@ namespace AgricoveBilling
                 newinv.Enabled = false;
                 this.AcceptButton = search_btn;
                 search_inv_box.Focus();
+                cleanform();
+                disable_rows();
                 if (datasrc.SelectedIndex == 0)
                 {
                     gridview_load(find_gridview, "invoice");
@@ -614,11 +666,154 @@ namespace AgricoveBilling
         }
 
         //Print
+        private void load_crystalreports()
+        {
+            reporter r = new reporter(
+                invno.Text,
+                invdt.Text,
+                ddt.Text,
+                billname.Text,
+                billaddr.Text,
+                descBox1.Text,
+                uBox1.Value,
+                qtyBox1.Value,
+                decimal.Parse(tBox1.Text),
+                descBox2.Text,
+                uBox2.Value,
+                qtyBox2.Value,
+                decimal.Parse(tBox2.Text),
+                descBox3.Text,
+                uBox3.Value,
+                qtyBox3.Value,
+                decimal.Parse(tBox3.Text),
+                descBox4.Text,
+                uBox4.Value,
+                qtyBox4.Value,
+                decimal.Parse(tBox4.Text),
+                descBox5.Text,
+                uBox5.Value,
+                qtyBox5.Value,
+                decimal.Parse(tBox5.Text),
+                descBox6.Text,
+                uBox6.Value,
+                qtyBox6.Value,
+                decimal.Parse(tBox6.Text),
+                descBox7.Text,
+                uBox7.Value,
+                qtyBox7.Value,
+                decimal.Parse(tBox7.Text),
+                descBox8.Text,
+                uBox8.Value,
+                qtyBox8.Value,
+                decimal.Parse(tBox8.Text),
+                descBox9.Text,
+                uBox9.Value,
+                qtyBox9.Value,
+                decimal.Parse(tBox9.Text),
+                descBox10.Text,
+                uBox10.Value,
+                qtyBox10.Value,
+                decimal.Parse(tBox10.Text),
+                descBox11.Text,
+                uBox11.Value,
+                qtyBox11.Value,
+                decimal.Parse(tBox11.Text),
+                decimal.Parse(subtotal.Text),
+                disctype.Text,
+                discval.Value,
+                decimal.Parse(subttllssdisc.Text),
+                txrt.Value,
+                decimal.Parse(ttltax.Text),
+                decimal.Parse(grssttl.Text),
+                paid.Value,
+                decimal.Parse(balancedue.Text)
+                );
+
+            /*var list = new List<reporter>();
+            list.Add( new reporter {
+                InvoiceNo = invno.Text,
+                InvoiceDt = invdt.Text,
+                DueDt = ddt.Text,
+                BillToName = billname.Text,
+                BillToAdd = billaddr.Text,
+                ItemID1Name = descBox1.Text,
+                ItemID1Price = uBox1.Value,
+                ItemID1Qty = qtyBox1.Value,
+                ItemID1Total = decimal.Parse(tBox1.Text),
+                ItemID2Name = descBox2.Text,
+                ItemID2Price = uBox2.Value,
+                ItemID2Qty = qtyBox2.Value,
+                ItemID2Total = decimal.Parse(tBox2.Text),
+                ItemID3Name = descBox3.Text,
+                ItemID3Price = uBox3.Value,
+                ItemID3Qty = qtyBox3.Value,
+                ItemID3Total = decimal.Parse(tBox3.Text),
+                ItemID4Name = descBox4.Text,
+                ItemID4Price = uBox4.Value,
+                ItemID4Qty = qtyBox4.Value,
+                ItemID4Total = decimal.Parse(tBox4.Text),
+                ItemID5Name = descBox5.Text,
+                ItemID5Price = uBox5.Value,
+                ItemID5Qty = qtyBox5.Value,
+                ItemID5Total = decimal.Parse(tBox5.Text),
+                ItemID6Name = descBox6.Text,
+                ItemID6Price = uBox6.Value,
+                ItemID6Qty = qtyBox6.Value,
+                ItemID6Total = decimal.Parse(tBox6.Text),
+                ItemID7Name = descBox7.Text,
+                ItemID7Price = uBox7.Value,
+                ItemID7Qty = qtyBox7.Value,
+                ItemID7Total = decimal.Parse(tBox7.Text),
+                ItemID8Name = descBox8.Text,
+                ItemID8Price = uBox8.Value,
+                ItemID8Qty = qtyBox8.Value,
+                ItemID8Total = decimal.Parse(tBox8.Text),
+                ItemID9Name = descBox9.Text,
+                ItemID9Price = uBox9.Value,
+                ItemID9Qty = qtyBox9.Value,
+                ItemID9Total = decimal.Parse(tBox9.Text),
+                ItemID10Name = descBox10.Text,
+                ItemID10Price = uBox10.Value,
+                ItemID10Qty = qtyBox10.Value,
+                ItemID10Total = decimal.Parse(tBox10.Text),
+                ItemID11Name = descBox11.Text,
+                ItemID11Price = uBox11.Value,
+                ItemID11Qty = qtyBox11.Value,
+                ItemID11Total = decimal.Parse(tBox8.Text),
+
+                Subtotal = decimal.Parse(subtotal.Text),
+                DiscountType = disctype.Text,
+                DiscountValue = discval.Value,
+                SubtotalLessDiscount = decimal.Parse(subttllssdisc.Text),
+                TaxRate = txrt.Value,
+                Totaltax = decimal.Parse(ttltax.Text),
+                GrossTotal = decimal.Parse(grssttl.Text),
+                Paid = paid.Value,
+                Due = decimal.Parse(balancedue.Text)
+                });
+                */
+            
+            Printpreview pv = new Printpreview(r);
+            pv.ShowDialog();
+        }
         private void print_Click(object sender, EventArgs e)
         {
             save_invoice();
-            CaptureScreen();
-            printDocument1.Print();
+            load_crystalreports();
+
+            //CaptureScreen();
+            //this.Enabled = false;
+            //printDocument1.Print();
+            /*PrintDialog pdi = new PrintDialog();
+            pdi.Document = printDocument1;
+            if (pdi.ShowDialog() == DialogResult.OK)
+            {
+                printDocument1.Print();
+            }
+            else
+            {
+                MessageBox.Show("                Print Cancelled         ");
+            }*/
         }
 
 
@@ -656,7 +851,7 @@ namespace AgricoveBilling
 
         private void Datasrc_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(datasrc.SelectedIndex == 0)
+            if (datasrc.SelectedIndex == 0)
             {
                 name_search_label.Text = "Client Name";
                 search_name_box.Width = 262;
@@ -685,7 +880,7 @@ namespace AgricoveBilling
         private void search_fill(DataGridView d)
         {
             using (var dataContext = new DBConnection())
-            {  
+            {
                 if (datasrc.SelectedIndex == 0)
                 {
                     var dts = datestart.Value;
@@ -696,7 +891,14 @@ namespace AgricoveBilling
 
                         var invoice = dataContext.Invoice.ToList();
                         var data = invoice.Where(x => x.InvoiceNo == var_invno)
-                                        .Select(x => new { x.InvoiceNo, x.InvoiceDt, x.DueDt, x.BillToName, x.Due }).ToList();
+                                        .Select(x => new
+                                        {
+                                            x.InvoiceNo,
+                                            x.InvoiceDt,
+                                            x.DueDt,
+                                            x.BillToName,
+                                            due = calc_due(x.Paid, x.ItemID1Price, x.ItemID1Qty, x.ItemID2Price, x.ItemID2Qty, x.ItemID3Price, x.ItemID3Qty, x.ItemID4Price, x.ItemID4Qty, x.ItemID5Price, x.ItemID5Qty, x.ItemID6Price, x.ItemID6Qty, x.ItemID7Price, x.ItemID7Qty, x.ItemID8Price, x.ItemID8Qty, x.ItemID9Price, x.ItemID9Qty, x.ItemID10Price, x.ItemID10Qty, x.ItemID11Price, x.ItemID11Qty)
+                                        }).ToList();
 
                         d.DataSource = data;
                     }
@@ -709,14 +911,28 @@ namespace AgricoveBilling
                             var data = invoice.Where(x => x.BillToName.ToLower().Contains(var_name.ToLower()))
                                             .Where(x => DateTime.ParseExact(x.InvoiceDt, "dd/MM/yyyy", null) >= dts)
                                             .Where(x => DateTime.ParseExact(x.InvoiceDt, "dd/MM/yyyy", null) <= dte)
-                                            .Select(x => new { x.InvoiceNo, x.InvoiceDt, x.DueDt, x.BillToName, x.Due }).ToList();
+                                            .Select(x => new
+                                            {
+                                                x.InvoiceNo,
+                                                x.InvoiceDt,
+                                                x.DueDt,
+                                                x.BillToName,
+                                                due = calc_due(x.Paid, x.ItemID1Price, x.ItemID1Qty, x.ItemID2Price, x.ItemID2Qty, x.ItemID3Price, x.ItemID3Qty, x.ItemID4Price, x.ItemID4Qty, x.ItemID5Price, x.ItemID5Qty, x.ItemID6Price, x.ItemID6Qty, x.ItemID7Price, x.ItemID7Qty, x.ItemID8Price, x.ItemID8Qty, x.ItemID9Price, x.ItemID9Qty, x.ItemID10Price, x.ItemID10Qty, x.ItemID11Price, x.ItemID11Qty)
+                                            }).ToList();
                             d.DataSource = data;
                         }
                         else
                         {
                             var invoice = dataContext.Invoice.ToList();
                             var data = invoice.Where(x => x.BillToName.ToLower().Contains(var_name.ToLower()))
-                                            .Select(x => new { x.InvoiceNo, x.InvoiceDt, x.DueDt, x.BillToName, x.Due }).ToList();
+                                            .Select(x => new
+                                            {
+                                                x.InvoiceNo,
+                                                x.InvoiceDt,
+                                                x.DueDt,
+                                                x.BillToName,
+                                                due = calc_due(x.Paid, x.ItemID1Price, x.ItemID1Qty, x.ItemID2Price, x.ItemID2Qty, x.ItemID3Price, x.ItemID3Qty, x.ItemID4Price, x.ItemID4Qty, x.ItemID5Price, x.ItemID5Qty, x.ItemID6Price, x.ItemID6Qty, x.ItemID7Price, x.ItemID7Qty, x.ItemID8Price, x.ItemID8Qty, x.ItemID9Price, x.ItemID9Qty, x.ItemID10Price, x.ItemID10Qty, x.ItemID11Price, x.ItemID11Qty)
+                                            }).ToList();
                             d.DataSource = data;
                         }
                     }
@@ -728,13 +944,27 @@ namespace AgricoveBilling
                             var data = invoice
                                         .Where(x => DateTime.ParseExact(x.InvoiceDt, "dd/MM/yyyy", null) >= dts)
                                         .Where(x => DateTime.ParseExact(x.InvoiceDt, "dd/MM/yyyy", null) <= dte)
-                                        .Select(x => new { x.InvoiceNo, x.InvoiceDt, x.DueDt, x.BillToName, x.Due }).ToList();
+                                        .Select(x => new
+                                        {
+                                            x.InvoiceNo,
+                                            x.InvoiceDt,
+                                            x.DueDt,
+                                            x.BillToName,
+                                            due = calc_due(x.Paid, x.ItemID1Price, x.ItemID1Qty, x.ItemID2Price, x.ItemID2Qty, x.ItemID3Price, x.ItemID3Qty, x.ItemID4Price, x.ItemID4Qty, x.ItemID5Price, x.ItemID5Qty, x.ItemID6Price, x.ItemID6Qty, x.ItemID7Price, x.ItemID7Qty, x.ItemID8Price, x.ItemID8Qty, x.ItemID9Price, x.ItemID9Qty, x.ItemID10Price, x.ItemID10Qty, x.ItemID11Price, x.ItemID11Qty)
+                                        }).ToList();
                             d.DataSource = data;
                         }
                         else
                         {
                             var invoice = dataContext.Invoice.ToList();
-                            var data = invoice.Select(x => new { x.InvoiceNo, x.InvoiceDt, x.DueDt, x.BillToName, x.Due }).ToList();
+                            var data = invoice.Select(x => new
+                            {
+                                x.InvoiceNo,
+                                x.InvoiceDt,
+                                x.DueDt,
+                                x.BillToName,
+                                due = calc_due(x.Paid, x.ItemID1Price, x.ItemID1Qty, x.ItemID2Price, x.ItemID2Qty, x.ItemID3Price, x.ItemID3Qty, x.ItemID4Price, x.ItemID4Qty, x.ItemID5Price, x.ItemID5Qty, x.ItemID6Price, x.ItemID6Qty, x.ItemID7Price, x.ItemID7Qty, x.ItemID8Price, x.ItemID8Qty, x.ItemID9Price, x.ItemID9Qty, x.ItemID10Price, x.ItemID10Qty, x.ItemID11Price, x.ItemID11Qty)
+                            }).ToList();
                             d.DataSource = data;
                         }
                     }
@@ -768,7 +998,7 @@ namespace AgricoveBilling
         {
             invno.Text = inv.InvoiceNo;
             invdt.Value = DateTime.ParseExact(inv.InvoiceDt, "dd/MM/yyyy", null);
-            ddt.Value = DateTime.ParseExact(inv.DueDt, "dd/MM/yyyy", null); 
+            ddt.Value = DateTime.ParseExact(inv.DueDt, "dd/MM/yyyy", null);
             billname.Text = inv.BillToName;
             billaddr.Text = inv.BillToAdd;
             descBox1.Text = inv.ItemID1Name;
@@ -804,7 +1034,7 @@ namespace AgricoveBilling
             descBox11.Text = inv.ItemID11Name;
             uBox11.Value = inv.ItemID11Price;
             qtyBox11.Value = inv.ItemID11Qty;
-                    
+
             disctype.SelectedIndex = inv.DiscountType;
             discval.Value = inv.DiscountValue;
             txrt.Value = inv.TaxRate;
@@ -824,8 +1054,8 @@ namespace AgricoveBilling
                     {
                         var invoice = dataContext.Invoice.ToList();
                         var inv = (from x in invoice
-                                    where x.InvoiceNo == find_gridview.Rows[e.RowIndex].Cells[1].Value.ToString()
-                                    select x).FirstOrDefault();
+                                   where x.InvoiceNo == find_gridview.Rows[e.RowIndex].Cells[1].Value.ToString()
+                                   select x).FirstOrDefault();
                         load_data(inv);
                         find_Click(sender, e);
                     }
@@ -840,7 +1070,14 @@ namespace AgricoveBilling
                                     where x.ItemPrice == find_gridview.Rows[e.RowIndex].Cells[2].Value.ToString()
                                     select x).FirstOrDefault();
                         dataContext.Items.Remove(item);
-                        dataContext.SaveChanges();
+                        try
+                        {
+                            dataContext.SaveChanges();
+                        }
+                        catch
+                        {
+                            MessageBox.Show("       Database write permission not available.     ");
+                        }
                         gridview_load(find_gridview, "items");
                     }
                 }

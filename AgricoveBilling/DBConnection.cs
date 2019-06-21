@@ -7,6 +7,16 @@ using System.Threading.Tasks;
 
 namespace AgricoveBilling
 {
+    [Serializable]
+    class FilePermissionException : Exception
+    {
+        public FilePermissionException()
+            : base(String.Format("No write permission to database folder"))
+        {
+
+        }
+
+    }
     class DBConnection : DbContext
     {
         private static bool _created = false;
@@ -16,7 +26,14 @@ namespace AgricoveBilling
             {
                 //_created = true;
                 //Database.EnsureDeleted();
-                Database.EnsureCreated();
+                try
+                {
+                    Database.EnsureCreated();
+                }
+                catch(FilePermissionException fe)
+                {
+                   
+                }
             }
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionbuilder)
