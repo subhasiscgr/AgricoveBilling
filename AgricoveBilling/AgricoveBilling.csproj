@@ -185,8 +185,10 @@
     </Compile>
     <Compile Include="DBConnection.cs" />
     <Compile Include="Invoice.cs" />
+    <Compile Include="invoice_grid_data.cs" />
     <Compile Include="ItemData.cs" />
     <Compile Include="Items.cs" />
+    <Compile Include="items_grid_data.cs" />
     <Compile Include="printform.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -201,7 +203,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyComparer.cs" />
     <Compile Include="reporter.cs" />
+    <Compile Include="SortableBindingList.cs" />
     <EmbeddedResource Include="AgricoveBilling.resx">
       <DependentUpon>AgricoveBilling.cs</DependentUpon>
     </EmbeddedResource>

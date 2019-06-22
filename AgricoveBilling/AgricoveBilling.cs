@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Configuration;
-
+using Be.Timvw.Framework.ComponentModel;
 
 namespace AgricoveBilling
 {
@@ -608,6 +608,7 @@ namespace AgricoveBilling
                 if (s == "invoice")
                 {
                     var invoice = dataContext.Invoice.ToList();
+                    
                     var data = invoice
                                 //.Where( x => x.Due > 0 )
                                 .Select(x => new
@@ -618,14 +619,20 @@ namespace AgricoveBilling
                                     x.BillToName,
                                     due = calc_due(x.Paid, x.ItemID1Price, x.ItemID1Qty, x.ItemID2Price, x.ItemID2Qty, x.ItemID3Price, x.ItemID3Qty, x.ItemID4Price, x.ItemID4Qty, x.ItemID5Price, x.ItemID5Qty, x.ItemID6Price, x.ItemID6Qty, x.ItemID7Price, x.ItemID7Qty, x.ItemID8Price, x.ItemID8Qty, x.ItemID9Price, x.ItemID9Qty, x.ItemID10Price, x.ItemID10Qty, x.ItemID11Price, x.ItemID11Qty)
                                 }).ToList();
-                    d.DataSource = data;
+                    List<invoice_grid_data> datalist = data.Select(p => new invoice_grid_data() { InvoiceNo = p.InvoiceNo, InvoiceDt = p.InvoiceDt, BillToName = p.BillToName, DueDt = p.DueDt, due =p.due }).ToList();
+                    
+                    SortableBindingList <invoice_grid_data> sorteddata = new SortableBindingList<invoice_grid_data>(datalist);
+                    d.DataSource = sorteddata;
                     gridview_format(d, "invoice");
                 }
                 else if (s == "items")
                 {
                     var items = dataContext.Items.ToList();
                     var data = items.Select(x => new { x.ItemName, x.ItemPrice }).ToList();
-                    d.DataSource = data;
+                    List<items_grid_data> datalist = data.Select(p => new items_grid_data() { ItemName = p.ItemName, ItemPrice = p.ItemPrice }).ToList();
+
+                    SortableBindingList<items_grid_data> sorteddata = new SortableBindingList<items_grid_data>(datalist);
+                    d.DataSource = sorteddata;
                     gridview_format(d, "items");
                 }
             }
@@ -900,7 +907,10 @@ namespace AgricoveBilling
                                             due = calc_due(x.Paid, x.ItemID1Price, x.ItemID1Qty, x.ItemID2Price, x.ItemID2Qty, x.ItemID3Price, x.ItemID3Qty, x.ItemID4Price, x.ItemID4Qty, x.ItemID5Price, x.ItemID5Qty, x.ItemID6Price, x.ItemID6Qty, x.ItemID7Price, x.ItemID7Qty, x.ItemID8Price, x.ItemID8Qty, x.ItemID9Price, x.ItemID9Qty, x.ItemID10Price, x.ItemID10Qty, x.ItemID11Price, x.ItemID11Qty)
                                         }).ToList();
 
-                        d.DataSource = data;
+                        List<invoice_grid_data> datalist = data.Select(p => new invoice_grid_data() { InvoiceNo = p.InvoiceNo, InvoiceDt = p.InvoiceDt, BillToName = p.BillToName, DueDt = p.DueDt, due = p.due }).ToList();
+
+                        SortableBindingList<invoice_grid_data> sorteddata = new SortableBindingList<invoice_grid_data>(datalist);
+                        d.DataSource = sorteddata;
                     }
                     else if (search_name_box.Text.Length > 0)
                     {
@@ -909,7 +919,7 @@ namespace AgricoveBilling
                         {
                             var invoice = dataContext.Invoice.ToList();
                             var data = invoice.Where(x => x.BillToName.ToLower().Contains(var_name.ToLower()))
-                                            .Where(x => DateTime.ParseExact(x.InvoiceDt, "dd/MM/yyyy", null) >= dts)
+                                            .Where(x => DateTime.ParseExact(x.InvoiceDt, "dd/MM/yyyy", null) >= dts.AddDays(-1))
                                             .Where(x => DateTime.ParseExact(x.InvoiceDt, "dd/MM/yyyy", null) <= dte)
                                             .Select(x => new
                                             {
@@ -919,7 +929,10 @@ namespace AgricoveBilling
                                                 x.BillToName,
                                                 due = calc_due(x.Paid, x.ItemID1Price, x.ItemID1Qty, x.ItemID2Price, x.ItemID2Qty, x.ItemID3Price, x.ItemID3Qty, x.ItemID4Price, x.ItemID4Qty, x.ItemID5Price, x.ItemID5Qty, x.ItemID6Price, x.ItemID6Qty, x.ItemID7Price, x.ItemID7Qty, x.ItemID8Price, x.ItemID8Qty, x.ItemID9Price, x.ItemID9Qty, x.ItemID10Price, x.ItemID10Qty, x.ItemID11Price, x.ItemID11Qty)
                                             }).ToList();
-                            d.DataSource = data;
+                            List<invoice_grid_data> datalist = data.Select(p => new invoice_grid_data() { InvoiceNo = p.InvoiceNo, InvoiceDt = p.InvoiceDt, BillToName = p.BillToName, DueDt = p.DueDt, due = p.due }).ToList();
+
+                            SortableBindingList<invoice_grid_data> sorteddata = new SortableBindingList<invoice_grid_data>(datalist);
+                            d.DataSource = sorteddata;
                         }
                         else
                         {
@@ -933,7 +946,10 @@ namespace AgricoveBilling
                                                 x.BillToName,
                                                 due = calc_due(x.Paid, x.ItemID1Price, x.ItemID1Qty, x.ItemID2Price, x.ItemID2Qty, x.ItemID3Price, x.ItemID3Qty, x.ItemID4Price, x.ItemID4Qty, x.ItemID5Price, x.ItemID5Qty, x.ItemID6Price, x.ItemID6Qty, x.ItemID7Price, x.ItemID7Qty, x.ItemID8Price, x.ItemID8Qty, x.ItemID9Price, x.ItemID9Qty, x.ItemID10Price, x.ItemID10Qty, x.ItemID11Price, x.ItemID11Qty)
                                             }).ToList();
-                            d.DataSource = data;
+                            List<invoice_grid_data> datalist = data.Select(p => new invoice_grid_data() { InvoiceNo = p.InvoiceNo, InvoiceDt = p.InvoiceDt, BillToName = p.BillToName, DueDt = p.DueDt, due = p.due }).ToList();
+
+                            SortableBindingList<invoice_grid_data> sorteddata = new SortableBindingList<invoice_grid_data>(datalist);
+                            d.DataSource = sorteddata;
                         }
                     }
                     else
@@ -942,7 +958,7 @@ namespace AgricoveBilling
                         {
                             var invoice = dataContext.Invoice.ToList();
                             var data = invoice
-                                        .Where(x => DateTime.ParseExact(x.InvoiceDt, "dd/MM/yyyy", null) >= dts)
+                                        .Where(x => DateTime.ParseExact(x.InvoiceDt, "dd/MM/yyyy", null) >= dts.AddDays(-1))
                                         .Where(x => DateTime.ParseExact(x.InvoiceDt, "dd/MM/yyyy", null) <= dte)
                                         .Select(x => new
                                         {
@@ -952,7 +968,10 @@ namespace AgricoveBilling
                                             x.BillToName,
                                             due = calc_due(x.Paid, x.ItemID1Price, x.ItemID1Qty, x.ItemID2Price, x.ItemID2Qty, x.ItemID3Price, x.ItemID3Qty, x.ItemID4Price, x.ItemID4Qty, x.ItemID5Price, x.ItemID5Qty, x.ItemID6Price, x.ItemID6Qty, x.ItemID7Price, x.ItemID7Qty, x.ItemID8Price, x.ItemID8Qty, x.ItemID9Price, x.ItemID9Qty, x.ItemID10Price, x.ItemID10Qty, x.ItemID11Price, x.ItemID11Qty)
                                         }).ToList();
-                            d.DataSource = data;
+                            List<invoice_grid_data> datalist = data.Select(p => new invoice_grid_data() { InvoiceNo = p.InvoiceNo, InvoiceDt = p.InvoiceDt, BillToName = p.BillToName, DueDt = p.DueDt, due = p.due }).ToList();
+
+                            SortableBindingList<invoice_grid_data> sorteddata = new SortableBindingList<invoice_grid_data>(datalist);
+                            d.DataSource = sorteddata;
                         }
                         else
                         {
@@ -965,7 +984,10 @@ namespace AgricoveBilling
                                 x.BillToName,
                                 due = calc_due(x.Paid, x.ItemID1Price, x.ItemID1Qty, x.ItemID2Price, x.ItemID2Qty, x.ItemID3Price, x.ItemID3Qty, x.ItemID4Price, x.ItemID4Qty, x.ItemID5Price, x.ItemID5Qty, x.ItemID6Price, x.ItemID6Qty, x.ItemID7Price, x.ItemID7Qty, x.ItemID8Price, x.ItemID8Qty, x.ItemID9Price, x.ItemID9Qty, x.ItemID10Price, x.ItemID10Qty, x.ItemID11Price, x.ItemID11Qty)
                             }).ToList();
-                            d.DataSource = data;
+                            List<invoice_grid_data> datalist = data.Select(p => new invoice_grid_data() { InvoiceNo = p.InvoiceNo, InvoiceDt = p.InvoiceDt, BillToName = p.BillToName, DueDt = p.DueDt, due = p.due }).ToList();
+
+                            SortableBindingList<invoice_grid_data> sorteddata = new SortableBindingList<invoice_grid_data>(datalist);
+                            d.DataSource = sorteddata;
                         }
                     }
                     gridview_format(d, "invoice");
@@ -975,7 +997,10 @@ namespace AgricoveBilling
                     var items = dataContext.Items.ToList();
                     var data = items.Where(x => x.ItemName.ToLower().Contains(search_name_box.Text.ToLower()))
                                 .Select(x => new { x.ItemName, x.ItemPrice }).ToList();
-                    d.DataSource = data;
+                    List<items_grid_data> datalist = data.Select(p => new items_grid_data() { ItemName = p.ItemName, ItemPrice = p.ItemPrice }).ToList();
+
+                    SortableBindingList<items_grid_data> sorteddata = new SortableBindingList<items_grid_data>(datalist);
+                    d.DataSource = sorteddata;
                     gridview_format(d, "items");
                 }
             }

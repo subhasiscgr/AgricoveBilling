@@ -59,7 +59,6 @@
             this.grssttl = new System.Windows.Forms.Label();
             this.balancedue = new System.Windows.Forms.Label();
             this.search = new System.Windows.Forms.Button();
-            this.windowsizer = new System.Windows.Forms.Label();
             this.txrt = new System.Windows.Forms.NumericUpDown();
             this.labelline10 = new System.Windows.Forms.Label();
             this.labelline11 = new System.Windows.Forms.Label();
@@ -465,15 +464,6 @@
             this.search.UseVisualStyleBackColor = true;
             this.search.Click += new System.EventHandler(this.find_Click);
             // 
-            // windowsizer
-            // 
-            this.windowsizer.AutoSize = true;
-            this.windowsizer.Location = new System.Drawing.Point(1107, 662);
-            this.windowsizer.Name = "windowsizer";
-            this.windowsizer.Size = new System.Drawing.Size(0, 13);
-            this.windowsizer.TabIndex = 57;
-            this.windowsizer.Tag = "force window height";
-            // 
             // txrt
             // 
             this.txrt.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -546,7 +536,6 @@
             // find_gridview
             // 
             this.find_gridview.AllowUserToAddRows = false;
-            this.find_gridview.AllowUserToOrderColumns = true;
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.find_gridview.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.find_gridview.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
@@ -1535,7 +1524,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 450F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 129F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 131F));
             this.tableLayoutPanel1.Controls.Add(this.descBox11, 0, 11);
             this.tableLayoutPanel1.Controls.Add(this.descBox10, 0, 10);
             this.tableLayoutPanel1.Controls.Add(this.descBox9, 0, 9);
@@ -1822,7 +1811,6 @@
             this.Controls.Add(this.invoice);
             this.Controls.Add(this.disctype);
             this.Controls.Add(this.discval);
-            this.Controls.Add(this.windowsizer);
             this.Controls.Add(this.label_address);
             this.Controls.Add(this.label_Name);
             this.Controls.Add(this.labelline9);
@@ -1948,7 +1936,6 @@
         private System.Windows.Forms.Label grssttl;
         private System.Windows.Forms.Label balancedue;
         private System.Windows.Forms.Button search;
-        private System.Windows.Forms.Label windowsizer;
         private System.Windows.Forms.NumericUpDown txrt;
         private System.Windows.Forms.Label labelline10;
         private System.Windows.Forms.Label labelline11;
