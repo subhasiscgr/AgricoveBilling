@@ -12,7 +12,7 @@ namespace AgricoveBilling
         [Key]
         public int ItemID { get; set; }
         public string ItemName { get; set; }
-        public string ItemPrice { get; set; }
+        public decimal ItemPrice { get; set; }
 
         private string _description;
         private double _qty;

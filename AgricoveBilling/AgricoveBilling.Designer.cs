@@ -62,14 +62,13 @@
             this.txrt = new System.Windows.Forms.NumericUpDown();
             this.labelline10 = new System.Windows.Forms.Label();
             this.labelline11 = new System.Windows.Forms.Label();
-            this.paid = new System.Windows.Forms.NumericUpDown();
-            this.arrow_hider1 = new System.Windows.Forms.Label();
             this.searchpanel = new System.Windows.Forms.Panel();
             this.find_gridview = new System.Windows.Forms.DataGridView();
             this.copymenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.line_search_1 = new System.Windows.Forms.Label();
             this.searchbar = new System.Windows.Forms.Panel();
+            this.search_duedt = new System.Windows.Forms.CheckBox();
             this.refresh_search = new System.Windows.Forms.Button();
             this.datasrc_label = new System.Windows.Forms.Label();
             this.datasrc = new System.Windows.Forms.ComboBox();
@@ -118,7 +117,6 @@
             this.qtyBox1 = new System.Windows.Forms.NumericUpDown();
             this.labelline21 = new System.Windows.Forms.Label();
             this.labelline20 = new System.Windows.Forms.Label();
-            this.labelline19 = new System.Windows.Forms.Label();
             this.tBox2 = new System.Windows.Forms.Label();
             this.tBox3 = new System.Windows.Forms.Label();
             this.tBox4 = new System.Windows.Forms.Label();
@@ -139,13 +137,13 @@
             this.descBox9 = new System.Windows.Forms.TextBox();
             this.descBox10 = new System.Windows.Forms.TextBox();
             this.descBox11 = new System.Windows.Forms.TextBox();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.invoice_table = new System.Windows.Forms.TableLayoutPanel();
+            this.qtylabel = new System.Windows.Forms.Label();
             this.label_subttl = new System.Windows.Forms.Label();
             this.label_discount = new System.Windows.Forms.Label();
             this.label_subttllssdisc = new System.Windows.Forms.Label();
             this.label_line2 = new System.Windows.Forms.Label();
             this.labelline3 = new System.Windows.Forms.Label();
-            this.subtotal = new System.Windows.Forms.Label();
             this.subttllssdisc = new System.Windows.Forms.Label();
             this.ddt = new System.Windows.Forms.DateTimePicker();
             this.labelline8 = new System.Windows.Forms.Label();
@@ -157,9 +155,10 @@
             this.invdt = new System.Windows.Forms.DateTimePicker();
             this.close = new System.Windows.Forms.Button();
             this.minimise = new System.Windows.Forms.Button();
+            this.subtotal = new System.Windows.Forms.Label();
+            this.paid = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txrt)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.paid)).BeginInit();
             this.searchpanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.find_gridview)).BeginInit();
             this.copymenu.SuspendLayout();
@@ -187,8 +186,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.uBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.qtyBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.qtyBox1)).BeginInit();
-            this.tableLayoutPanel1.SuspendLayout();
+            this.invoice_table.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.discval)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.paid)).BeginInit();
             this.SuspendLayout();
             // 
             // label_agri_addr
@@ -260,7 +260,7 @@
             this.newinv.Name = "newinv";
             this.newinv.Size = new System.Drawing.Size(192, 29);
             this.newinv.TabIndex = 44;
-            this.newinv.Text = "&New Invoice";
+            this.newinv.Text = "Refresh (F5)";
             this.newinv.UseVisualStyleBackColor = true;
             this.newinv.Click += new System.EventHandler(this.newinv_Click);
             // 
@@ -296,10 +296,9 @@
             // 
             // label_ttlamtpaid
             // 
-            this.label_ttlamtpaid.AutoSize = true;
-            this.label_ttlamtpaid.Location = new System.Drawing.Point(890, 605);
+            this.label_ttlamtpaid.Location = new System.Drawing.Point(890, 599);
             this.label_ttlamtpaid.Name = "label_ttlamtpaid";
-            this.label_ttlamtpaid.Size = new System.Drawing.Size(94, 13);
+            this.label_ttlamtpaid.Size = new System.Drawing.Size(94, 24);
             this.label_ttlamtpaid.TabIndex = 23;
             this.label_ttlamtpaid.Text = "Total Amount Paid";
             this.label_ttlamtpaid.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -308,7 +307,7 @@
             // 
             this.label_balancedue.AutoSize = true;
             this.label_balancedue.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_balancedue.Location = new System.Drawing.Point(814, 630);
+            this.label_balancedue.Location = new System.Drawing.Point(777, 630);
             this.label_balancedue.Name = "label_balancedue";
             this.label_balancedue.Size = new System.Drawing.Size(173, 25);
             this.label_balancedue.TabIndex = 90;
@@ -446,13 +445,12 @@
             // balancedue
             // 
             this.balancedue.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.balancedue.Location = new System.Drawing.Point(993, 629);
+            this.balancedue.Location = new System.Drawing.Point(958, 629);
             this.balancedue.Name = "balancedue";
-            this.balancedue.Size = new System.Drawing.Size(100, 23);
+            this.balancedue.Size = new System.Drawing.Size(135, 23);
             this.balancedue.TabIndex = 89;
             this.balancedue.Text = "0.00";
             this.balancedue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.balancedue.TextChanged += new System.EventHandler(this.balancedue_TextChanged);
             // 
             // search
             // 
@@ -473,6 +471,9 @@
             this.txrt.TabIndex = 36;
             this.txrt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txrt.ValueChanged += new System.EventHandler(this.txrt_ValueChanged);
+            this.txrt.Enter += new System.EventHandler(this.numBox_Enter);
+            this.txrt.Leave += new System.EventHandler(this.updown_leave);
+            this.txrt.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numBox_Enter);
             // 
             // labelline10
             // 
@@ -496,39 +497,12 @@
             this.labelline11.Size = new System.Drawing.Size(276, 2);
             this.labelline11.TabIndex = 94;
             // 
-            // paid
-            // 
-            this.paid.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.paid.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.paid.DecimalPlaces = 2;
-            this.paid.Location = new System.Drawing.Point(988, 605);
-            this.paid.Maximum = new decimal(new int[] {
-            900000,
-            0,
-            0,
-            0});
-            this.paid.Name = "paid";
-            this.paid.Size = new System.Drawing.Size(98, 16);
-            this.paid.TabIndex = 37;
-            this.paid.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.paid.ThousandsSeparator = true;
-            this.paid.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
-            this.paid.ValueChanged += new System.EventHandler(this.grssttl_TextChanged);
-            // 
-            // arrow_hider1
-            // 
-            this.arrow_hider1.Location = new System.Drawing.Point(989, 604);
-            this.arrow_hider1.Name = "arrow_hider1";
-            this.arrow_hider1.Size = new System.Drawing.Size(15, 17);
-            this.arrow_hider1.TabIndex = 96;
-            this.arrow_hider1.Text = " ";
-            // 
             // searchpanel
             // 
             this.searchpanel.Controls.Add(this.find_gridview);
             this.searchpanel.Controls.Add(this.line_search_1);
             this.searchpanel.Controls.Add(this.searchbar);
-            this.searchpanel.Location = new System.Drawing.Point(329, 55);
+            this.searchpanel.Location = new System.Drawing.Point(328, 55);
             this.searchpanel.Name = "searchpanel";
             this.searchpanel.Size = new System.Drawing.Size(760, 597);
             this.searchpanel.TabIndex = 100;
@@ -558,6 +532,7 @@
             this.find_gridview.TabIndex = 110;
             this.find_gridview.DataSourceChanged += new System.EventHandler(this.find_gridview_DataSourceChanged);
             this.find_gridview.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.find_gridview_CellContentClick);
+            this.find_gridview.Leave += new System.EventHandler(this.find_gridview_Leave);
             // 
             // copymenu
             // 
@@ -586,6 +561,7 @@
             // searchbar
             // 
             this.searchbar.BackColor = System.Drawing.Color.Transparent;
+            this.searchbar.Controls.Add(this.search_duedt);
             this.searchbar.Controls.Add(this.refresh_search);
             this.searchbar.Controls.Add(this.datasrc_label);
             this.searchbar.Controls.Add(this.datasrc);
@@ -604,6 +580,17 @@
             this.searchbar.TabIndex = 52;
             this.searchbar.Enter += new System.EventHandler(this.searchbar_Enter);
             this.searchbar.Leave += new System.EventHandler(this.searchbar_Leave);
+            // 
+            // search_duedt
+            // 
+            this.search_duedt.AutoSize = true;
+            this.search_duedt.Location = new System.Drawing.Point(573, 4);
+            this.search_duedt.Name = "search_duedt";
+            this.search_duedt.Size = new System.Drawing.Size(72, 17);
+            this.search_duedt.TabIndex = 110;
+            this.search_duedt.Text = "Due Date";
+            this.search_duedt.UseVisualStyleBackColor = true;
+            this.search_duedt.CheckedChanged += new System.EventHandler(this.search_duedt_CheckedChanged);
             // 
             // refresh_search
             // 
@@ -644,9 +631,9 @@
             this.dtrange.AutoSize = true;
             this.dtrange.Location = new System.Drawing.Point(485, 4);
             this.dtrange.Name = "dtrange";
-            this.dtrange.Size = new System.Drawing.Size(84, 17);
+            this.dtrange.Size = new System.Drawing.Size(87, 17);
             this.dtrange.TabIndex = 104;
-            this.dtrange.Text = "Date Range";
+            this.dtrange.Text = "Invoice Date";
             this.dtrange.UseVisualStyleBackColor = true;
             this.dtrange.CheckedChanged += new System.EventHandler(this.Dtrange_CheckedChanged);
             // 
@@ -689,7 +676,7 @@
             this.search_name_box.Name = "search_name_box";
             this.search_name_box.Size = new System.Drawing.Size(262, 20);
             this.search_name_box.TabIndex = 102;
-            this.search_name_box.Enter += new System.EventHandler(this.Search_name_box_Enter);
+            this.search_name_box.Enter += new System.EventHandler(this.textbox_Enter);
             // 
             // copypastemenu
             // 
@@ -728,7 +715,7 @@
             this.search_inv_box.Name = "search_inv_box";
             this.search_inv_box.Size = new System.Drawing.Size(106, 20);
             this.search_inv_box.TabIndex = 101;
-            this.search_inv_box.Enter += new System.EventHandler(this.Search_inv_box_Enter);
+            this.search_inv_box.Enter += new System.EventHandler(this.textbox_Enter);
             // 
             // datestart
             // 
@@ -750,21 +737,32 @@
             // 
             // billname
             // 
+            this.billname.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.billname.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
             this.billname.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.billname.ContextMenuStrip = this.copypastemenu;
             this.billname.Location = new System.Drawing.Point(392, 75);
             this.billname.Name = "billname";
             this.billname.Size = new System.Drawing.Size(406, 13);
             this.billname.TabIndex = 38;
+            this.billname.TextChanged += new System.EventHandler(this.billname_TextChanged);
+            this.billname.Enter += new System.EventHandler(this.textbox_Enter);
+            this.billname.Leave += new System.EventHandler(this.billname_Leave);
+            this.billname.MouseUp += new System.Windows.Forms.MouseEventHandler(this.textbox_Enter);
             // 
             // billaddr
             // 
+            this.billaddr.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.billaddr.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
             this.billaddr.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.billaddr.ContextMenuStrip = this.copypastemenu;
             this.billaddr.Location = new System.Drawing.Point(392, 101);
             this.billaddr.Name = "billaddr";
             this.billaddr.Size = new System.Drawing.Size(406, 13);
             this.billaddr.TabIndex = 39;
+            this.billaddr.TextChanged += new System.EventHandler(this.billaddr_TextChanged);
+            this.billaddr.Enter += new System.EventHandler(this.textbox_Enter);
+            this.billaddr.MouseUp += new System.Windows.Forms.MouseEventHandler(this.textbox_Enter);
             // 
             // label_invno
             // 
@@ -807,7 +805,7 @@
             // 
             // labelline18
             // 
-            this.labelline18.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.labelline18.BackColor = System.Drawing.Color.Transparent;
             this.labelline18.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelline18.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.labelline18.Location = new System.Drawing.Point(1, 1);
@@ -822,17 +820,22 @@
             // 
             this.descBox1.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.descBox1.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.descBox1.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.descBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.descBox1.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.descBox1.Location = new System.Drawing.Point(4, 30);
             this.descBox1.Name = "descBox1";
-            this.descBox1.Size = new System.Drawing.Size(444, 13);
+            this.descBox1.Size = new System.Drawing.Size(444, 19);
             this.descBox1.TabIndex = 0;
             this.descBox1.Tag = "0";
+            this.descBox1.TextChanged += new System.EventHandler(this.desc_TextChanged);
+            this.descBox1.Enter += new System.EventHandler(this.descBox_Enter);
             this.descBox1.Leave += new System.EventHandler(this.descBox_LostFocus);
+            this.descBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.textbox_Enter);
             // 
             // tBox1
             // 
+            this.tBox1.BackColor = System.Drawing.Color.Transparent;
+            this.tBox1.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.tBox1.Location = new System.Drawing.Point(657, 27);
             this.tBox1.Name = "tBox1";
             this.tBox1.Size = new System.Drawing.Size(94, 23);
@@ -843,7 +846,6 @@
             // 
             // uBox11
             // 
-            this.uBox11.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.uBox11.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.uBox11.DecimalPlaces = 2;
             this.uBox11.Enabled = false;
@@ -861,13 +863,20 @@
             this.uBox11.ThousandsSeparator = true;
             this.uBox11.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.uBox11.ValueChanged += new System.EventHandler(this.uBox_ValueChanged);
+            this.uBox11.Enter += new System.EventHandler(this.numBox_Enter);
+            this.uBox11.Leave += new System.EventHandler(this.updown_leave);
+            this.uBox11.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numBox_Enter);
             // 
             // qtyBox11
             // 
-            this.qtyBox11.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.qtyBox11.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.qtyBox11.Enabled = false;
             this.qtyBox11.Location = new System.Drawing.Point(455, 290);
+            this.qtyBox11.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
             this.qtyBox11.Name = "qtyBox11";
             this.qtyBox11.Size = new System.Drawing.Size(83, 16);
             this.qtyBox11.TabIndex = 31;
@@ -876,10 +885,12 @@
             this.qtyBox11.ThousandsSeparator = true;
             this.qtyBox11.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.qtyBox11.ValueChanged += new System.EventHandler(this.qtyBox_ValueChanged);
+            this.qtyBox11.Enter += new System.EventHandler(this.numBox_Enter);
+            this.qtyBox11.Leave += new System.EventHandler(this.updown_leave);
+            this.qtyBox11.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numBox_Enter);
             // 
             // uBox10
             // 
-            this.uBox10.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.uBox10.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.uBox10.DecimalPlaces = 2;
             this.uBox10.Enabled = false;
@@ -897,13 +908,20 @@
             this.uBox10.ThousandsSeparator = true;
             this.uBox10.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.uBox10.ValueChanged += new System.EventHandler(this.uBox_ValueChanged);
+            this.uBox10.Enter += new System.EventHandler(this.numBox_Enter);
+            this.uBox10.Leave += new System.EventHandler(this.updown_leave);
+            this.uBox10.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numBox_Enter);
             // 
             // qtyBox10
             // 
-            this.qtyBox10.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.qtyBox10.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.qtyBox10.Enabled = false;
             this.qtyBox10.Location = new System.Drawing.Point(455, 264);
+            this.qtyBox10.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
             this.qtyBox10.Name = "qtyBox10";
             this.qtyBox10.Size = new System.Drawing.Size(83, 16);
             this.qtyBox10.TabIndex = 28;
@@ -912,10 +930,12 @@
             this.qtyBox10.ThousandsSeparator = true;
             this.qtyBox10.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.qtyBox10.ValueChanged += new System.EventHandler(this.qtyBox_ValueChanged);
+            this.qtyBox10.Enter += new System.EventHandler(this.numBox_Enter);
+            this.qtyBox10.Leave += new System.EventHandler(this.updown_leave);
+            this.qtyBox10.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numBox_Enter);
             // 
             // uBox9
             // 
-            this.uBox9.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.uBox9.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.uBox9.DecimalPlaces = 2;
             this.uBox9.Enabled = false;
@@ -933,13 +953,20 @@
             this.uBox9.ThousandsSeparator = true;
             this.uBox9.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.uBox9.ValueChanged += new System.EventHandler(this.uBox_ValueChanged);
+            this.uBox9.Enter += new System.EventHandler(this.numBox_Enter);
+            this.uBox9.Leave += new System.EventHandler(this.updown_leave);
+            this.uBox9.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numBox_Enter);
             // 
             // qtyBox9
             // 
-            this.qtyBox9.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.qtyBox9.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.qtyBox9.Enabled = false;
             this.qtyBox9.Location = new System.Drawing.Point(455, 238);
+            this.qtyBox9.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
             this.qtyBox9.Name = "qtyBox9";
             this.qtyBox9.Size = new System.Drawing.Size(83, 16);
             this.qtyBox9.TabIndex = 25;
@@ -948,10 +975,12 @@
             this.qtyBox9.ThousandsSeparator = true;
             this.qtyBox9.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.qtyBox9.ValueChanged += new System.EventHandler(this.qtyBox_ValueChanged);
+            this.qtyBox9.Enter += new System.EventHandler(this.numBox_Enter);
+            this.qtyBox9.Leave += new System.EventHandler(this.updown_leave);
+            this.qtyBox9.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numBox_Enter);
             // 
             // uBox8
             // 
-            this.uBox8.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.uBox8.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.uBox8.DecimalPlaces = 2;
             this.uBox8.Enabled = false;
@@ -969,13 +998,20 @@
             this.uBox8.ThousandsSeparator = true;
             this.uBox8.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.uBox8.ValueChanged += new System.EventHandler(this.uBox_ValueChanged);
+            this.uBox8.Enter += new System.EventHandler(this.numBox_Enter);
+            this.uBox8.Leave += new System.EventHandler(this.updown_leave);
+            this.uBox8.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numBox_Enter);
             // 
             // qtyBox8
             // 
-            this.qtyBox8.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.qtyBox8.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.qtyBox8.Enabled = false;
             this.qtyBox8.Location = new System.Drawing.Point(455, 212);
+            this.qtyBox8.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
             this.qtyBox8.Name = "qtyBox8";
             this.qtyBox8.Size = new System.Drawing.Size(83, 16);
             this.qtyBox8.TabIndex = 22;
@@ -984,10 +1020,12 @@
             this.qtyBox8.ThousandsSeparator = true;
             this.qtyBox8.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.qtyBox8.ValueChanged += new System.EventHandler(this.qtyBox_ValueChanged);
+            this.qtyBox8.Enter += new System.EventHandler(this.numBox_Enter);
+            this.qtyBox8.Leave += new System.EventHandler(this.updown_leave);
+            this.qtyBox8.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numBox_Enter);
             // 
             // uBox7
             // 
-            this.uBox7.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.uBox7.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.uBox7.DecimalPlaces = 2;
             this.uBox7.Enabled = false;
@@ -1005,13 +1043,20 @@
             this.uBox7.ThousandsSeparator = true;
             this.uBox7.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.uBox7.ValueChanged += new System.EventHandler(this.uBox_ValueChanged);
+            this.uBox7.Enter += new System.EventHandler(this.numBox_Enter);
+            this.uBox7.Leave += new System.EventHandler(this.updown_leave);
+            this.uBox7.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numBox_Enter);
             // 
             // qtyBox7
             // 
-            this.qtyBox7.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.qtyBox7.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.qtyBox7.Enabled = false;
             this.qtyBox7.Location = new System.Drawing.Point(455, 186);
+            this.qtyBox7.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
             this.qtyBox7.Name = "qtyBox7";
             this.qtyBox7.Size = new System.Drawing.Size(83, 16);
             this.qtyBox7.TabIndex = 19;
@@ -1020,10 +1065,12 @@
             this.qtyBox7.ThousandsSeparator = true;
             this.qtyBox7.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.qtyBox7.ValueChanged += new System.EventHandler(this.qtyBox_ValueChanged);
+            this.qtyBox7.Enter += new System.EventHandler(this.numBox_Enter);
+            this.qtyBox7.Leave += new System.EventHandler(this.updown_leave);
+            this.qtyBox7.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numBox_Enter);
             // 
             // uBox6
             // 
-            this.uBox6.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.uBox6.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.uBox6.DecimalPlaces = 2;
             this.uBox6.Enabled = false;
@@ -1041,13 +1088,20 @@
             this.uBox6.ThousandsSeparator = true;
             this.uBox6.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.uBox6.ValueChanged += new System.EventHandler(this.uBox_ValueChanged);
+            this.uBox6.Enter += new System.EventHandler(this.numBox_Enter);
+            this.uBox6.Leave += new System.EventHandler(this.updown_leave);
+            this.uBox6.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numBox_Enter);
             // 
             // qtyBox6
             // 
-            this.qtyBox6.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.qtyBox6.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.qtyBox6.Enabled = false;
             this.qtyBox6.Location = new System.Drawing.Point(455, 160);
+            this.qtyBox6.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
             this.qtyBox6.Name = "qtyBox6";
             this.qtyBox6.Size = new System.Drawing.Size(83, 16);
             this.qtyBox6.TabIndex = 16;
@@ -1056,10 +1110,12 @@
             this.qtyBox6.ThousandsSeparator = true;
             this.qtyBox6.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.qtyBox6.ValueChanged += new System.EventHandler(this.qtyBox_ValueChanged);
+            this.qtyBox6.Enter += new System.EventHandler(this.numBox_Enter);
+            this.qtyBox6.Leave += new System.EventHandler(this.updown_leave);
+            this.qtyBox6.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numBox_Enter);
             // 
             // uBox5
             // 
-            this.uBox5.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.uBox5.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.uBox5.DecimalPlaces = 2;
             this.uBox5.Enabled = false;
@@ -1077,13 +1133,20 @@
             this.uBox5.ThousandsSeparator = true;
             this.uBox5.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.uBox5.ValueChanged += new System.EventHandler(this.uBox_ValueChanged);
+            this.uBox5.Enter += new System.EventHandler(this.numBox_Enter);
+            this.uBox5.Leave += new System.EventHandler(this.updown_leave);
+            this.uBox5.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numBox_Enter);
             // 
             // qtyBox5
             // 
-            this.qtyBox5.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.qtyBox5.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.qtyBox5.Enabled = false;
             this.qtyBox5.Location = new System.Drawing.Point(455, 134);
+            this.qtyBox5.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
             this.qtyBox5.Name = "qtyBox5";
             this.qtyBox5.Size = new System.Drawing.Size(83, 16);
             this.qtyBox5.TabIndex = 13;
@@ -1092,10 +1155,12 @@
             this.qtyBox5.ThousandsSeparator = true;
             this.qtyBox5.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.qtyBox5.ValueChanged += new System.EventHandler(this.qtyBox_ValueChanged);
+            this.qtyBox5.Enter += new System.EventHandler(this.numBox_Enter);
+            this.qtyBox5.Leave += new System.EventHandler(this.updown_leave);
+            this.qtyBox5.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numBox_Enter);
             // 
             // uBox4
             // 
-            this.uBox4.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.uBox4.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.uBox4.DecimalPlaces = 2;
             this.uBox4.Enabled = false;
@@ -1113,13 +1178,20 @@
             this.uBox4.ThousandsSeparator = true;
             this.uBox4.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.uBox4.ValueChanged += new System.EventHandler(this.uBox_ValueChanged);
+            this.uBox4.Enter += new System.EventHandler(this.numBox_Enter);
+            this.uBox4.Leave += new System.EventHandler(this.updown_leave);
+            this.uBox4.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numBox_Enter);
             // 
             // qtyBox4
             // 
-            this.qtyBox4.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.qtyBox4.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.qtyBox4.Enabled = false;
             this.qtyBox4.Location = new System.Drawing.Point(455, 108);
+            this.qtyBox4.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
             this.qtyBox4.Name = "qtyBox4";
             this.qtyBox4.Size = new System.Drawing.Size(83, 16);
             this.qtyBox4.TabIndex = 10;
@@ -1128,10 +1200,12 @@
             this.qtyBox4.ThousandsSeparator = true;
             this.qtyBox4.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.qtyBox4.ValueChanged += new System.EventHandler(this.qtyBox_ValueChanged);
+            this.qtyBox4.Enter += new System.EventHandler(this.numBox_Enter);
+            this.qtyBox4.Leave += new System.EventHandler(this.updown_leave);
+            this.qtyBox4.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numBox_Enter);
             // 
             // uBox3
             // 
-            this.uBox3.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.uBox3.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.uBox3.DecimalPlaces = 2;
             this.uBox3.Enabled = false;
@@ -1149,13 +1223,20 @@
             this.uBox3.ThousandsSeparator = true;
             this.uBox3.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.uBox3.ValueChanged += new System.EventHandler(this.uBox_ValueChanged);
+            this.uBox3.Enter += new System.EventHandler(this.numBox_Enter);
+            this.uBox3.Leave += new System.EventHandler(this.updown_leave);
+            this.uBox3.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numBox_Enter);
             // 
             // qtyBox3
             // 
-            this.qtyBox3.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.qtyBox3.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.qtyBox3.Enabled = false;
             this.qtyBox3.Location = new System.Drawing.Point(455, 82);
+            this.qtyBox3.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
             this.qtyBox3.Name = "qtyBox3";
             this.qtyBox3.Size = new System.Drawing.Size(83, 16);
             this.qtyBox3.TabIndex = 7;
@@ -1164,10 +1245,12 @@
             this.qtyBox3.ThousandsSeparator = true;
             this.qtyBox3.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.qtyBox3.ValueChanged += new System.EventHandler(this.qtyBox_ValueChanged);
+            this.qtyBox3.Enter += new System.EventHandler(this.numBox_Enter);
+            this.qtyBox3.Leave += new System.EventHandler(this.updown_leave);
+            this.qtyBox3.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numBox_Enter);
             // 
             // uBox2
             // 
-            this.uBox2.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.uBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.uBox2.DecimalPlaces = 2;
             this.uBox2.Enabled = false;
@@ -1185,10 +1268,12 @@
             this.uBox2.ThousandsSeparator = true;
             this.uBox2.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.uBox2.ValueChanged += new System.EventHandler(this.uBox_ValueChanged);
+            this.uBox2.Enter += new System.EventHandler(this.numBox_Enter);
+            this.uBox2.Leave += new System.EventHandler(this.updown_leave);
+            this.uBox2.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numBox_Enter);
             // 
             // uBox1
             // 
-            this.uBox1.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.uBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.uBox1.DecimalPlaces = 2;
             this.uBox1.Enabled = false;
@@ -1206,13 +1291,20 @@
             this.uBox1.ThousandsSeparator = true;
             this.uBox1.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.uBox1.ValueChanged += new System.EventHandler(this.uBox_ValueChanged);
+            this.uBox1.Enter += new System.EventHandler(this.numBox_Enter);
+            this.uBox1.Leave += new System.EventHandler(this.updown_leave);
+            this.uBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numBox_Enter);
             // 
             // qtyBox2
             // 
-            this.qtyBox2.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.qtyBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.qtyBox2.Enabled = false;
             this.qtyBox2.Location = new System.Drawing.Point(455, 56);
+            this.qtyBox2.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
             this.qtyBox2.Name = "qtyBox2";
             this.qtyBox2.Size = new System.Drawing.Size(83, 16);
             this.qtyBox2.TabIndex = 4;
@@ -1221,13 +1313,20 @@
             this.qtyBox2.ThousandsSeparator = true;
             this.qtyBox2.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.qtyBox2.ValueChanged += new System.EventHandler(this.qtyBox_ValueChanged);
+            this.qtyBox2.Enter += new System.EventHandler(this.numBox_Enter);
+            this.qtyBox2.Leave += new System.EventHandler(this.updown_leave);
+            this.qtyBox2.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numBox_Enter);
             // 
             // qtyBox1
             // 
-            this.qtyBox1.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.qtyBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.qtyBox1.Enabled = false;
             this.qtyBox1.Location = new System.Drawing.Point(455, 30);
+            this.qtyBox1.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
             this.qtyBox1.Name = "qtyBox1";
             this.qtyBox1.Size = new System.Drawing.Size(83, 16);
             this.qtyBox1.TabIndex = 1;
@@ -1236,10 +1335,13 @@
             this.qtyBox1.ThousandsSeparator = true;
             this.qtyBox1.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.qtyBox1.ValueChanged += new System.EventHandler(this.qtyBox_ValueChanged);
+            this.qtyBox1.Enter += new System.EventHandler(this.numBox_Enter);
+            this.qtyBox1.Leave += new System.EventHandler(this.updown_leave);
+            this.qtyBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numBox_Enter);
             // 
             // labelline21
             // 
-            this.labelline21.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.labelline21.BackColor = System.Drawing.Color.Transparent;
             this.labelline21.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelline21.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.labelline21.Location = new System.Drawing.Point(654, 1);
@@ -1252,7 +1354,7 @@
             // 
             // labelline20
             // 
-            this.labelline20.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.labelline20.BackColor = System.Drawing.Color.Transparent;
             this.labelline20.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelline20.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.labelline20.Location = new System.Drawing.Point(553, 1);
@@ -1263,21 +1365,10 @@
             this.labelline20.Text = "Unit Price";
             this.labelline20.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // labelline19
-            // 
-            this.labelline19.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.labelline19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelline19.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.labelline19.Location = new System.Drawing.Point(452, 1);
-            this.labelline19.Margin = new System.Windows.Forms.Padding(0);
-            this.labelline19.Name = "labelline19";
-            this.labelline19.Size = new System.Drawing.Size(100, 25);
-            this.labelline19.TabIndex = 80;
-            this.labelline19.Text = "Qty/HR";
-            this.labelline19.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // tBox2
             // 
+            this.tBox2.BackColor = System.Drawing.Color.Transparent;
+            this.tBox2.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.tBox2.Location = new System.Drawing.Point(657, 53);
             this.tBox2.Name = "tBox2";
             this.tBox2.Size = new System.Drawing.Size(94, 23);
@@ -1288,6 +1379,8 @@
             // 
             // tBox3
             // 
+            this.tBox3.BackColor = System.Drawing.Color.Transparent;
+            this.tBox3.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.tBox3.Location = new System.Drawing.Point(657, 79);
             this.tBox3.Name = "tBox3";
             this.tBox3.Size = new System.Drawing.Size(94, 23);
@@ -1298,6 +1391,8 @@
             // 
             // tBox4
             // 
+            this.tBox4.BackColor = System.Drawing.Color.Transparent;
+            this.tBox4.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.tBox4.Location = new System.Drawing.Point(657, 105);
             this.tBox4.Name = "tBox4";
             this.tBox4.Size = new System.Drawing.Size(94, 23);
@@ -1308,6 +1403,8 @@
             // 
             // tBox5
             // 
+            this.tBox5.BackColor = System.Drawing.Color.Transparent;
+            this.tBox5.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.tBox5.Location = new System.Drawing.Point(657, 131);
             this.tBox5.Name = "tBox5";
             this.tBox5.Size = new System.Drawing.Size(94, 23);
@@ -1318,6 +1415,8 @@
             // 
             // tBox6
             // 
+            this.tBox6.BackColor = System.Drawing.Color.Transparent;
+            this.tBox6.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.tBox6.Location = new System.Drawing.Point(657, 157);
             this.tBox6.Name = "tBox6";
             this.tBox6.Size = new System.Drawing.Size(94, 23);
@@ -1328,6 +1427,8 @@
             // 
             // tBox7
             // 
+            this.tBox7.BackColor = System.Drawing.Color.Transparent;
+            this.tBox7.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.tBox7.Location = new System.Drawing.Point(657, 183);
             this.tBox7.Name = "tBox7";
             this.tBox7.Size = new System.Drawing.Size(94, 23);
@@ -1338,6 +1439,8 @@
             // 
             // tBox8
             // 
+            this.tBox8.BackColor = System.Drawing.Color.Transparent;
+            this.tBox8.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.tBox8.Location = new System.Drawing.Point(657, 209);
             this.tBox8.Name = "tBox8";
             this.tBox8.Size = new System.Drawing.Size(94, 23);
@@ -1348,6 +1451,8 @@
             // 
             // tBox9
             // 
+            this.tBox9.BackColor = System.Drawing.Color.Transparent;
+            this.tBox9.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.tBox9.Location = new System.Drawing.Point(657, 235);
             this.tBox9.Name = "tBox9";
             this.tBox9.Size = new System.Drawing.Size(94, 23);
@@ -1358,6 +1463,8 @@
             // 
             // tBox10
             // 
+            this.tBox10.BackColor = System.Drawing.Color.Transparent;
+            this.tBox10.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.tBox10.Location = new System.Drawing.Point(657, 261);
             this.tBox10.Name = "tBox10";
             this.tBox10.Size = new System.Drawing.Size(94, 23);
@@ -1368,6 +1475,8 @@
             // 
             // tBox11
             // 
+            this.tBox11.BackColor = System.Drawing.Color.Transparent;
+            this.tBox11.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.tBox11.Location = new System.Drawing.Point(657, 287);
             this.tBox11.Name = "tBox11";
             this.tBox11.Size = new System.Drawing.Size(94, 23);
@@ -1380,218 +1489,262 @@
             // 
             this.descBox2.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.descBox2.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.descBox2.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.descBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.descBox2.Enabled = false;
+            this.descBox2.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.descBox2.Location = new System.Drawing.Point(4, 56);
             this.descBox2.Name = "descBox2";
-            this.descBox2.Size = new System.Drawing.Size(444, 13);
+            this.descBox2.Size = new System.Drawing.Size(444, 19);
             this.descBox2.TabIndex = 3;
             this.descBox2.Tag = "1";
+            this.descBox2.TextChanged += new System.EventHandler(this.desc_TextChanged);
+            this.descBox2.Enter += new System.EventHandler(this.descBox_Enter);
             this.descBox2.Leave += new System.EventHandler(this.descBox_LostFocus);
+            this.descBox2.MouseUp += new System.Windows.Forms.MouseEventHandler(this.textbox_Enter);
             // 
             // descBox3
             // 
             this.descBox3.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.descBox3.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.descBox3.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.descBox3.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.descBox3.Enabled = false;
+            this.descBox3.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.descBox3.Location = new System.Drawing.Point(4, 82);
             this.descBox3.Name = "descBox3";
-            this.descBox3.Size = new System.Drawing.Size(444, 13);
+            this.descBox3.Size = new System.Drawing.Size(444, 19);
             this.descBox3.TabIndex = 6;
             this.descBox3.Tag = "2";
+            this.descBox3.TextChanged += new System.EventHandler(this.desc_TextChanged);
+            this.descBox3.Enter += new System.EventHandler(this.descBox_Enter);
             this.descBox3.Leave += new System.EventHandler(this.descBox_LostFocus);
+            this.descBox3.MouseUp += new System.Windows.Forms.MouseEventHandler(this.textbox_Enter);
             // 
             // descBox4
             // 
             this.descBox4.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.descBox4.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.descBox4.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.descBox4.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.descBox4.Enabled = false;
+            this.descBox4.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.descBox4.Location = new System.Drawing.Point(4, 108);
             this.descBox4.Name = "descBox4";
-            this.descBox4.Size = new System.Drawing.Size(444, 13);
+            this.descBox4.Size = new System.Drawing.Size(444, 19);
             this.descBox4.TabIndex = 9;
             this.descBox4.Tag = "3";
+            this.descBox4.TextChanged += new System.EventHandler(this.desc_TextChanged);
+            this.descBox4.Enter += new System.EventHandler(this.descBox_Enter);
             this.descBox4.Leave += new System.EventHandler(this.descBox_LostFocus);
+            this.descBox4.MouseUp += new System.Windows.Forms.MouseEventHandler(this.textbox_Enter);
             // 
             // descBox5
             // 
             this.descBox5.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.descBox5.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.descBox5.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.descBox5.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.descBox5.Enabled = false;
+            this.descBox5.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.descBox5.Location = new System.Drawing.Point(4, 134);
             this.descBox5.Name = "descBox5";
-            this.descBox5.Size = new System.Drawing.Size(444, 13);
+            this.descBox5.Size = new System.Drawing.Size(444, 19);
             this.descBox5.TabIndex = 12;
             this.descBox5.Tag = "4";
+            this.descBox5.TextChanged += new System.EventHandler(this.desc_TextChanged);
+            this.descBox5.Enter += new System.EventHandler(this.descBox_Enter);
             this.descBox5.Leave += new System.EventHandler(this.descBox_LostFocus);
+            this.descBox5.MouseUp += new System.Windows.Forms.MouseEventHandler(this.textbox_Enter);
             // 
             // descBox6
             // 
             this.descBox6.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.descBox6.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.descBox6.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.descBox6.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.descBox6.Enabled = false;
+            this.descBox6.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.descBox6.Location = new System.Drawing.Point(4, 160);
             this.descBox6.Name = "descBox6";
-            this.descBox6.Size = new System.Drawing.Size(444, 13);
+            this.descBox6.Size = new System.Drawing.Size(444, 19);
             this.descBox6.TabIndex = 15;
             this.descBox6.Tag = "5";
+            this.descBox6.TextChanged += new System.EventHandler(this.desc_TextChanged);
+            this.descBox6.Enter += new System.EventHandler(this.descBox_Enter);
             this.descBox6.Leave += new System.EventHandler(this.descBox_LostFocus);
+            this.descBox6.MouseUp += new System.Windows.Forms.MouseEventHandler(this.textbox_Enter);
             // 
             // descBox7
             // 
             this.descBox7.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.descBox7.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.descBox7.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.descBox7.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.descBox7.Enabled = false;
+            this.descBox7.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.descBox7.Location = new System.Drawing.Point(4, 186);
             this.descBox7.Name = "descBox7";
-            this.descBox7.Size = new System.Drawing.Size(444, 13);
+            this.descBox7.Size = new System.Drawing.Size(444, 19);
             this.descBox7.TabIndex = 18;
             this.descBox7.Tag = "6";
+            this.descBox7.TextChanged += new System.EventHandler(this.desc_TextChanged);
+            this.descBox7.Enter += new System.EventHandler(this.descBox_Enter);
             this.descBox7.Leave += new System.EventHandler(this.descBox_LostFocus);
+            this.descBox7.MouseUp += new System.Windows.Forms.MouseEventHandler(this.textbox_Enter);
             // 
             // descBox8
             // 
             this.descBox8.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.descBox8.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.descBox8.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.descBox8.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.descBox8.Enabled = false;
+            this.descBox8.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.descBox8.Location = new System.Drawing.Point(4, 212);
             this.descBox8.Name = "descBox8";
-            this.descBox8.Size = new System.Drawing.Size(444, 13);
+            this.descBox8.Size = new System.Drawing.Size(444, 19);
             this.descBox8.TabIndex = 21;
             this.descBox8.Tag = "7";
+            this.descBox8.TextChanged += new System.EventHandler(this.desc_TextChanged);
+            this.descBox8.Enter += new System.EventHandler(this.descBox_Enter);
             this.descBox8.Leave += new System.EventHandler(this.descBox_LostFocus);
+            this.descBox8.MouseUp += new System.Windows.Forms.MouseEventHandler(this.textbox_Enter);
             // 
             // descBox9
             // 
             this.descBox9.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.descBox9.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.descBox9.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.descBox9.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.descBox9.Enabled = false;
+            this.descBox9.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.descBox9.Location = new System.Drawing.Point(4, 238);
             this.descBox9.Name = "descBox9";
-            this.descBox9.Size = new System.Drawing.Size(444, 13);
+            this.descBox9.Size = new System.Drawing.Size(444, 19);
             this.descBox9.TabIndex = 24;
             this.descBox9.Tag = "8";
+            this.descBox9.TextChanged += new System.EventHandler(this.desc_TextChanged);
+            this.descBox9.Enter += new System.EventHandler(this.descBox_Enter);
             this.descBox9.Leave += new System.EventHandler(this.descBox_LostFocus);
+            this.descBox9.MouseUp += new System.Windows.Forms.MouseEventHandler(this.textbox_Enter);
             // 
             // descBox10
             // 
             this.descBox10.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.descBox10.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.descBox10.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.descBox10.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.descBox10.Enabled = false;
+            this.descBox10.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.descBox10.Location = new System.Drawing.Point(4, 264);
             this.descBox10.Name = "descBox10";
-            this.descBox10.Size = new System.Drawing.Size(444, 13);
+            this.descBox10.Size = new System.Drawing.Size(444, 19);
             this.descBox10.TabIndex = 27;
             this.descBox10.Tag = "9";
+            this.descBox10.TextChanged += new System.EventHandler(this.desc_TextChanged);
+            this.descBox10.Enter += new System.EventHandler(this.descBox_Enter);
             this.descBox10.Leave += new System.EventHandler(this.descBox_LostFocus);
+            this.descBox10.MouseUp += new System.Windows.Forms.MouseEventHandler(this.textbox_Enter);
             // 
             // descBox11
             // 
             this.descBox11.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.descBox11.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.descBox11.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.descBox11.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.descBox11.Enabled = false;
+            this.descBox11.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.descBox11.Location = new System.Drawing.Point(4, 290);
             this.descBox11.Name = "descBox11";
-            this.descBox11.Size = new System.Drawing.Size(444, 13);
+            this.descBox11.Size = new System.Drawing.Size(444, 19);
             this.descBox11.TabIndex = 30;
             this.descBox11.Tag = "10";
+            this.descBox11.TextChanged += new System.EventHandler(this.desc_TextChanged);
+            this.descBox11.Enter += new System.EventHandler(this.descBox_Enter);
             this.descBox11.Leave += new System.EventHandler(this.descBox_LostFocus);
+            this.descBox11.MouseUp += new System.Windows.Forms.MouseEventHandler(this.textbox_Enter);
             // 
-            // tableLayoutPanel1
+            // invoice_table
             // 
-            this.tableLayoutPanel1.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.tableLayoutPanel1.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tableLayoutPanel1.ColumnCount = 4;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 450F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 131F));
-            this.tableLayoutPanel1.Controls.Add(this.descBox11, 0, 11);
-            this.tableLayoutPanel1.Controls.Add(this.descBox10, 0, 10);
-            this.tableLayoutPanel1.Controls.Add(this.descBox9, 0, 9);
-            this.tableLayoutPanel1.Controls.Add(this.descBox8, 0, 8);
-            this.tableLayoutPanel1.Controls.Add(this.descBox7, 0, 7);
-            this.tableLayoutPanel1.Controls.Add(this.descBox6, 0, 6);
-            this.tableLayoutPanel1.Controls.Add(this.descBox5, 0, 5);
-            this.tableLayoutPanel1.Controls.Add(this.descBox4, 0, 4);
-            this.tableLayoutPanel1.Controls.Add(this.descBox3, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.descBox2, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.tBox11, 3, 11);
-            this.tableLayoutPanel1.Controls.Add(this.tBox10, 3, 10);
-            this.tableLayoutPanel1.Controls.Add(this.tBox9, 3, 9);
-            this.tableLayoutPanel1.Controls.Add(this.tBox8, 3, 8);
-            this.tableLayoutPanel1.Controls.Add(this.tBox7, 3, 7);
-            this.tableLayoutPanel1.Controls.Add(this.tBox6, 3, 6);
-            this.tableLayoutPanel1.Controls.Add(this.tBox5, 3, 5);
-            this.tableLayoutPanel1.Controls.Add(this.tBox4, 3, 4);
-            this.tableLayoutPanel1.Controls.Add(this.tBox3, 3, 3);
-            this.tableLayoutPanel1.Controls.Add(this.tBox2, 3, 2);
-            this.tableLayoutPanel1.Controls.Add(this.labelline19, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.labelline20, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.labelline21, 3, 0);
-            this.tableLayoutPanel1.Controls.Add(this.qtyBox1, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.qtyBox2, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.uBox1, 2, 1);
-            this.tableLayoutPanel1.Controls.Add(this.uBox2, 2, 2);
-            this.tableLayoutPanel1.Controls.Add(this.qtyBox3, 1, 3);
-            this.tableLayoutPanel1.Controls.Add(this.uBox3, 2, 3);
-            this.tableLayoutPanel1.Controls.Add(this.qtyBox4, 1, 4);
-            this.tableLayoutPanel1.Controls.Add(this.uBox4, 2, 4);
-            this.tableLayoutPanel1.Controls.Add(this.qtyBox5, 1, 5);
-            this.tableLayoutPanel1.Controls.Add(this.uBox5, 2, 5);
-            this.tableLayoutPanel1.Controls.Add(this.qtyBox6, 1, 6);
-            this.tableLayoutPanel1.Controls.Add(this.uBox6, 2, 6);
-            this.tableLayoutPanel1.Controls.Add(this.qtyBox7, 1, 7);
-            this.tableLayoutPanel1.Controls.Add(this.uBox7, 2, 7);
-            this.tableLayoutPanel1.Controls.Add(this.qtyBox8, 1, 8);
-            this.tableLayoutPanel1.Controls.Add(this.uBox8, 2, 8);
-            this.tableLayoutPanel1.Controls.Add(this.qtyBox9, 1, 9);
-            this.tableLayoutPanel1.Controls.Add(this.uBox9, 2, 9);
-            this.tableLayoutPanel1.Controls.Add(this.qtyBox10, 1, 10);
-            this.tableLayoutPanel1.Controls.Add(this.uBox10, 2, 10);
-            this.tableLayoutPanel1.Controls.Add(this.qtyBox11, 1, 11);
-            this.tableLayoutPanel1.Controls.Add(this.uBox11, 2, 11);
-            this.tableLayoutPanel1.Controls.Add(this.tBox1, 3, 1);
-            this.tableLayoutPanel1.Controls.Add(this.descBox1, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.labelline18, 0, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(335, 136);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 12;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(752, 313);
-            this.tableLayoutPanel1.TabIndex = 82;
-            this.tableLayoutPanel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tableLayoutPanel1_MouseDown);
+            this.invoice_table.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.invoice_table.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.invoice_table.ColumnCount = 4;
+            this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 450F));
+            this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 149F));
+            this.invoice_table.Controls.Add(this.descBox11, 0, 11);
+            this.invoice_table.Controls.Add(this.descBox10, 0, 10);
+            this.invoice_table.Controls.Add(this.descBox9, 0, 9);
+            this.invoice_table.Controls.Add(this.descBox8, 0, 8);
+            this.invoice_table.Controls.Add(this.descBox7, 0, 7);
+            this.invoice_table.Controls.Add(this.descBox6, 0, 6);
+            this.invoice_table.Controls.Add(this.descBox5, 0, 5);
+            this.invoice_table.Controls.Add(this.descBox4, 0, 4);
+            this.invoice_table.Controls.Add(this.descBox3, 0, 3);
+            this.invoice_table.Controls.Add(this.descBox2, 0, 2);
+            this.invoice_table.Controls.Add(this.tBox11, 3, 11);
+            this.invoice_table.Controls.Add(this.tBox10, 3, 10);
+            this.invoice_table.Controls.Add(this.tBox9, 3, 9);
+            this.invoice_table.Controls.Add(this.tBox8, 3, 8);
+            this.invoice_table.Controls.Add(this.tBox7, 3, 7);
+            this.invoice_table.Controls.Add(this.tBox6, 3, 6);
+            this.invoice_table.Controls.Add(this.tBox5, 3, 5);
+            this.invoice_table.Controls.Add(this.tBox4, 3, 4);
+            this.invoice_table.Controls.Add(this.tBox3, 3, 3);
+            this.invoice_table.Controls.Add(this.tBox2, 3, 2);
+            this.invoice_table.Controls.Add(this.labelline20, 2, 0);
+            this.invoice_table.Controls.Add(this.labelline21, 3, 0);
+            this.invoice_table.Controls.Add(this.qtyBox1, 1, 1);
+            this.invoice_table.Controls.Add(this.qtyBox2, 1, 2);
+            this.invoice_table.Controls.Add(this.uBox1, 2, 1);
+            this.invoice_table.Controls.Add(this.uBox2, 2, 2);
+            this.invoice_table.Controls.Add(this.qtyBox3, 1, 3);
+            this.invoice_table.Controls.Add(this.uBox3, 2, 3);
+            this.invoice_table.Controls.Add(this.qtyBox4, 1, 4);
+            this.invoice_table.Controls.Add(this.uBox4, 2, 4);
+            this.invoice_table.Controls.Add(this.qtyBox5, 1, 5);
+            this.invoice_table.Controls.Add(this.uBox5, 2, 5);
+            this.invoice_table.Controls.Add(this.qtyBox6, 1, 6);
+            this.invoice_table.Controls.Add(this.uBox6, 2, 6);
+            this.invoice_table.Controls.Add(this.qtyBox7, 1, 7);
+            this.invoice_table.Controls.Add(this.uBox7, 2, 7);
+            this.invoice_table.Controls.Add(this.qtyBox8, 1, 8);
+            this.invoice_table.Controls.Add(this.uBox8, 2, 8);
+            this.invoice_table.Controls.Add(this.qtyBox9, 1, 9);
+            this.invoice_table.Controls.Add(this.uBox9, 2, 9);
+            this.invoice_table.Controls.Add(this.qtyBox10, 1, 10);
+            this.invoice_table.Controls.Add(this.uBox10, 2, 10);
+            this.invoice_table.Controls.Add(this.qtyBox11, 1, 11);
+            this.invoice_table.Controls.Add(this.uBox11, 2, 11);
+            this.invoice_table.Controls.Add(this.tBox1, 3, 1);
+            this.invoice_table.Controls.Add(this.descBox1, 0, 1);
+            this.invoice_table.Controls.Add(this.labelline18, 0, 0);
+            this.invoice_table.Controls.Add(this.qtylabel, 1, 0);
+            this.invoice_table.Location = new System.Drawing.Point(335, 136);
+            this.invoice_table.Margin = new System.Windows.Forms.Padding(0);
+            this.invoice_table.Name = "invoice_table";
+            this.invoice_table.RowCount = 12;
+            this.invoice_table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.invoice_table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.invoice_table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.invoice_table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.invoice_table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.invoice_table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.invoice_table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.invoice_table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.invoice_table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.invoice_table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.invoice_table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.invoice_table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.invoice_table.Size = new System.Drawing.Size(752, 313);
+            this.invoice_table.TabIndex = 82;
+            this.invoice_table.CellPaint += new System.Windows.Forms.TableLayoutCellPaintEventHandler(this.invoice_table_CellPaint);
+            this.invoice_table.MouseDown += new System.Windows.Forms.MouseEventHandler(this.invoice_table_MouseDown);
+            // 
+            // qtylabel
+            // 
+            this.qtylabel.BackColor = System.Drawing.Color.Transparent;
+            this.qtylabel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.qtylabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.qtylabel.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.qtylabel.Location = new System.Drawing.Point(455, 1);
+            this.qtylabel.Name = "qtylabel";
+            this.qtylabel.Size = new System.Drawing.Size(94, 23);
+            this.qtylabel.TabIndex = 102;
+            this.qtylabel.Text = "QTY";
+            this.qtylabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label_subttl
             // 
@@ -1643,16 +1796,6 @@
             this.labelline3.Size = new System.Drawing.Size(100, 2);
             this.labelline3.TabIndex = 75;
             // 
-            // subtotal
-            // 
-            this.subtotal.Location = new System.Drawing.Point(988, 455);
-            this.subtotal.Name = "subtotal";
-            this.subtotal.Size = new System.Drawing.Size(100, 20);
-            this.subtotal.TabIndex = 99;
-            this.subtotal.Text = "0.00";
-            this.subtotal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.subtotal.TextChanged += new System.EventHandler(this.disc_calc);
-            // 
             // subttllssdisc
             // 
             this.subttllssdisc.Location = new System.Drawing.Point(988, 503);
@@ -1672,6 +1815,7 @@
             this.ddt.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.ddt.Size = new System.Drawing.Size(100, 20);
             this.ddt.TabIndex = 41;
+            this.ddt.ValueChanged += new System.EventHandler(this.datetime_TextChanged);
             // 
             // labelline8
             // 
@@ -1725,22 +1869,26 @@
             0});
             this.discval.Name = "discval";
             this.discval.Size = new System.Drawing.Size(85, 16);
-            this.discval.TabIndex = 35;
+            this.discval.TabIndex = 34;
             this.discval.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.discval.ThousandsSeparator = true;
             this.discval.ValueChanged += new System.EventHandler(this.disc_calc);
+            this.discval.Enter += new System.EventHandler(this.numBox_Enter);
+            this.discval.Leave += new System.EventHandler(this.updown_leave);
+            this.discval.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numBox_Enter);
             // 
             // disctype
             // 
+            this.disctype.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.disctype.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.disctype.FormattingEnabled = true;
             this.disctype.Items.AddRange(new object[] {
-            "₹",
-            "%"});
+            "%",
+            "₹"});
             this.disctype.Location = new System.Drawing.Point(1056, 479);
             this.disctype.Name = "disctype";
             this.disctype.Size = new System.Drawing.Size(32, 21);
-            this.disctype.TabIndex = 34;
+            this.disctype.TabIndex = 35;
             this.disctype.SelectedIndexChanged += new System.EventHandler(this.disctype_SelectedIndexChanged);
             // 
             // invdt
@@ -1752,6 +1900,7 @@
             this.invdt.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.invdt.Size = new System.Drawing.Size(100, 20);
             this.invdt.TabIndex = 40;
+            this.invdt.ValueChanged += new System.EventHandler(this.datetime_TextChanged);
             // 
             // close
             // 
@@ -1764,7 +1913,7 @@
             this.close.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.close.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.close.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.close.Location = new System.Drawing.Point(1066, 26);
+            this.close.Location = new System.Drawing.Point(1066, 9);
             this.close.Name = "close";
             this.close.Size = new System.Drawing.Size(24, 23);
             this.close.TabIndex = 46;
@@ -1782,12 +1931,44 @@
             this.minimise.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.minimise.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.minimise.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.minimise.Location = new System.Drawing.Point(1036, 26);
+            this.minimise.Location = new System.Drawing.Point(1036, 9);
             this.minimise.Name = "minimise";
             this.minimise.Size = new System.Drawing.Size(23, 23);
             this.minimise.TabIndex = 47;
             this.minimise.UseVisualStyleBackColor = false;
             this.minimise.Click += new System.EventHandler(this.minimise_Click_1);
+            // 
+            // subtotal
+            // 
+            this.subtotal.Location = new System.Drawing.Point(988, 455);
+            this.subtotal.Name = "subtotal";
+            this.subtotal.Size = new System.Drawing.Size(100, 20);
+            this.subtotal.TabIndex = 99;
+            this.subtotal.Text = "0.00";
+            this.subtotal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.subtotal.TextChanged += new System.EventHandler(this.disc_calc);
+            // 
+            // paid
+            // 
+            this.paid.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.paid.DecimalPlaces = 2;
+            this.paid.Location = new System.Drawing.Point(963, 604);
+            this.paid.Maximum = new decimal(new int[] {
+            900000,
+            0,
+            0,
+            0});
+            this.paid.Name = "paid";
+            this.paid.Size = new System.Drawing.Size(123, 16);
+            this.paid.TabIndex = 101;
+            this.paid.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.paid.ThousandsSeparator = true;
+            this.paid.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
+            this.paid.ValueChanged += new System.EventHandler(this.paid_ValueChanged);
+            this.paid.Enter += new System.EventHandler(this.numBox_Enter);
+            this.paid.KeyUp += new System.Windows.Forms.KeyEventHandler(this.paid_ValueChanged);
+            this.paid.Leave += new System.EventHandler(this.updown_leave);
+            this.paid.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numBox_Enter);
             // 
             // AgricoveBilling
             // 
@@ -1802,8 +1983,6 @@
             this.Controls.Add(this.searchpanel);
             this.Controls.Add(this.minimise);
             this.Controls.Add(this.close);
-            this.Controls.Add(this.arrow_hider1);
-            this.Controls.Add(this.paid);
             this.Controls.Add(this.labelline11);
             this.Controls.Add(this.labelline10);
             this.Controls.Add(this.txrt);
@@ -1842,7 +2021,7 @@
             this.Controls.Add(this.label_subttllssdisc);
             this.Controls.Add(this.label_discount);
             this.Controls.Add(this.label_subttl);
-            this.Controls.Add(this.tableLayoutPanel1);
+            this.Controls.Add(this.invoice_table);
             this.Controls.Add(this.newinv);
             this.Controls.Add(this.invno);
             this.Controls.Add(this.label_duedt);
@@ -1857,6 +2036,7 @@
             this.Controls.Add(this.label_agri_email);
             this.Controls.Add(this.label_agri_url);
             this.Controls.Add(this.label_agri_addr);
+            this.Controls.Add(this.paid);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1870,7 +2050,6 @@
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.AgricoveBilling_MouseDown);
             ((System.ComponentModel.ISupportInitialize)(this.logo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txrt)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.paid)).EndInit();
             this.searchpanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.find_gridview)).EndInit();
             this.copymenu.ResumeLayout(false);
@@ -1899,9 +2078,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.uBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.qtyBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.qtyBox1)).EndInit();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
+            this.invoice_table.ResumeLayout(false);
+            this.invoice_table.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.discval)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.paid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1939,8 +2119,6 @@
         private System.Windows.Forms.NumericUpDown txrt;
         private System.Windows.Forms.Label labelline10;
         private System.Windows.Forms.Label labelline11;
-        private System.Windows.Forms.NumericUpDown paid;
-        private System.Windows.Forms.Label arrow_hider1;
         private System.Windows.Forms.Panel searchpanel;
         private System.Windows.Forms.TextBox search_name_box;
         private System.Windows.Forms.DateTimePicker dateend;
@@ -2039,7 +2217,6 @@
         private System.Windows.Forms.NumericUpDown qtyBox1;
         private System.Windows.Forms.Label labelline21;
         private System.Windows.Forms.Label labelline20;
-        private System.Windows.Forms.Label labelline19;
         private System.Windows.Forms.Label tBox2;
         private System.Windows.Forms.Label tBox3;
         private System.Windows.Forms.Label tBox4;
@@ -2060,13 +2237,12 @@
         private System.Windows.Forms.TextBox descBox9;
         private System.Windows.Forms.TextBox descBox10;
         private System.Windows.Forms.TextBox descBox11;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel invoice_table;
         private System.Windows.Forms.Label label_subttl;
         private System.Windows.Forms.Label label_discount;
         private System.Windows.Forms.Label label_subttllssdisc;
         private System.Windows.Forms.Label label_line2;
         private System.Windows.Forms.Label labelline3;
-        private System.Windows.Forms.Label subtotal;
         private System.Windows.Forms.Label subttllssdisc;
         private System.Windows.Forms.DateTimePicker ddt;
         private System.Windows.Forms.Label labelline8;
@@ -2084,6 +2260,10 @@
         private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip copymenu;
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem1;
+        private System.Windows.Forms.Label subtotal;
+        private System.Windows.Forms.Label qtylabel;
+        private System.Windows.Forms.CheckBox search_duedt;
+        private System.Windows.Forms.NumericUpDown paid;
     }
 }
 

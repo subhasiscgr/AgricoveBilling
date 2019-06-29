@@ -8,7 +8,8 @@ namespace AgricoveBilling
 {
     class items_grid_data
     {
+        public int ItemID { get; set; }
         public string ItemName { get; set; }
-        public string ItemPrice { get; set; }
+        public decimal ItemPrice { get; set; }
     }
 }

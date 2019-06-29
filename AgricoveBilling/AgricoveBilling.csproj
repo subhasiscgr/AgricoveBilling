@@ -189,6 +189,7 @@
     <Compile Include="ItemData.cs" />
     <Compile Include="Items.cs" />
     <Compile Include="items_grid_data.cs" />
+    <Compile Include="MessageBoxManager.cs" />
     <Compile Include="printform.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
