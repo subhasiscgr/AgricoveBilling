@@ -11,5 +11,6 @@ namespace AgricoveBilling
         public int ItemID { get; set; }
         public string ItemName { get; set; }
         public decimal ItemPrice { get; set; }
+        public string ItemUnit { get; set; }
     }
 }

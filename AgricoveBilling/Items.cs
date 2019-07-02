@@ -8,23 +8,25 @@ using System.Threading.Tasks;
 namespace AgricoveBilling
 {
     public class Items
-    {       
+    {
         [Key]
         public int ItemID { get; set; }
         public string ItemName { get; set; }
         public decimal ItemPrice { get; set; }
+        public string ItemUnit { get; set; }
 
         private string _description;
         private double _qty;
         private double _price;
+
         private Items tempobj;
         public Items()
         {
 
         }
-        public Items(Items tempobj)
+        public Items( Items tempobj )
         {
-            description= tempobj.description;
+            description = tempobj.description;
             qty = tempobj.qty;
             price = tempobj.price;
         }

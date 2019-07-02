@@ -138,7 +138,19 @@
             this.descBox10 = new System.Windows.Forms.TextBox();
             this.descBox11 = new System.Windows.Forms.TextBox();
             this.invoice_table = new System.Windows.Forms.TableLayoutPanel();
+            this.unitBox11 = new System.Windows.Forms.ComboBox();
+            this.unitBox10 = new System.Windows.Forms.ComboBox();
+            this.unitBox9 = new System.Windows.Forms.ComboBox();
+            this.unitBox8 = new System.Windows.Forms.ComboBox();
+            this.unitBox7 = new System.Windows.Forms.ComboBox();
+            this.unitBox6 = new System.Windows.Forms.ComboBox();
+            this.unitBox5 = new System.Windows.Forms.ComboBox();
+            this.unitBox4 = new System.Windows.Forms.ComboBox();
+            this.unitBox3 = new System.Windows.Forms.ComboBox();
+            this.unitBox2 = new System.Windows.Forms.ComboBox();
             this.qtylabel = new System.Windows.Forms.Label();
+            this.unitlabel = new System.Windows.Forms.Label();
+            this.unitBox1 = new System.Windows.Forms.ComboBox();
             this.label_subttl = new System.Windows.Forms.Label();
             this.label_discount = new System.Windows.Forms.Label();
             this.label_subttllssdisc = new System.Windows.Forms.Label();
@@ -502,7 +514,7 @@
             this.searchpanel.Controls.Add(this.find_gridview);
             this.searchpanel.Controls.Add(this.line_search_1);
             this.searchpanel.Controls.Add(this.searchbar);
-            this.searchpanel.Location = new System.Drawing.Point(328, 55);
+            this.searchpanel.Location = new System.Drawing.Point(329, 55);
             this.searchpanel.Name = "searchpanel";
             this.searchpanel.Size = new System.Drawing.Size(760, 597);
             this.searchpanel.TabIndex = 100;
@@ -532,6 +544,7 @@
             this.find_gridview.TabIndex = 110;
             this.find_gridview.DataSourceChanged += new System.EventHandler(this.find_gridview_DataSourceChanged);
             this.find_gridview.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.find_gridview_CellContentClick);
+            this.find_gridview.CurrentCellDirtyStateChanged += new System.EventHandler(this.find_gridview_CurrentCellDirtyStateChanged);
             this.find_gridview.Leave += new System.EventHandler(this.find_gridview_Leave);
             // 
             // copymenu
@@ -620,6 +633,9 @@
             // datasrc
             // 
             this.datasrc.FormattingEnabled = true;
+            this.datasrc.Items.AddRange(new object[] {
+            "Invoice",
+            "Items"});
             this.datasrc.Location = new System.Drawing.Point(1, 20);
             this.datasrc.Name = "datasrc";
             this.datasrc.Size = new System.Drawing.Size(94, 21);
@@ -811,7 +827,7 @@
             this.labelline18.Location = new System.Drawing.Point(1, 1);
             this.labelline18.Margin = new System.Windows.Forms.Padding(0);
             this.labelline18.Name = "labelline18";
-            this.labelline18.Size = new System.Drawing.Size(450, 25);
+            this.labelline18.Size = new System.Drawing.Size(390, 25);
             this.labelline18.TabIndex = 81;
             this.labelline18.Text = "Description";
             this.labelline18.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -824,7 +840,7 @@
             this.descBox1.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.descBox1.Location = new System.Drawing.Point(4, 30);
             this.descBox1.Name = "descBox1";
-            this.descBox1.Size = new System.Drawing.Size(444, 19);
+            this.descBox1.Size = new System.Drawing.Size(384, 19);
             this.descBox1.TabIndex = 0;
             this.descBox1.Tag = "0";
             this.descBox1.TextChanged += new System.EventHandler(this.desc_TextChanged);
@@ -836,7 +852,7 @@
             // 
             this.tBox1.BackColor = System.Drawing.Color.Transparent;
             this.tBox1.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tBox1.Location = new System.Drawing.Point(657, 27);
+            this.tBox1.Location = new System.Drawing.Point(658, 27);
             this.tBox1.Name = "tBox1";
             this.tBox1.Size = new System.Drawing.Size(94, 23);
             this.tBox1.TabIndex = 91;
@@ -849,7 +865,7 @@
             this.uBox11.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.uBox11.DecimalPlaces = 2;
             this.uBox11.Enabled = false;
-            this.uBox11.Location = new System.Drawing.Point(556, 290);
+            this.uBox11.Location = new System.Drawing.Point(557, 290);
             this.uBox11.Maximum = new decimal(new int[] {
             900000,
             0,
@@ -870,8 +886,9 @@
             // qtyBox11
             // 
             this.qtyBox11.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.qtyBox11.DecimalPlaces = 3;
             this.qtyBox11.Enabled = false;
-            this.qtyBox11.Location = new System.Drawing.Point(455, 290);
+            this.qtyBox11.Location = new System.Drawing.Point(395, 290);
             this.qtyBox11.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -894,7 +911,7 @@
             this.uBox10.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.uBox10.DecimalPlaces = 2;
             this.uBox10.Enabled = false;
-            this.uBox10.Location = new System.Drawing.Point(556, 264);
+            this.uBox10.Location = new System.Drawing.Point(557, 264);
             this.uBox10.Maximum = new decimal(new int[] {
             900000,
             0,
@@ -915,8 +932,9 @@
             // qtyBox10
             // 
             this.qtyBox10.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.qtyBox10.DecimalPlaces = 3;
             this.qtyBox10.Enabled = false;
-            this.qtyBox10.Location = new System.Drawing.Point(455, 264);
+            this.qtyBox10.Location = new System.Drawing.Point(395, 264);
             this.qtyBox10.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -939,7 +957,7 @@
             this.uBox9.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.uBox9.DecimalPlaces = 2;
             this.uBox9.Enabled = false;
-            this.uBox9.Location = new System.Drawing.Point(556, 238);
+            this.uBox9.Location = new System.Drawing.Point(557, 238);
             this.uBox9.Maximum = new decimal(new int[] {
             900000,
             0,
@@ -960,8 +978,9 @@
             // qtyBox9
             // 
             this.qtyBox9.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.qtyBox9.DecimalPlaces = 3;
             this.qtyBox9.Enabled = false;
-            this.qtyBox9.Location = new System.Drawing.Point(455, 238);
+            this.qtyBox9.Location = new System.Drawing.Point(395, 238);
             this.qtyBox9.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -984,7 +1003,7 @@
             this.uBox8.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.uBox8.DecimalPlaces = 2;
             this.uBox8.Enabled = false;
-            this.uBox8.Location = new System.Drawing.Point(556, 212);
+            this.uBox8.Location = new System.Drawing.Point(557, 212);
             this.uBox8.Maximum = new decimal(new int[] {
             900000,
             0,
@@ -1005,8 +1024,9 @@
             // qtyBox8
             // 
             this.qtyBox8.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.qtyBox8.DecimalPlaces = 3;
             this.qtyBox8.Enabled = false;
-            this.qtyBox8.Location = new System.Drawing.Point(455, 212);
+            this.qtyBox8.Location = new System.Drawing.Point(395, 212);
             this.qtyBox8.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -1029,7 +1049,7 @@
             this.uBox7.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.uBox7.DecimalPlaces = 2;
             this.uBox7.Enabled = false;
-            this.uBox7.Location = new System.Drawing.Point(556, 186);
+            this.uBox7.Location = new System.Drawing.Point(557, 186);
             this.uBox7.Maximum = new decimal(new int[] {
             900000,
             0,
@@ -1050,8 +1070,9 @@
             // qtyBox7
             // 
             this.qtyBox7.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.qtyBox7.DecimalPlaces = 3;
             this.qtyBox7.Enabled = false;
-            this.qtyBox7.Location = new System.Drawing.Point(455, 186);
+            this.qtyBox7.Location = new System.Drawing.Point(395, 186);
             this.qtyBox7.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -1074,7 +1095,7 @@
             this.uBox6.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.uBox6.DecimalPlaces = 2;
             this.uBox6.Enabled = false;
-            this.uBox6.Location = new System.Drawing.Point(556, 160);
+            this.uBox6.Location = new System.Drawing.Point(557, 160);
             this.uBox6.Maximum = new decimal(new int[] {
             900000,
             0,
@@ -1095,8 +1116,9 @@
             // qtyBox6
             // 
             this.qtyBox6.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.qtyBox6.DecimalPlaces = 3;
             this.qtyBox6.Enabled = false;
-            this.qtyBox6.Location = new System.Drawing.Point(455, 160);
+            this.qtyBox6.Location = new System.Drawing.Point(395, 160);
             this.qtyBox6.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -1119,7 +1141,7 @@
             this.uBox5.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.uBox5.DecimalPlaces = 2;
             this.uBox5.Enabled = false;
-            this.uBox5.Location = new System.Drawing.Point(556, 134);
+            this.uBox5.Location = new System.Drawing.Point(557, 134);
             this.uBox5.Maximum = new decimal(new int[] {
             900000,
             0,
@@ -1140,8 +1162,9 @@
             // qtyBox5
             // 
             this.qtyBox5.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.qtyBox5.DecimalPlaces = 3;
             this.qtyBox5.Enabled = false;
-            this.qtyBox5.Location = new System.Drawing.Point(455, 134);
+            this.qtyBox5.Location = new System.Drawing.Point(395, 134);
             this.qtyBox5.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -1164,7 +1187,7 @@
             this.uBox4.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.uBox4.DecimalPlaces = 2;
             this.uBox4.Enabled = false;
-            this.uBox4.Location = new System.Drawing.Point(556, 108);
+            this.uBox4.Location = new System.Drawing.Point(557, 108);
             this.uBox4.Maximum = new decimal(new int[] {
             900000,
             0,
@@ -1185,8 +1208,9 @@
             // qtyBox4
             // 
             this.qtyBox4.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.qtyBox4.DecimalPlaces = 3;
             this.qtyBox4.Enabled = false;
-            this.qtyBox4.Location = new System.Drawing.Point(455, 108);
+            this.qtyBox4.Location = new System.Drawing.Point(395, 108);
             this.qtyBox4.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -1209,7 +1233,7 @@
             this.uBox3.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.uBox3.DecimalPlaces = 2;
             this.uBox3.Enabled = false;
-            this.uBox3.Location = new System.Drawing.Point(556, 82);
+            this.uBox3.Location = new System.Drawing.Point(557, 82);
             this.uBox3.Maximum = new decimal(new int[] {
             900000,
             0,
@@ -1230,8 +1254,9 @@
             // qtyBox3
             // 
             this.qtyBox3.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.qtyBox3.DecimalPlaces = 3;
             this.qtyBox3.Enabled = false;
-            this.qtyBox3.Location = new System.Drawing.Point(455, 82);
+            this.qtyBox3.Location = new System.Drawing.Point(395, 82);
             this.qtyBox3.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -1254,7 +1279,7 @@
             this.uBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.uBox2.DecimalPlaces = 2;
             this.uBox2.Enabled = false;
-            this.uBox2.Location = new System.Drawing.Point(556, 56);
+            this.uBox2.Location = new System.Drawing.Point(557, 56);
             this.uBox2.Maximum = new decimal(new int[] {
             900000,
             0,
@@ -1277,7 +1302,7 @@
             this.uBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.uBox1.DecimalPlaces = 2;
             this.uBox1.Enabled = false;
-            this.uBox1.Location = new System.Drawing.Point(556, 30);
+            this.uBox1.Location = new System.Drawing.Point(557, 30);
             this.uBox1.Maximum = new decimal(new int[] {
             900000,
             0,
@@ -1298,8 +1323,9 @@
             // qtyBox2
             // 
             this.qtyBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.qtyBox2.DecimalPlaces = 3;
             this.qtyBox2.Enabled = false;
-            this.qtyBox2.Location = new System.Drawing.Point(455, 56);
+            this.qtyBox2.Location = new System.Drawing.Point(395, 56);
             this.qtyBox2.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -1320,8 +1346,9 @@
             // qtyBox1
             // 
             this.qtyBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.qtyBox1.DecimalPlaces = 3;
             this.qtyBox1.Enabled = false;
-            this.qtyBox1.Location = new System.Drawing.Point(455, 30);
+            this.qtyBox1.Location = new System.Drawing.Point(395, 30);
             this.qtyBox1.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -1344,7 +1371,7 @@
             this.labelline21.BackColor = System.Drawing.Color.Transparent;
             this.labelline21.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelline21.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.labelline21.Location = new System.Drawing.Point(654, 1);
+            this.labelline21.Location = new System.Drawing.Point(655, 1);
             this.labelline21.Margin = new System.Windows.Forms.Padding(0);
             this.labelline21.Name = "labelline21";
             this.labelline21.Size = new System.Drawing.Size(97, 25);
@@ -1357,7 +1384,7 @@
             this.labelline20.BackColor = System.Drawing.Color.Transparent;
             this.labelline20.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelline20.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.labelline20.Location = new System.Drawing.Point(553, 1);
+            this.labelline20.Location = new System.Drawing.Point(554, 1);
             this.labelline20.Margin = new System.Windows.Forms.Padding(0);
             this.labelline20.Name = "labelline20";
             this.labelline20.Size = new System.Drawing.Size(100, 25);
@@ -1369,7 +1396,7 @@
             // 
             this.tBox2.BackColor = System.Drawing.Color.Transparent;
             this.tBox2.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tBox2.Location = new System.Drawing.Point(657, 53);
+            this.tBox2.Location = new System.Drawing.Point(658, 53);
             this.tBox2.Name = "tBox2";
             this.tBox2.Size = new System.Drawing.Size(94, 23);
             this.tBox2.TabIndex = 92;
@@ -1381,7 +1408,7 @@
             // 
             this.tBox3.BackColor = System.Drawing.Color.Transparent;
             this.tBox3.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tBox3.Location = new System.Drawing.Point(657, 79);
+            this.tBox3.Location = new System.Drawing.Point(658, 79);
             this.tBox3.Name = "tBox3";
             this.tBox3.Size = new System.Drawing.Size(94, 23);
             this.tBox3.TabIndex = 93;
@@ -1393,7 +1420,7 @@
             // 
             this.tBox4.BackColor = System.Drawing.Color.Transparent;
             this.tBox4.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tBox4.Location = new System.Drawing.Point(657, 105);
+            this.tBox4.Location = new System.Drawing.Point(658, 105);
             this.tBox4.Name = "tBox4";
             this.tBox4.Size = new System.Drawing.Size(94, 23);
             this.tBox4.TabIndex = 94;
@@ -1405,7 +1432,7 @@
             // 
             this.tBox5.BackColor = System.Drawing.Color.Transparent;
             this.tBox5.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tBox5.Location = new System.Drawing.Point(657, 131);
+            this.tBox5.Location = new System.Drawing.Point(658, 131);
             this.tBox5.Name = "tBox5";
             this.tBox5.Size = new System.Drawing.Size(94, 23);
             this.tBox5.TabIndex = 95;
@@ -1417,7 +1444,7 @@
             // 
             this.tBox6.BackColor = System.Drawing.Color.Transparent;
             this.tBox6.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tBox6.Location = new System.Drawing.Point(657, 157);
+            this.tBox6.Location = new System.Drawing.Point(658, 157);
             this.tBox6.Name = "tBox6";
             this.tBox6.Size = new System.Drawing.Size(94, 23);
             this.tBox6.TabIndex = 96;
@@ -1429,7 +1456,7 @@
             // 
             this.tBox7.BackColor = System.Drawing.Color.Transparent;
             this.tBox7.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tBox7.Location = new System.Drawing.Point(657, 183);
+            this.tBox7.Location = new System.Drawing.Point(658, 183);
             this.tBox7.Name = "tBox7";
             this.tBox7.Size = new System.Drawing.Size(94, 23);
             this.tBox7.TabIndex = 97;
@@ -1441,7 +1468,7 @@
             // 
             this.tBox8.BackColor = System.Drawing.Color.Transparent;
             this.tBox8.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tBox8.Location = new System.Drawing.Point(657, 209);
+            this.tBox8.Location = new System.Drawing.Point(658, 209);
             this.tBox8.Name = "tBox8";
             this.tBox8.Size = new System.Drawing.Size(94, 23);
             this.tBox8.TabIndex = 98;
@@ -1453,7 +1480,7 @@
             // 
             this.tBox9.BackColor = System.Drawing.Color.Transparent;
             this.tBox9.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tBox9.Location = new System.Drawing.Point(657, 235);
+            this.tBox9.Location = new System.Drawing.Point(658, 235);
             this.tBox9.Name = "tBox9";
             this.tBox9.Size = new System.Drawing.Size(94, 23);
             this.tBox9.TabIndex = 99;
@@ -1465,7 +1492,7 @@
             // 
             this.tBox10.BackColor = System.Drawing.Color.Transparent;
             this.tBox10.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tBox10.Location = new System.Drawing.Point(657, 261);
+            this.tBox10.Location = new System.Drawing.Point(658, 261);
             this.tBox10.Name = "tBox10";
             this.tBox10.Size = new System.Drawing.Size(94, 23);
             this.tBox10.TabIndex = 100;
@@ -1477,7 +1504,7 @@
             // 
             this.tBox11.BackColor = System.Drawing.Color.Transparent;
             this.tBox11.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tBox11.Location = new System.Drawing.Point(657, 287);
+            this.tBox11.Location = new System.Drawing.Point(658, 287);
             this.tBox11.Name = "tBox11";
             this.tBox11.Size = new System.Drawing.Size(94, 23);
             this.tBox11.TabIndex = 101;
@@ -1494,7 +1521,7 @@
             this.descBox2.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.descBox2.Location = new System.Drawing.Point(4, 56);
             this.descBox2.Name = "descBox2";
-            this.descBox2.Size = new System.Drawing.Size(444, 19);
+            this.descBox2.Size = new System.Drawing.Size(384, 19);
             this.descBox2.TabIndex = 3;
             this.descBox2.Tag = "1";
             this.descBox2.TextChanged += new System.EventHandler(this.desc_TextChanged);
@@ -1511,7 +1538,7 @@
             this.descBox3.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.descBox3.Location = new System.Drawing.Point(4, 82);
             this.descBox3.Name = "descBox3";
-            this.descBox3.Size = new System.Drawing.Size(444, 19);
+            this.descBox3.Size = new System.Drawing.Size(384, 19);
             this.descBox3.TabIndex = 6;
             this.descBox3.Tag = "2";
             this.descBox3.TextChanged += new System.EventHandler(this.desc_TextChanged);
@@ -1528,7 +1555,7 @@
             this.descBox4.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.descBox4.Location = new System.Drawing.Point(4, 108);
             this.descBox4.Name = "descBox4";
-            this.descBox4.Size = new System.Drawing.Size(444, 19);
+            this.descBox4.Size = new System.Drawing.Size(384, 19);
             this.descBox4.TabIndex = 9;
             this.descBox4.Tag = "3";
             this.descBox4.TextChanged += new System.EventHandler(this.desc_TextChanged);
@@ -1545,7 +1572,7 @@
             this.descBox5.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.descBox5.Location = new System.Drawing.Point(4, 134);
             this.descBox5.Name = "descBox5";
-            this.descBox5.Size = new System.Drawing.Size(444, 19);
+            this.descBox5.Size = new System.Drawing.Size(384, 19);
             this.descBox5.TabIndex = 12;
             this.descBox5.Tag = "4";
             this.descBox5.TextChanged += new System.EventHandler(this.desc_TextChanged);
@@ -1562,7 +1589,7 @@
             this.descBox6.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.descBox6.Location = new System.Drawing.Point(4, 160);
             this.descBox6.Name = "descBox6";
-            this.descBox6.Size = new System.Drawing.Size(444, 19);
+            this.descBox6.Size = new System.Drawing.Size(384, 19);
             this.descBox6.TabIndex = 15;
             this.descBox6.Tag = "5";
             this.descBox6.TextChanged += new System.EventHandler(this.desc_TextChanged);
@@ -1579,7 +1606,7 @@
             this.descBox7.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.descBox7.Location = new System.Drawing.Point(4, 186);
             this.descBox7.Name = "descBox7";
-            this.descBox7.Size = new System.Drawing.Size(444, 19);
+            this.descBox7.Size = new System.Drawing.Size(384, 19);
             this.descBox7.TabIndex = 18;
             this.descBox7.Tag = "6";
             this.descBox7.TextChanged += new System.EventHandler(this.desc_TextChanged);
@@ -1596,7 +1623,7 @@
             this.descBox8.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.descBox8.Location = new System.Drawing.Point(4, 212);
             this.descBox8.Name = "descBox8";
-            this.descBox8.Size = new System.Drawing.Size(444, 19);
+            this.descBox8.Size = new System.Drawing.Size(384, 19);
             this.descBox8.TabIndex = 21;
             this.descBox8.Tag = "7";
             this.descBox8.TextChanged += new System.EventHandler(this.desc_TextChanged);
@@ -1613,7 +1640,7 @@
             this.descBox9.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.descBox9.Location = new System.Drawing.Point(4, 238);
             this.descBox9.Name = "descBox9";
-            this.descBox9.Size = new System.Drawing.Size(444, 19);
+            this.descBox9.Size = new System.Drawing.Size(384, 19);
             this.descBox9.TabIndex = 24;
             this.descBox9.Tag = "8";
             this.descBox9.TextChanged += new System.EventHandler(this.desc_TextChanged);
@@ -1630,7 +1657,7 @@
             this.descBox10.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.descBox10.Location = new System.Drawing.Point(4, 264);
             this.descBox10.Name = "descBox10";
-            this.descBox10.Size = new System.Drawing.Size(444, 19);
+            this.descBox10.Size = new System.Drawing.Size(384, 19);
             this.descBox10.TabIndex = 27;
             this.descBox10.Tag = "9";
             this.descBox10.TextChanged += new System.EventHandler(this.desc_TextChanged);
@@ -1647,7 +1674,7 @@
             this.descBox11.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.descBox11.Location = new System.Drawing.Point(4, 290);
             this.descBox11.Name = "descBox11";
-            this.descBox11.Size = new System.Drawing.Size(444, 19);
+            this.descBox11.Size = new System.Drawing.Size(384, 19);
             this.descBox11.TabIndex = 30;
             this.descBox11.Tag = "10";
             this.descBox11.TextChanged += new System.EventHandler(this.desc_TextChanged);
@@ -1659,11 +1686,22 @@
             // 
             this.invoice_table.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.invoice_table.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.invoice_table.ColumnCount = 4;
-            this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 450F));
+            this.invoice_table.ColumnCount = 5;
+            this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 390F));
             this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
             this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 149F));
+            this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 105F));
+            this.invoice_table.Controls.Add(this.unitBox11, 2, 11);
+            this.invoice_table.Controls.Add(this.unitBox10, 2, 10);
+            this.invoice_table.Controls.Add(this.unitBox9, 2, 9);
+            this.invoice_table.Controls.Add(this.unitBox8, 2, 8);
+            this.invoice_table.Controls.Add(this.unitBox7, 2, 7);
+            this.invoice_table.Controls.Add(this.unitBox6, 2, 6);
+            this.invoice_table.Controls.Add(this.unitBox5, 2, 5);
+            this.invoice_table.Controls.Add(this.unitBox4, 2, 4);
+            this.invoice_table.Controls.Add(this.unitBox3, 2, 3);
+            this.invoice_table.Controls.Add(this.unitBox2, 2, 2);
             this.invoice_table.Controls.Add(this.descBox11, 0, 11);
             this.invoice_table.Controls.Add(this.descBox10, 0, 10);
             this.invoice_table.Controls.Add(this.descBox9, 0, 9);
@@ -1674,45 +1712,47 @@
             this.invoice_table.Controls.Add(this.descBox4, 0, 4);
             this.invoice_table.Controls.Add(this.descBox3, 0, 3);
             this.invoice_table.Controls.Add(this.descBox2, 0, 2);
-            this.invoice_table.Controls.Add(this.tBox11, 3, 11);
-            this.invoice_table.Controls.Add(this.tBox10, 3, 10);
-            this.invoice_table.Controls.Add(this.tBox9, 3, 9);
-            this.invoice_table.Controls.Add(this.tBox8, 3, 8);
-            this.invoice_table.Controls.Add(this.tBox7, 3, 7);
-            this.invoice_table.Controls.Add(this.tBox6, 3, 6);
-            this.invoice_table.Controls.Add(this.tBox5, 3, 5);
-            this.invoice_table.Controls.Add(this.tBox4, 3, 4);
-            this.invoice_table.Controls.Add(this.tBox3, 3, 3);
-            this.invoice_table.Controls.Add(this.tBox2, 3, 2);
-            this.invoice_table.Controls.Add(this.labelline20, 2, 0);
-            this.invoice_table.Controls.Add(this.labelline21, 3, 0);
+            this.invoice_table.Controls.Add(this.tBox11, 4, 11);
+            this.invoice_table.Controls.Add(this.tBox10, 4, 10);
+            this.invoice_table.Controls.Add(this.tBox9, 4, 9);
+            this.invoice_table.Controls.Add(this.tBox8, 4, 8);
+            this.invoice_table.Controls.Add(this.tBox7, 4, 7);
+            this.invoice_table.Controls.Add(this.tBox6, 4, 6);
+            this.invoice_table.Controls.Add(this.tBox5, 4, 5);
+            this.invoice_table.Controls.Add(this.tBox4, 4, 4);
+            this.invoice_table.Controls.Add(this.tBox3, 4, 3);
+            this.invoice_table.Controls.Add(this.tBox2, 4, 2);
+            this.invoice_table.Controls.Add(this.labelline20, 3, 0);
+            this.invoice_table.Controls.Add(this.labelline21, 4, 0);
             this.invoice_table.Controls.Add(this.qtyBox1, 1, 1);
             this.invoice_table.Controls.Add(this.qtyBox2, 1, 2);
-            this.invoice_table.Controls.Add(this.uBox1, 2, 1);
-            this.invoice_table.Controls.Add(this.uBox2, 2, 2);
+            this.invoice_table.Controls.Add(this.uBox1, 3, 1);
+            this.invoice_table.Controls.Add(this.uBox2, 3, 2);
             this.invoice_table.Controls.Add(this.qtyBox3, 1, 3);
-            this.invoice_table.Controls.Add(this.uBox3, 2, 3);
+            this.invoice_table.Controls.Add(this.uBox3, 3, 3);
             this.invoice_table.Controls.Add(this.qtyBox4, 1, 4);
-            this.invoice_table.Controls.Add(this.uBox4, 2, 4);
+            this.invoice_table.Controls.Add(this.uBox4, 3, 4);
             this.invoice_table.Controls.Add(this.qtyBox5, 1, 5);
-            this.invoice_table.Controls.Add(this.uBox5, 2, 5);
+            this.invoice_table.Controls.Add(this.uBox5, 3, 5);
             this.invoice_table.Controls.Add(this.qtyBox6, 1, 6);
-            this.invoice_table.Controls.Add(this.uBox6, 2, 6);
+            this.invoice_table.Controls.Add(this.uBox6, 3, 6);
             this.invoice_table.Controls.Add(this.qtyBox7, 1, 7);
-            this.invoice_table.Controls.Add(this.uBox7, 2, 7);
+            this.invoice_table.Controls.Add(this.uBox7, 3, 7);
             this.invoice_table.Controls.Add(this.qtyBox8, 1, 8);
-            this.invoice_table.Controls.Add(this.uBox8, 2, 8);
+            this.invoice_table.Controls.Add(this.uBox8, 3, 8);
             this.invoice_table.Controls.Add(this.qtyBox9, 1, 9);
-            this.invoice_table.Controls.Add(this.uBox9, 2, 9);
+            this.invoice_table.Controls.Add(this.uBox9, 3, 9);
             this.invoice_table.Controls.Add(this.qtyBox10, 1, 10);
-            this.invoice_table.Controls.Add(this.uBox10, 2, 10);
+            this.invoice_table.Controls.Add(this.uBox10, 3, 10);
             this.invoice_table.Controls.Add(this.qtyBox11, 1, 11);
-            this.invoice_table.Controls.Add(this.uBox11, 2, 11);
-            this.invoice_table.Controls.Add(this.tBox1, 3, 1);
+            this.invoice_table.Controls.Add(this.uBox11, 3, 11);
+            this.invoice_table.Controls.Add(this.tBox1, 4, 1);
             this.invoice_table.Controls.Add(this.descBox1, 0, 1);
             this.invoice_table.Controls.Add(this.labelline18, 0, 0);
             this.invoice_table.Controls.Add(this.qtylabel, 1, 0);
-            this.invoice_table.Location = new System.Drawing.Point(335, 136);
+            this.invoice_table.Controls.Add(this.unitlabel, 2, 0);
+            this.invoice_table.Controls.Add(this.unitBox1, 2, 1);
+            this.invoice_table.Location = new System.Drawing.Point(333, 136);
             this.invoice_table.Margin = new System.Windows.Forms.Padding(0);
             this.invoice_table.Name = "invoice_table";
             this.invoice_table.RowCount = 12;
@@ -1728,10 +1768,170 @@
             this.invoice_table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.invoice_table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.invoice_table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.invoice_table.Size = new System.Drawing.Size(752, 313);
+            this.invoice_table.Size = new System.Drawing.Size(755, 313);
             this.invoice_table.TabIndex = 82;
             this.invoice_table.CellPaint += new System.Windows.Forms.TableLayoutCellPaintEventHandler(this.invoice_table_CellPaint);
             this.invoice_table.MouseDown += new System.Windows.Forms.MouseEventHandler(this.invoice_table_MouseDown);
+            // 
+            // unitBox11
+            // 
+            this.unitBox11.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.unitBox11.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.unitBox11.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.unitBox11.FormattingEnabled = true;
+            this.unitBox11.Items.AddRange(new object[] {
+            "KG",
+            "Gram",
+            "Piece"});
+            this.unitBox11.Location = new System.Drawing.Point(496, 290);
+            this.unitBox11.Name = "unitBox11";
+            this.unitBox11.Size = new System.Drawing.Size(54, 20);
+            this.unitBox11.TabIndex = 114;
+            this.unitBox11.SelectedIndexChanged += new System.EventHandler(this.unitBox_SelectedIndexChanged);
+            // 
+            // unitBox10
+            // 
+            this.unitBox10.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.unitBox10.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.unitBox10.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.unitBox10.FormattingEnabled = true;
+            this.unitBox10.Items.AddRange(new object[] {
+            "KG",
+            "Gram",
+            "Piece"});
+            this.unitBox10.Location = new System.Drawing.Point(496, 264);
+            this.unitBox10.Name = "unitBox10";
+            this.unitBox10.Size = new System.Drawing.Size(54, 20);
+            this.unitBox10.TabIndex = 113;
+            this.unitBox10.SelectedIndexChanged += new System.EventHandler(this.unitBox_SelectedIndexChanged);
+            // 
+            // unitBox9
+            // 
+            this.unitBox9.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.unitBox9.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.unitBox9.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.unitBox9.FormattingEnabled = true;
+            this.unitBox9.Items.AddRange(new object[] {
+            "KG",
+            "Gram",
+            "Piece"});
+            this.unitBox9.Location = new System.Drawing.Point(496, 238);
+            this.unitBox9.Name = "unitBox9";
+            this.unitBox9.Size = new System.Drawing.Size(54, 20);
+            this.unitBox9.TabIndex = 112;
+            this.unitBox9.SelectedIndexChanged += new System.EventHandler(this.unitBox_SelectedIndexChanged);
+            // 
+            // unitBox8
+            // 
+            this.unitBox8.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.unitBox8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.unitBox8.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.unitBox8.FormattingEnabled = true;
+            this.unitBox8.Items.AddRange(new object[] {
+            "KG",
+            "Gram",
+            "Piece"});
+            this.unitBox8.Location = new System.Drawing.Point(496, 212);
+            this.unitBox8.Name = "unitBox8";
+            this.unitBox8.Size = new System.Drawing.Size(54, 20);
+            this.unitBox8.TabIndex = 111;
+            this.unitBox8.SelectedIndexChanged += new System.EventHandler(this.unitBox_SelectedIndexChanged);
+            // 
+            // unitBox7
+            // 
+            this.unitBox7.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.unitBox7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.unitBox7.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.unitBox7.FormattingEnabled = true;
+            this.unitBox7.Items.AddRange(new object[] {
+            "KG",
+            "Gram",
+            "Piece"});
+            this.unitBox7.Location = new System.Drawing.Point(496, 186);
+            this.unitBox7.Name = "unitBox7";
+            this.unitBox7.Size = new System.Drawing.Size(54, 20);
+            this.unitBox7.TabIndex = 110;
+            this.unitBox7.SelectedIndexChanged += new System.EventHandler(this.unitBox_SelectedIndexChanged);
+            // 
+            // unitBox6
+            // 
+            this.unitBox6.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.unitBox6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.unitBox6.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.unitBox6.FormattingEnabled = true;
+            this.unitBox6.Items.AddRange(new object[] {
+            "KG",
+            "Gram",
+            "Piece"});
+            this.unitBox6.Location = new System.Drawing.Point(496, 160);
+            this.unitBox6.Name = "unitBox6";
+            this.unitBox6.Size = new System.Drawing.Size(54, 20);
+            this.unitBox6.TabIndex = 109;
+            this.unitBox6.SelectedIndexChanged += new System.EventHandler(this.unitBox_SelectedIndexChanged);
+            // 
+            // unitBox5
+            // 
+            this.unitBox5.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.unitBox5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.unitBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.unitBox5.FormattingEnabled = true;
+            this.unitBox5.Items.AddRange(new object[] {
+            "KG",
+            "Gram",
+            "Piece"});
+            this.unitBox5.Location = new System.Drawing.Point(496, 134);
+            this.unitBox5.Name = "unitBox5";
+            this.unitBox5.Size = new System.Drawing.Size(54, 20);
+            this.unitBox5.TabIndex = 108;
+            this.unitBox5.SelectedIndexChanged += new System.EventHandler(this.unitBox_SelectedIndexChanged);
+            // 
+            // unitBox4
+            // 
+            this.unitBox4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.unitBox4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.unitBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.unitBox4.FormattingEnabled = true;
+            this.unitBox4.Items.AddRange(new object[] {
+            "KG",
+            "Gram",
+            "Piece"});
+            this.unitBox4.Location = new System.Drawing.Point(496, 108);
+            this.unitBox4.Name = "unitBox4";
+            this.unitBox4.Size = new System.Drawing.Size(54, 20);
+            this.unitBox4.TabIndex = 107;
+            this.unitBox4.SelectedIndexChanged += new System.EventHandler(this.unitBox_SelectedIndexChanged);
+            // 
+            // unitBox3
+            // 
+            this.unitBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.unitBox3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.unitBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.unitBox3.FormattingEnabled = true;
+            this.unitBox3.Items.AddRange(new object[] {
+            "KG",
+            "Gram",
+            "Piece"});
+            this.unitBox3.Location = new System.Drawing.Point(496, 82);
+            this.unitBox3.Name = "unitBox3";
+            this.unitBox3.Size = new System.Drawing.Size(54, 20);
+            this.unitBox3.TabIndex = 106;
+            this.unitBox3.SelectedIndexChanged += new System.EventHandler(this.unitBox_SelectedIndexChanged);
+            // 
+            // unitBox2
+            // 
+            this.unitBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.unitBox2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.unitBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.unitBox2.FormattingEnabled = true;
+            this.unitBox2.Items.AddRange(new object[] {
+            "KG",
+            "Gram",
+            "Piece"});
+            this.unitBox2.Location = new System.Drawing.Point(496, 56);
+            this.unitBox2.Name = "unitBox2";
+            this.unitBox2.Size = new System.Drawing.Size(54, 20);
+            this.unitBox2.TabIndex = 105;
+            this.unitBox2.SelectedIndexChanged += new System.EventHandler(this.unitBox_SelectedIndexChanged);
             // 
             // qtylabel
             // 
@@ -1739,12 +1939,40 @@
             this.qtylabel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.qtylabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.qtylabel.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.qtylabel.Location = new System.Drawing.Point(455, 1);
+            this.qtylabel.Location = new System.Drawing.Point(395, 1);
             this.qtylabel.Name = "qtylabel";
             this.qtylabel.Size = new System.Drawing.Size(94, 23);
             this.qtylabel.TabIndex = 102;
             this.qtylabel.Text = "QTY";
             this.qtylabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // unitlabel
+            // 
+            this.unitlabel.BackColor = System.Drawing.Color.Transparent;
+            this.unitlabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.unitlabel.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.unitlabel.Location = new System.Drawing.Point(496, 1);
+            this.unitlabel.Name = "unitlabel";
+            this.unitlabel.Size = new System.Drawing.Size(44, 23);
+            this.unitlabel.TabIndex = 103;
+            this.unitlabel.Text = "Unit";
+            this.unitlabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // unitBox1
+            // 
+            this.unitBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.unitBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.unitBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.unitBox1.FormattingEnabled = true;
+            this.unitBox1.Items.AddRange(new object[] {
+            "KG",
+            "Gram",
+            "Piece"});
+            this.unitBox1.Location = new System.Drawing.Point(496, 30);
+            this.unitBox1.Name = "unitBox1";
+            this.unitBox1.Size = new System.Drawing.Size(54, 20);
+            this.unitBox1.TabIndex = 104;
+            this.unitBox1.SelectedIndexChanged += new System.EventHandler(this.unitBox_SelectedIndexChanged);
             // 
             // label_subttl
             // 
@@ -2264,6 +2492,18 @@
         private System.Windows.Forms.Label qtylabel;
         private System.Windows.Forms.CheckBox search_duedt;
         private System.Windows.Forms.NumericUpDown paid;
+        private System.Windows.Forms.Label unitlabel;
+        private System.Windows.Forms.ComboBox unitBox11;
+        private System.Windows.Forms.ComboBox unitBox10;
+        private System.Windows.Forms.ComboBox unitBox9;
+        private System.Windows.Forms.ComboBox unitBox8;
+        private System.Windows.Forms.ComboBox unitBox7;
+        private System.Windows.Forms.ComboBox unitBox6;
+        private System.Windows.Forms.ComboBox unitBox5;
+        private System.Windows.Forms.ComboBox unitBox4;
+        private System.Windows.Forms.ComboBox unitBox3;
+        private System.Windows.Forms.ComboBox unitBox2;
+        private System.Windows.Forms.ComboBox unitBox1;
     }
 }
 

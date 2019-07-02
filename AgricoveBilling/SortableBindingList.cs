@@ -1,3 +1,5 @@
+//From Tim Van Wassenhove's blog
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+//From Tim Van Wassenhove's blog
+
 using System.Reflection;
 
 namespace Be.Timvw.Framework.Collections.Generic

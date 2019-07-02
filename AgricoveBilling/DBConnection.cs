@@ -11,7 +11,7 @@ namespace AgricoveBilling
     class FilePermissionException : Exception
     {
         public FilePermissionException()
-            : base(String.Format("No write permission to database folder"))
+            : base ( String.Format ( "No write permission to database folder" ) )
         {
 
         }
@@ -22,25 +22,25 @@ namespace AgricoveBilling
         private static bool _created = false;
         public DBConnection()
         {
-            if (!_created)
+            if ( !_created )
             {
                 //_created = true;
                 //Database.EnsureDeleted();
                 try
                 {
-                    Database.EnsureCreated();
+                    Database.EnsureCreated ();
                 }
-                catch(FilePermissionException fe)
+                catch ( FilePermissionException fe )
                 {
-                   
+
                 }
             }
         }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionbuilder)
+        protected override void OnConfiguring( DbContextOptionsBuilder optionbuilder )
         {
             //optionbuilder.UseSqlite(@"Data Source=c:\AgricoveBilling.db");
             //optionbuilder.UseSqlite(@"Data Source=%USERPROFILE%\AgricoveBilling.db");
-            optionbuilder.UseSqlite(@"Data Source=..\AgricoveBilling.db");
+            optionbuilder.UseSqlite ( @"Data Source=..\AgricoveBilling.db" );
         }
 
         public DbSet<Invoice> Invoice { get; set; }

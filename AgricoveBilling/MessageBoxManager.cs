@@ -1,4 +1,6 @@
-﻿#pragma warning disable 0618
+﻿//MessageboxManager by Nish Nishant CoreProject
+
+#pragma warning disable 0618
 
 using System;
 
