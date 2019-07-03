@@ -908,26 +908,8 @@ namespace AgricoveBilling
         }
 
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-        //Data fetch/save events
+        // Data fetch and save functions
         //
-
-        // Auto Load address 
-        private void billname_Leave( object sender , EventArgs e )
-        {
-            if ( !fast_load && !history_load )                                                                   //will not fire during form load
-            {
-                using ( var dataContext = new DBConnection () )
-                {
-                    var invoice = dataContext.Invoice.ToList ();
-                    var data = invoice.Where ( x => x.BillToName == billname.Text.ToString () )
-                                    .Select ( x => x.BillToAdd ).FirstOrDefault ();
-                    if ( data != null )
-                    {
-                        billaddr.Text = data.ToString ();
-                    }
-                }
-            }
-        }
 
         private bool inv_exists()
         {
@@ -1173,66 +1155,6 @@ namespace AgricoveBilling
             return r;
         }
 
-        //Load data to invoice editor
-        private void load_data( Invoice inv )
-        {
-            invno.Text = inv.InvoiceNo;
-            invdt.Value = DateTime.ParseExact ( inv.InvoiceDt , "dd/MM/yyyy" , null );       //Indian format 
-            ddt.Value = DateTime.ParseExact ( inv.DueDt , "dd/MM/yyyy" , null );             //Indian format
-            billname.Text = inv.BillToName;
-            billaddr.Text = inv.BillToAdd;
-            descBox1.Text = inv.ItemID1Name;
-            qtyBox1.Value = inv.ItemID1Qty;
-            unitBox1.SelectedIndex = inv.ItemID1Unit;
-            uBox1.Value = inv.ItemID1Price;                                                  // ordering matters
-            descBox2.Text = inv.ItemID2Name;
-            qtyBox2.Value = inv.ItemID2Qty;
-            unitBox2.SelectedIndex = inv.ItemID2Unit;
-            uBox2.Value = inv.ItemID2Price;
-            descBox3.Text = inv.ItemID3Name;
-            qtyBox3.Value = inv.ItemID3Qty;
-            unitBox3.SelectedIndex = inv.ItemID3Unit;
-            uBox3.Value = inv.ItemID3Price;
-            descBox4.Text = inv.ItemID4Name;
-            qtyBox4.Value = inv.ItemID4Qty;
-            unitBox4.SelectedIndex = inv.ItemID4Unit;
-            uBox4.Value = inv.ItemID4Price;
-            descBox5.Text = inv.ItemID5Name;
-            qtyBox5.Value = inv.ItemID5Qty;
-            unitBox5.SelectedIndex = inv.ItemID5Unit;
-            uBox5.Value = inv.ItemID5Price;
-            descBox6.Text = inv.ItemID6Name;
-            qtyBox6.Value = inv.ItemID6Qty;
-            unitBox6.SelectedIndex = inv.ItemID6Unit;
-            uBox6.Value = inv.ItemID6Price;
-            descBox7.Text = inv.ItemID7Name;
-            qtyBox7.Value = inv.ItemID7Qty;
-            unitBox7.SelectedIndex = inv.ItemID7Unit;
-            uBox7.Value = inv.ItemID7Price;
-            descBox8.Text = inv.ItemID8Name;
-            qtyBox8.Value = inv.ItemID8Qty;
-            unitBox8.SelectedIndex = inv.ItemID8Unit;
-            uBox8.Value = inv.ItemID8Price;
-            descBox9.Text = inv.ItemID9Name;
-            qtyBox9.Value = inv.ItemID9Qty;
-            unitBox9.SelectedIndex = inv.ItemID9Unit;
-            uBox9.Value = inv.ItemID9Price;
-            descBox10.Text = inv.ItemID10Name;
-            qtyBox10.Value = inv.ItemID10Qty;
-            unitBox10.SelectedIndex = inv.ItemID10Unit;
-            uBox10.Value = inv.ItemID10Price;
-            descBox11.Text = inv.ItemID11Name;
-            qtyBox11.Value = inv.ItemID11Qty;
-            unitBox11.SelectedIndex = inv.ItemID11Unit;
-            uBox11.Value = inv.ItemID11Price;
-
-            disctype.SelectedIndex = inv.DiscountType;
-            discval.Value = inv.DiscountValue;
-            txrt.Value = inv.TaxRate;
-            paid.Value = inv.Paid;
-            paid_ValueChanged ();               //If paid remains same between two consecurively loaded invoices, due will not be changed. So trigger it manually. Hopefully this wouldn't run concurrently while gross total is still being filled
-        }
-
         //Default gridview load before search
         private void gridview_load( DataGridView d , string s )
         {
@@ -1446,96 +1368,149 @@ namespace AgricoveBilling
             }
         }
 
-        // Search result button click
-        private void find_gridview_CellContentClick( object sender , DataGridViewCellEventArgs e )
+        //Load data to invoice editor
+        private void load_data( Invoice inv )
         {
-            var senderGrid = ( DataGridView ) sender;
+            invno.Text = inv.InvoiceNo;
+            invdt.Value = DateTime.ParseExact ( inv.InvoiceDt , "dd/MM/yyyy" , null );       //Indian format 
+            ddt.Value = DateTime.ParseExact ( inv.DueDt , "dd/MM/yyyy" , null );             //Indian format
+            billname.Text = inv.BillToName;
+            billaddr.Text = inv.BillToAdd;
+            descBox1.Text = inv.ItemID1Name;
+            uBox1.Value = inv.ItemID1Price;
+            qtyBox1.Value = inv.ItemID1Qty;
+            unitBox1.SelectedIndex = inv.ItemID1Unit;
+            descBox2.Text = inv.ItemID2Name;
+            uBox2.Value = inv.ItemID2Price;
+            qtyBox2.Value = inv.ItemID2Qty;
+            unitBox2.SelectedIndex = inv.ItemID2Unit;
+            descBox3.Text = inv.ItemID3Name;
+            uBox3.Value = inv.ItemID3Price;
+            qtyBox3.Value = inv.ItemID3Qty;
+            unitBox3.SelectedIndex = inv.ItemID3Unit;
+            descBox4.Text = inv.ItemID4Name;
+            uBox4.Value = inv.ItemID4Price;
+            qtyBox4.Value = inv.ItemID4Qty;
+            unitBox4.SelectedIndex = inv.ItemID4Unit;
+            descBox5.Text = inv.ItemID5Name;
+            uBox5.Value = inv.ItemID5Price;
+            qtyBox5.Value = inv.ItemID5Qty;
+            unitBox5.SelectedIndex = inv.ItemID5Unit;
+            descBox6.Text = inv.ItemID6Name;
+            uBox6.Value = inv.ItemID6Price;
+            qtyBox6.Value = inv.ItemID6Qty;
+            unitBox6.SelectedIndex = inv.ItemID6Unit;
+            descBox7.Text = inv.ItemID7Name;
+            uBox7.Value = inv.ItemID7Price;
+            qtyBox7.Value = inv.ItemID7Qty;
+            unitBox7.SelectedIndex = inv.ItemID7Unit;
+            descBox8.Text = inv.ItemID8Name;
+            uBox8.Value = inv.ItemID8Price;
+            qtyBox8.Value = inv.ItemID8Qty;
+            unitBox8.SelectedIndex = inv.ItemID8Unit;
+            descBox9.Text = inv.ItemID9Name;
+            uBox9.Value = inv.ItemID9Price;
+            qtyBox9.Value = inv.ItemID9Qty;
+            unitBox9.SelectedIndex = inv.ItemID9Unit;
+            descBox10.Text = inv.ItemID10Name;
+            uBox10.Value = inv.ItemID10Price;
+            qtyBox10.Value = inv.ItemID10Qty;
+            unitBox10.SelectedIndex = inv.ItemID10Unit;
+            descBox11.Text = inv.ItemID11Name;
+            uBox11.Value = inv.ItemID11Price;
+            qtyBox11.Value = inv.ItemID11Qty;
+            unitBox11.SelectedIndex = inv.ItemID11Unit;
 
-            if ( senderGrid.Columns [ e.ColumnIndex ] is DataGridViewButtonColumn && e.RowIndex >= 0 )
-            {
-                //TODO - Button Clicked - Execute Code Here
-                if ( datasrc.SelectedIndex == 0 )                     //load invoice from search result
-                {
-                    using ( var dataContext = new DBConnection () )
-                    {
-                        var invoice = dataContext.Invoice.ToList ();
-                        var inv = ( from x in invoice
-                                    where x.InvoiceNo == find_gridview.Rows [ e.RowIndex ].Cells [ 1 ].Value.ToString ()
-                                    select x ).FirstOrDefault ();
-                        edit_check = 1;                             //this must be called before load_data to prevent edit_check from being fired automatically during load
-                        history_load = true;
-                        load_data ( inv );
-                        history_load = false;
-                        disable_rows ();
-                        print.Enabled = true;
-                        find_Click ( sender , e );
-                    }
-                }
-                else
-                {                                                                               //delete item
-                    using ( var dataContext = new DBConnection () )
-                    {
-                        var items = dataContext.Items.ToList ();
-                        var item = ( from x in items
-                                     where x.ItemID == Convert.ToInt32 ( find_gridview.Rows [ e.RowIndex ].Cells [ 1 ].Value )
-                                     select x ).FirstOrDefault ();
-                        dataContext.Items.Remove ( item );
-                        try
-                        {
-                            dataContext.SaveChanges ();
-                        }
-                        catch
-                        {
-                            MessageBox.Show ( "       Database write permission not available.     " );
-                        }
-                        search_fill ( find_gridview );
-                    }
-                }
-            }
-        }
-
-        //Save items edit
-        private void find_gridview_Leave( object sender , EventArgs e )
-        {
-            DataGridView dgview = new DataGridView ();
-            dgview = ( DataGridView ) sender;
-
-            if ( datasrc.SelectedIndex == 1 )
-            {
-                using ( var dataContext = new DBConnection () )
-                {
-                    var items = dataContext.Items.ToList ();
-                    foreach ( DataGridViewRow dg in dgview.Rows )
-                    {
-                        var item = ( from x in items
-                                     where x.ItemID == Convert.ToInt32 ( dg.Cells [ 1 ].Value )
-                                     select x ).FirstOrDefault ();
-                        if ( item != null )
-                        {
-                            item.ItemName = dg.Cells [ 2 ].Value.ToString ();                       //Cells[1] is hidden
-                            item.ItemPrice = decimal.Parse ( dg.Cells [ 3 ].Value.ToString () );
-                            item.ItemUnit = dg.Cells [ 4 ].Value.ToString ();
-                        }
-                    }
-                    try
-                    {
-                        dataContext.SaveChanges ();
-                    }
-                    catch
-                    {
-                        MessageBox.Show ( "       Database write permission not available.     " );
-                    }
-                    search_fill ( find_gridview );             //reloads updated results
-                }
-            }
+            disctype.SelectedIndex = inv.DiscountType;
+            discval.Value = inv.DiscountValue;
+            txrt.Value = inv.TaxRate;
+            paid.Value = inv.Paid;
+            paid_ValueChanged ();               //hopefully this wouldn't run concurrently while gross total is still being filled
         }
 
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-        //Other events
+        //User triggered events
         //
+
+        //Window events ------------------------------------------------------------------------------------------------------------------------------------------
+
+        //window close button
+        private void close_Click_1( object sender , EventArgs e )
+        {
+            this.Close ();
+        }
+
+        //window minimise button
+        private void minimise_Click_1( object sender , EventArgs e )
+        {
+            WindowState = FormWindowState.Minimized;
+        }
 
         //invoice part  -----------------------------------------------------------------------------------------------------------------------------------------
         //-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        //---------------------------------------------------------------------------------------------------------------------------------------------------
+        // Common method
+
+        //paid value changed
+        private void paid_ValueChanged()
+        {
+            decimal value = 0;
+            value = decimal_parse ( grssttl.Text.ToString () );
+
+            if ( paid.Value > value )
+            {
+                //MessageBox.Show("         You can't pay more than what's due      ");
+                paid.Value = value;
+            }
+            balancedue.Text = ( value - paid.Value ).ToString ( "#,##0.00" );
+        }
+
+        // Auto Load address 
+        private void billname_Leave( object sender , EventArgs e )
+        {
+            if ( !fast_load && !history_load )                                                                   //will not fire during form load
+            {
+                using ( var dataContext = new DBConnection () )
+                {
+                    var invoice = dataContext.Invoice.ToList ();
+                    var data = invoice.Where ( x => x.BillToName == billname.Text.ToString () )
+                                    .Select ( x => x.BillToAdd ).FirstOrDefault ();
+                    if ( data != null )
+                    {
+                        billaddr.Text = data.ToString ();
+                    }
+                }
+            }
+        }
+
+        //give user option to print once data has been saved
+        private void print_dialogue()
+        {
+            DialogResult dlgResult = MessageBox.Show ( "invoice has been saved successfully" , "Print" , MessageBoxButtons.YesNo , MessageBoxIcon.Information );
+
+            if ( dlgResult == DialogResult.Yes )
+            {
+                try
+                {
+                    Printpreview pv = new Printpreview ( load_crystalreports () );
+                    pv.ShowDialog ();                                                   //ShowDialog to make sure user can't interact with parent window
+                }
+                catch
+                {
+                    MessageBox.Show ( "         CrystalReports Not Installed      " );
+                }
+            }
+        }
+
+        //save button click
+        private void save_Click( object sender , EventArgs e )
+        {
+            save_item ();
+            save_invoice ();
+            print_dialogue ();
+            newinv_Click ( sender , e );                    //automatically open a new invoice
+        }
 
         //This enables the corresponding row of the currently entered descbox
         private void descBox_Enter( object sender , EventArgs e )
@@ -1625,6 +1600,106 @@ namespace AgricoveBilling
                     qtyBox [ i ].DecimalPlaces = 3;
                 }
             }
+        }
+
+        //don't allow blank in numericupdown
+        private void updown_leave( object sender , EventArgs e )
+        {
+            if ( !fast_load && !history_load )                                                                           //will not fire during form load
+            {
+                if ( sender.GetType ().ToString () == "System.Windows.Forms.NumericUpDown" )                    //Necessary to avoid collision with disctype combobox
+                {
+                    NumericUpDown obj = new NumericUpDown ();
+                    obj = ( NumericUpDown ) sender;
+                    if ( obj.Text == "" )
+                    {
+                        obj.Value = 0;
+                        obj.Text = obj.Value.ToString ();
+                    }
+                }
+            }
+        }
+
+        //refresh invoice
+        private void newinv_Click( object sender , EventArgs e )
+        {
+            Cursor.Current = Cursors.WaitCursor;        //set cursor to busy until form loads
+            fast_load = true;                           //make sure unnecessary events don't get triggered
+            form_load ();
+            fast_load = false;
+            Cursor.Current = Cursors.Default;
+        }
+
+        //Toggle search UI
+        private void find_Click( object sender , EventArgs e )
+        {
+            if ( searchpanel.Visible )
+            {
+                searchpanel.Visible = false;
+                if ( balancedue.Text.Length > 0 )
+                {
+                    save.Enabled = true;
+                    print.Enabled = true;
+                }
+                if ( edit_check == 1 )
+                {
+                    search.Text = "Back to Results";
+                }
+                else
+                {
+                    search.Text = "&Find";
+                }
+                newinv.Enabled = true;
+                this.AcceptButton = null;
+                find_gridview.DataSource = null;
+                descBox1.Focus ();                           //return default focus
+            }
+            else
+            {
+                searchpanel.Visible = true;
+                save.Enabled = false;
+                print.Enabled = false;
+                search.Text = "Back to Invoice";
+                newinv.Enabled = false;
+                this.AcceptButton = search_btn;
+                search_inv_box.Focus ();
+
+                if ( datasrc.SelectedItem == null )                    // if loading for the first time
+                {
+                    datasrc.SelectedIndex = 0;                     //Necessary to ensure data loads for the first time   
+                }
+                else
+                {
+                    search_fill ( find_gridview );                     //load last search                    
+                }
+            }
+        }
+
+        //paid value typed in 
+        private void paid_ValueChanged( object sender , KeyEventArgs e )
+        {
+            paid_ValueChanged ();
+            paid_token = true;                      //paid_token sets only when value is changed manually
+            paid_max = paid.Value;                  //save the max value user has typed
+            numbox_TextChanged ( sender , 38 );           //send for edit log
+        }
+
+        //print
+        private void print_Click( object sender , EventArgs e )
+        {
+            save_item ();
+            save_invoice ();
+            try
+            {
+                Printpreview pv = new Printpreview ( load_crystalreports () );
+                pv.ShowDialog ();                                        //ShowDialog to make sure user can't interact with parent window
+            }
+            catch
+            {
+                MessageBox.Show ( "         CrystalReports Not Installed      " );
+            }
+            //newinv_Click ( sender , e );                                    //refresh form once done printing
+            //bitmap_print ();                                  //deprecated
         }
 
         //unit value changed
@@ -1754,29 +1829,6 @@ namespace AgricoveBilling
             }
         }
 
-        //paid value changed
-        private void paid_ValueChanged()
-        {
-            decimal value = 0;
-            value = decimal_parse ( grssttl.Text.ToString () );
-
-            if ( paid.Value > value )
-            {
-                //MessageBox.Show("         You can't pay more than what's due      ");
-                paid.Value = value;
-            }
-            balancedue.Text = ( value - paid.Value ).ToString ( "#,##0.00" );
-        }
-
-        //paid value typed in 
-        private void paid_ValueChanged( object sender , KeyEventArgs e )
-        {
-            paid_ValueChanged ();
-            paid_token = true;                      //paid_token sets only when value is changed manually
-            paid_max = paid.Value;                  //save the max value user has typed
-            numbox_TextChanged ( sender , 38 );           //send for edit log
-        }
-
         //when paid value is auto calculated
         private void paid_ValueChanged( object sender , EventArgs e )
         {
@@ -1786,139 +1838,6 @@ namespace AgricoveBilling
                 numbox_TextChanged ( sender , 38 );       //send for edit log
             }
         }
-
-        //don't allow blank in numericupdown
-        private void updown_leave( object sender , EventArgs e )
-        {
-            if ( !fast_load && !history_load )                                                                           //will not fire during form load
-            {
-                if ( sender.GetType ().ToString () == "System.Windows.Forms.NumericUpDown" )                    //Necessary to avoid collision with disctype combobox
-                {
-                    NumericUpDown obj = new NumericUpDown ();
-                    obj = ( NumericUpDown ) sender;
-                    if ( obj.Text == "" )
-                    {
-                        obj.Value = 0;
-                        obj.Text = obj.Value.ToString ();
-                    }
-                }
-            }
-        }
-
-        //buttons-----------------------------------------------------------------------------------------
-
-        private void close_Click_1( object sender , EventArgs e )
-        {
-            this.Close ();
-        }
-
-        //window minimise button
-        private void minimise_Click_1( object sender , EventArgs e )
-        {
-            WindowState = FormWindowState.Minimized;
-        }
-
-        //give user option to print once data has been saved
-        private void print_dialogue()
-        {
-            DialogResult dlgResult = MessageBox.Show ( "invoice has been saved successfully" , "Print" , MessageBoxButtons.YesNo , MessageBoxIcon.Information );
-
-            if ( dlgResult == DialogResult.Yes )
-            {
-                try
-                {
-                    Printpreview pv = new Printpreview ( load_crystalreports () );
-                    pv.ShowDialog ();                                                   //ShowDialog to make sure user can't interact with parent window
-                }
-                catch
-                {
-                    MessageBox.Show ( "         CrystalReports Not Installed      " );
-                }
-            }
-        }
-
-        //save button click
-        private void save_Click( object sender , EventArgs e )
-        {
-            save_item ();
-            save_invoice ();
-            print_dialogue ();
-            newinv_Click ( sender , e );                    //automatically open a new invoice
-        }
-
-        //refresh invoice
-        private void newinv_Click( object sender , EventArgs e )
-        {
-            Cursor.Current = Cursors.WaitCursor;        //set cursor to busy until form loads
-            fast_load = true;                           //make sure unnecessary events don't get triggered
-            form_load ();
-            fast_load = false;
-            Cursor.Current = Cursors.Default;
-        }
-
-        //Toggle search UI
-        private void find_Click( object sender , EventArgs e )
-        {
-            if ( searchpanel.Visible )
-            {
-                searchpanel.Visible = false;
-                if ( balancedue.Text.Length > 0 )
-                {
-                    save.Enabled = true;
-                    print.Enabled = true;
-                }
-                if ( edit_check == 1 )
-                {
-                    search.Text = "Back to Results";
-                }
-                else
-                {
-                    search.Text = "&Find";
-                }
-                newinv.Enabled = true;
-                this.AcceptButton = null;
-                find_gridview.DataSource = null;
-                descBox1.Focus ();                           //return default focus
-            }
-            else
-            {
-                searchpanel.Visible = true;
-                save.Enabled = false;
-                print.Enabled = false;
-                search.Text = "Back to Invoice";
-                newinv.Enabled = false;
-                this.AcceptButton = search_btn;
-                search_inv_box.Focus ();
-
-                if ( datasrc.SelectedItem == null )                    // if loading for the first time
-                {
-                    datasrc.SelectedIndex = 0;                     //Necessary to ensure data loads for the first time   
-                }
-                else
-                {
-                    search_fill ( find_gridview );                     //load last search                    
-                }
-            }
-        }
-
-        //print
-        private void print_Click( object sender , EventArgs e )
-        {
-            save_item ();
-            save_invoice ();
-            try
-            {
-                Printpreview pv = new Printpreview ( load_crystalreports () );
-                pv.ShowDialog ();                                        //ShowDialog to make sure user can't interact with parent window
-            }
-            catch
-            {
-                MessageBox.Show ( "         CrystalReports Not Installed      " );
-            }
-            //newinv_Click ( sender , e );                                    //refresh form once done printing
-            //bitmap_print ();                                  //deprecated
-        }
-
 
         //Search result part---------------------------------------------------------------------------------------------------------------------------------------
         //---------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2020,11 +1939,95 @@ namespace AgricoveBilling
             datetime_Changed ( sender , e );                 //call edit_check
         }
 
-        //refresh button on search results pane
+        // Search result button click
+        private void find_gridview_CellContentClick( object sender , DataGridViewCellEventArgs e )
+        {
+            var senderGrid = ( DataGridView ) sender;
+
+            if ( senderGrid.Columns [ e.ColumnIndex ] is DataGridViewButtonColumn && e.RowIndex >= 0 )
+            {
+                //TODO - Button Clicked - Execute Code Here
+                if ( datasrc.SelectedIndex == 0 )                     //load invoice from search result
+                {
+                    using ( var dataContext = new DBConnection () )
+                    {
+                        var invoice = dataContext.Invoice.ToList ();
+                        var inv = ( from x in invoice
+                                    where x.InvoiceNo == find_gridview.Rows [ e.RowIndex ].Cells [ 1 ].Value.ToString ()
+                                    select x ).FirstOrDefault ();
+                        edit_check = 1;                             //this must be called before load_data to prevent edit_check from being fired automatically during load
+                        history_load = true;
+                        load_data ( inv );
+                        history_load = false;
+                        disable_rows ();
+                        print.Enabled = true;
+                        find_Click ( sender , e );
+                    }
+                }
+                else
+                {                                                                               //delete item
+                    using ( var dataContext = new DBConnection () )
+                    {
+                        var items = dataContext.Items.ToList ();
+                        var item = ( from x in items
+                                     where x.ItemID == Convert.ToInt32 ( find_gridview.Rows [ e.RowIndex ].Cells [ 1 ].Value )
+                                     select x ).FirstOrDefault ();
+                        dataContext.Items.Remove ( item );
+                        try
+                        {
+                            dataContext.SaveChanges ();
+                        }
+                        catch
+                        {
+                            MessageBox.Show ( "       Database write permission not available.     " );
+                        }
+                        search_fill ( find_gridview );
+                    }
+                }
+            }
+        }
+
+        //refresh button on search results
         private void refresh_search_Click( object sender , EventArgs e )
         {
             find_gridview.DataSource = null;                //Necessary to reset user alteration of grid size 
             Datasrc_SelectedIndexChanged ( sender , e );
+        }   
+
+        //Save items edit
+        private void find_gridview_Leave( object sender , EventArgs e )
+        {
+            DataGridView dgview = new DataGridView ();
+            dgview = ( DataGridView ) sender;
+
+            if ( datasrc.SelectedIndex == 1 )
+            {
+                using ( var dataContext = new DBConnection () )
+                {
+                    var items = dataContext.Items.ToList ();
+                    foreach ( DataGridViewRow dg in dgview.Rows )
+                    {
+                        var item = ( from x in items
+                                     where x.ItemID == Convert.ToInt32 ( dg.Cells [ 1 ].Value )
+                                     select x ).FirstOrDefault ();
+                        if ( item != null )
+                        {
+                            item.ItemName = dg.Cells [ 2 ].Value.ToString ();                       //Cells[1] is hidden
+                            item.ItemPrice = decimal.Parse ( dg.Cells [ 3 ].Value.ToString () );
+                            item.ItemUnit = dg.Cells [ 4 ].Value.ToString ();
+                        }
+                    }
+                    try
+                    {
+                        dataContext.SaveChanges ();
+                    }
+                    catch
+                    {
+                        MessageBox.Show ( "       Database write permission not available.     " );
+                    }
+                    search_fill ( find_gridview );             //reloads updated results
+                }
+            }
         }
 
         //this ensures that combobox selection change on gridview is immediately effective
@@ -2140,7 +2143,7 @@ namespace AgricoveBilling
             textbox_TextChanged ( sender , 2 );
         }
 
-    private void desc_TextChanged( object sender , EventArgs e )
+        private void desc_TextChanged( object sender , EventArgs e )
         {
             TextBox t = new TextBox ();
             t = ( TextBox ) sender;
