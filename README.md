@@ -1,10 +1,15 @@
 # AgricoveBilling
 
-Billing system designed using EF Core code first approach and Crystal Reports
+Billing system designed for Green Agricove Ltd. using EF Core code first approach and Crystal Reports
 
 System Requirements: Windows 10 32bit with .NET 4.6.1
 
+# Download
+Compiled binary can be downloaded here: [Download](http://www.mediafire.com/file/aqdht1i1rqgrylp/AgricoveBilling.exe/file)
+
 # Changelog
+## [0.7.5] - 2017-07-03
+
 - Shift Tab now working
 - Ability to quantity in decimal
 - Table cell color indicates field active/inactive state
