@@ -169,6 +169,7 @@
             this.minimise = new System.Windows.Forms.Button();
             this.subtotal = new System.Windows.Forms.Label();
             this.paid = new System.Windows.Forms.NumericUpDown();
+            this.ver = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txrt)).BeginInit();
             this.searchpanel.SuspendLayout();
@@ -1691,7 +1692,7 @@
             this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
             this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
             this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 108F));
+            this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 109F));
             this.invoice_table.Controls.Add(this.unitBox11, 2, 11);
             this.invoice_table.Controls.Add(this.unitBox10, 2, 10);
             this.invoice_table.Controls.Add(this.unitBox9, 2, 9);
@@ -2198,6 +2199,18 @@
             this.paid.Leave += new System.EventHandler(this.updown_leave);
             this.paid.MouseUp += new System.Windows.Forms.MouseEventHandler(this.numBox_Enter);
             // 
+            // ver
+            // 
+            this.ver.AutoSize = true;
+            this.ver.BackColor = System.Drawing.Color.Transparent;
+            this.ver.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ver.ForeColor = System.Drawing.Color.DarkSlateGray;
+            this.ver.Location = new System.Drawing.Point(922, 15);
+            this.ver.Name = "ver";
+            this.ver.Size = new System.Drawing.Size(82, 14);
+            this.ver.TabIndex = 102;
+            this.ver.Text = "Ver. 0.7.5 Beta";
+            // 
             // AgricoveBilling
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -2208,6 +2221,7 @@
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.CausesValidation = false;
             this.ClientSize = new System.Drawing.Size(1119, 684);
+            this.Controls.Add(this.ver);
             this.Controls.Add(this.searchpanel);
             this.Controls.Add(this.minimise);
             this.Controls.Add(this.close);
@@ -2504,6 +2518,7 @@
         private System.Windows.Forms.ComboBox unitBox3;
         private System.Windows.Forms.ComboBox unitBox2;
         private System.Windows.Forms.ComboBox unitBox1;
+        private System.Windows.Forms.Label ver;
     }
 }
 
