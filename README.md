@@ -7,6 +7,10 @@ Compiled binary can be downloaded here: [Download](http://www.mediafire.com/file
 
 System Requirements: Windows 10 32bit with .NET 4.6.1
 
+# Screenshots
+
+![Screenshot_1](https://raw.githubusercontent.com/subhasiscgr/AgricoveBilling/master/Screenshots/home.jpg?raw=true "Home")
+
 # Changelog
 ## [0.7.5] - 2017-07-03
 
