@@ -1,6 +1,6 @@
 # AgricoveBilling
 
-Billing system designed for Green Agricove Ltd. using EF Core code first approach and Crystal Reports
+Billing system designed for Green Agricove Ltd. using EF Core and Crystal Reports
 
 System Requirements: Windows 10 32bit with .NET 4.6.1
 
