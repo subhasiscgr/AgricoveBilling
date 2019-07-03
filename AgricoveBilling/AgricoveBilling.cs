@@ -20,7 +20,7 @@ namespace AgricoveBilling
     public partial class AgricoveBilling : Form
     {
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-        // Variable Phase
+        // Variable Section
         //
 
         //Set arrays for invoice elements for easy iteration
