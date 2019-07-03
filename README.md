@@ -1,3 +1,5 @@
+<meta name="google-site-verification" content="{{ site.google_verify }}">
+
 # AgricoveBilling
 
 Billing system designed for Green Agricove Ltd. using Entity Framework Core and Crystal Reports
