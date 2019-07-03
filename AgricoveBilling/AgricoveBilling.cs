@@ -1859,44 +1859,47 @@ namespace AgricoveBilling
         //Toggle search UI
         private void find_Click( object sender , EventArgs e )
         {
-            if ( searchpanel.Visible )
+            if ( edit_check < 2 )
             {
-                searchpanel.Visible = false;
-                if ( balancedue.Text.Length > 0 )
+                if ( searchpanel.Visible )
                 {
-                    save.Enabled = true;
-                    print.Enabled = true;
-                }
-                if ( edit_check == 1 )
-                {
-                    search.Text = "Back to Results";
+                    searchpanel.Visible = false;
+                    if ( balancedue.Text.Length > 0 )
+                    {
+                        save.Enabled = true;
+                        print.Enabled = true;
+                    }
+                    if ( edit_check == 1 )
+                    {
+                        search.Text = "Back to Results";
+                    }
+                    else
+                    {
+                        search.Text = "&Find";
+                    }
+                    newinv.Enabled = true;
+                    this.AcceptButton = null;
+                    find_gridview.DataSource = null;
+                    descBox1.Focus ();                           //return default focus
                 }
                 else
                 {
-                    search.Text = "&Find";
-                }
-                newinv.Enabled = true;
-                this.AcceptButton = null;
-                find_gridview.DataSource = null;
-                descBox1.Focus ();                           //return default focus
-            }
-            else
-            {
-                searchpanel.Visible = true;
-                save.Enabled = false;
-                print.Enabled = false;
-                search.Text = "Back to Invoice";
-                newinv.Enabled = false;
-                this.AcceptButton = search_btn;
-                search_inv_box.Focus ();
+                    searchpanel.Visible = true;
+                    save.Enabled = false;
+                    print.Enabled = false;
+                    search.Text = "Back to Invoice";
+                    newinv.Enabled = false;
+                    this.AcceptButton = search_btn;
+                    search_inv_box.Focus ();
 
-                if ( datasrc.SelectedItem == null )                    // if loading for the first time
-                {
-                    datasrc.SelectedIndex = 0;                     //Necessary to ensure data loads for the first time   
-                }
-                else
-                {
-                    search_fill ( find_gridview );                     //load last search                    
+                    if ( datasrc.SelectedItem == null )                    // if loading for the first time
+                    {
+                        datasrc.SelectedIndex = 0;                     //Necessary to ensure data loads for the first time   
+                    }
+                    else
+                    {
+                        search_fill ( find_gridview );                     //load last search                    
+                    }
                 }
             }
         }
