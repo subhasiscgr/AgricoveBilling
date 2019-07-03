@@ -1446,7 +1446,7 @@ namespace AgricoveBilling
             }
         }
 
-        // Search result button click
+        // Search result button click  by Stack Overflow KyleMit
         private void find_gridview_CellContentClick( object sender , DataGridViewCellEventArgs e )
         {
             var senderGrid = ( DataGridView ) sender;
