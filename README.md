@@ -1,4 +1,4 @@
-<meta name="google-site-verification" content="{{ site.google_verify }}">
+<meta name="google-site-verification" content="8DNq4h3WGEdX24y2IO8UzjiU7hSWboU-Z4Lv5sdCW6c" />
 
 # AgricoveBilling
 
