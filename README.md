@@ -12,6 +12,11 @@ Windows 10 32bit with .NET 4.6.1
 VS 2017 Community, Entity Framework Core, and Crystal Reports for Visual Studio
 
 # Changelog
+## [0.7.5] - 2017-07-03 
+
+- Optimised some database calls
+- Added loading screen
+
 ## [0.7.5] - 2017-07-03
 
 - Shift Tab now working
