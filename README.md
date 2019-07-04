@@ -16,6 +16,7 @@ VS 2017 Community, Entity Framework Core, and Crystal Reports for Visual Studio
 
 - Optimised some database calls
 - Added loading screen
+- Bring window to front after loading
 
 ## [0.7.5] - 2017-07-03
 
