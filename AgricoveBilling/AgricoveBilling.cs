@@ -171,6 +171,11 @@ namespace AgricoveBilling
             ComboColumn.FlatStyle = ButtonColumn.FlatStyle = FlatStyle.Flat;
 
             splashForm.SetText ( "Done" );              //setting the text to "Done" closes the loading screen
+
+            //This code brings this window to front: By Shabbir Hussain StackOverFlow
+            this.WindowState = FormWindowState.Minimized;
+            this.Show ();
+            this.WindowState = FormWindowState.Normal;
         }
 
         private void form_load()
