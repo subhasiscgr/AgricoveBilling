@@ -9,7 +9,7 @@ Compiled binary can be downloaded here: [Download](http://www.mediafire.com/file
 Windows 10 32bit with .NET 4.6.1
 
 # Build Requirements
-VS 2017 and Crystal Reports for Visual Studio
+VS 2017 Community, Entity Framework Core, and Crystal Reports for Visual Studio
 
 # Changelog
 ## [0.7.5] - 2017-07-03
