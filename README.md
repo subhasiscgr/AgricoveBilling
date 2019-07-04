@@ -2,7 +2,7 @@
 
 Billing system designed for Green Agricove Ltd for generating, printing, and keeping a history of invoices. There is no GST billing supprt or inventory management yet.
 
-Currently in Beta
+#This is a pre-release version
 
 # Download
 Compiled binary can be downloaded here: [Download](http://www.mediafire.com/file/aqdht1i1rqgrylp/AgricoveBilling.exe/file)
