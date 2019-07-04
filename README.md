@@ -1,6 +1,6 @@
 # AgricoveBilling
 
-Billing system designed for Green Agricove Ltd. using Entity Framework Core and Crystal Reports
+Billing system designed for Green Agricove Ltd for generating, printing, and keeping a history of invoices. There is no GST billing supprt or inventory management yet.
 
 # Download
 Compiled binary can be downloaded here: [Download](http://www.mediafire.com/file/aqdht1i1rqgrylp/AgricoveBilling.exe/file)
