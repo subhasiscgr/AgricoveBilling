@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace AgricoveBilling
@@ -14,9 +12,9 @@ namespace AgricoveBilling
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new AgricoveBilling());
+            Application.EnableVisualStyles ();
+            Application.SetCompatibleTextRenderingDefault ( false );
+            Application.Run ( new AgricoveBilling () );
         }
     }
 }

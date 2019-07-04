@@ -93,6 +93,16 @@ namespace AgricoveBilling.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap form_background {
+            get {
+                object obj = ResourceManager.GetObject("form_background", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap minimummark {
             get {
                 object obj = ResourceManager.GetObject("minimummark", resourceCulture);

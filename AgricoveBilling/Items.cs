@@ -19,7 +19,7 @@ namespace AgricoveBilling
         private double _qty;
         private double _price;
 
-        private Items tempobj;
+        //private Items tempobj;
         public Items()
         {
 

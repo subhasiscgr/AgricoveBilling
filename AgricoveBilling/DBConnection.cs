@@ -30,10 +30,8 @@ namespace AgricoveBilling
                 {
                     Database.EnsureCreated ();
                 }
-                catch ( FilePermissionException fe )
-                {
-
-                }
+                catch
+                { }
             }
         }
         protected override void OnConfiguring( DbContextOptionsBuilder optionbuilder )

@@ -14,6 +14,7 @@ using Be.Timvw.Framework.ComponentModel;
 using System.Globalization;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace AgricoveBilling
 {
@@ -55,9 +56,10 @@ namespace AgricoveBilling
         //Take a set of buttons for gridview
         DataGridViewButtonColumn ButtonColumn = new DataGridViewButtonColumn ();
         DataGridViewComboBoxColumn ComboColumn = new DataGridViewComboBoxColumn ();
+        SplashForm splashForm = new SplashForm ();
 
         //Print
-        private PrintDocument printDocument1 = new PrintDocument();
+        private PrintDocument printDocument1 = new PrintDocument ();
         Bitmap memoryImage;
         //
 
@@ -103,15 +105,24 @@ namespace AgricoveBilling
         //Form Load
         private void AgricoveBilling_Load( object sender , EventArgs e )
         {
-            fast_load = true;                                                                               //make sure unnecessary calculations don't get triggered
+            //loading screen
+            Thread thread = new Thread ( new ThreadStart ( delegate {  System.Windows.Forms.Application.Run ( splashForm ); } ) );
+            thread.IsBackground = true;
+            thread.SetApartmentState ( ApartmentState.STA );
+            thread.Start ();
+
+            fast_load = true;                                                    //make sure unnecessary calculations don't get triggered
+            splashForm.SetText ( "Loading Indexes..." );                        //this function reports stage of loading
             add_tabindex ();
+            splashForm.SetText ( "Loading Arrays..." );
             add_tag ( descBox );
             add_tag ( qtyBox );
             add_tag ( unitBox );
             add_tag ( uBox );
             add_tag ( tBox );
-            nudstyle ();
+            splashForm.SetText ( "Loading Form..." );
             form_load ();
+            splashForm.SetText ( "Reading Configurations..." );
             initiate_label ();
             fast_load = false;
 
@@ -123,14 +134,15 @@ namespace AgricoveBilling
 
             //printDocument1.DefaultPageSettings.PaperSize = GetPaperSize("A4");
             //
+            splashForm.SetText ( "Loading Menus..." );
+            add_context ( descBox );                           //call context menu adder
 
+            splashForm.SetText ( "Setting Parameters..." );
             //MessageBoxManager.OK = "Alright";
             MessageBoxManager.Yes = "Print";                //Turn Yes into a print button using MessageBox manager
             //MessageBoxManager.No = "Nope";
             MessageBoxManager.Register ();
-
-            add_context ( descBox );                           //call context menu adder
-
+            
             //Populate datasrc combobox
             //datasrc.Items.Add("Invoice");
             //datasrc.Items.Add("Items");
@@ -152,9 +164,13 @@ namespace AgricoveBilling
             ComboColumn.Items.Add ( "KG" );
             ComboColumn.Items.Add ( "Gram" );
             ComboColumn.Items.Add ( "Piece" );
+
+            splashForm.SetText ( "Loading Styles.." );
+            nudstyle ();
+            datagridview_style ( find_gridview );
             ComboColumn.FlatStyle = ButtonColumn.FlatStyle = FlatStyle.Flat;
 
-            datagridview_style ( find_gridview );
+            splashForm.SetText ( "Done" );              //setting the text to "Done" closes the loading screen
         }
 
         private void form_load()
@@ -165,7 +181,15 @@ namespace AgricoveBilling
             DateTime foo = DateTime.UtcNow;
             long unixTime = ( ( DateTimeOffset ) foo ).ToUnixTimeSeconds ();
             invno.Text = "#INV" + unixTime.ToString ();                          //invoice ID is UNIX datetime
+            if ( fast_load )
+            {
+                splashForm.SetText ( "Loading Database..." );
+            }
             populate_list ();                                                    //autocomplete suggestions are loaded
+            if ( fast_load )
+            {
+                splashForm.SetText ( "Loading Defaults..." );
+            }
             cleanform ();
         }
 
@@ -216,14 +240,14 @@ namespace AgricoveBilling
                             ( control as ComboBox ).SelectedIndex = 0;
                         }
                     }
-                    else if(control is Label)
+                    else if ( control is Label )
                     {
                         var r = new Regex ( @"tBox\d{0,2}" );
-                        if ( r.IsMatch(control.Name) )
+                        if ( r.IsMatch ( control.Name ) )
                         {
                             ( control as Label ).Text = "0.00";
                         }
-                        if ( control.Name =="subtotal" )
+                        if ( control.Name == "subtotal" )
                         {
                             ( control as Label ).Text = "0.00";
                         }
@@ -251,7 +275,10 @@ namespace AgricoveBilling
             };
 
             func ( Controls );
-
+            if ( fast_load )
+            {
+                splashForm.SetText ( "Loading Theme..." );
+            }
             disable_rows ();
             this.ActiveControl = descBox1;            //set focus to descbox1
 
@@ -319,22 +346,41 @@ namespace AgricoveBilling
             {
                 try
                 {
+                    if ( fast_load )
+                    {
+                        splashForm.SetText ( "Loading Items..." );
+                    }
                     var items = dataContext.Items.ToList ();
                     var desc = items.Select ( t => t.ItemName ).ToList ();
+                    var c = desc.Count ();
                     foreach ( var descval in desc )
                     {
+                        if ( fast_load )
+                        {
+                            splashForm.SetText ( "Loading " + c.ToString () + " Items..." );
+                        }
                         foreach ( var dBox in descBox )
                         {
                             dBox.AutoCompleteCustomSource.Add ( descval );
                         }
+                        c = c - 1;
                     }
-
+                    if ( fast_load )
+                    {
+                        splashForm.SetText ( "Loading Invoices..." );
+                    }
                     var invoice = dataContext.Invoice.ToList ();
                     var names = invoice.Select ( n => n.BillToName ).ToList ();
                     var adds = invoice.Select ( a => a.BillToAdd ).ToList ();
+                    c = names.Count ();
                     foreach ( var name in names )
                     {
                         billname.AutoCompleteCustomSource.Add ( name );
+                        if ( fast_load )
+                        {
+                            splashForm.SetText ( "Loading " + c.ToString () + " Invoices..." );
+                        }
+                        c = c - 1;
                     }
                     foreach ( var add in adds )
                     {
@@ -495,7 +541,7 @@ namespace AgricoveBilling
                 ReleaseCapture ();
                 SendMessage ( Handle , WM_NCLBUTTONDOWN , HT_CAPTION , 0 );
             }
-        }        
+        }
 
         //numericupdown style load
         private void nudstyle()
@@ -740,7 +786,7 @@ namespace AgricoveBilling
                     d.Columns [ 5 ].DefaultCellStyle.Format = "0.00##";
                     d.AllowUserToDeleteRows = false;
                     d.ReadOnly = true;
-                    d.Sort ( d.Columns [1] , ListSortDirection.Descending );         //Order by invoice time (timestamp in invoince no)
+                    d.Sort ( d.Columns [ 1 ] , ListSortDirection.Descending );         //Order by invoice time (timestamp in invoince no)
                     d.Sort ( d.Columns [ "Due" ] , ListSortDirection.Descending );         //Order by due
                     d.AllowUserToResizeRows = true;                             //this enabled only in invoice view
 
@@ -882,14 +928,14 @@ namespace AgricoveBilling
         {
             Graphics myGraphics = this.CreateGraphics ();
             Size s = this.Size;
-            memoryImage = new Bitmap(s.Width, s.Height, myGraphics);
-            Graphics memoryGraphics = Graphics.FromImage(memoryImage);
-            memoryGraphics.CopyFromScreen(this.Location.X, this.Location.Y, 0, 0, s);
+            memoryImage = new Bitmap ( s.Width , s.Height , myGraphics );
+            Graphics memoryGraphics = Graphics.FromImage ( memoryImage );
+            memoryGraphics.CopyFromScreen ( this.Location.X , this.Location.Y , 0 , 0 , s );
         }
 
         private void printDocument1_PrintPage( System.Object sender , System.Drawing.Printing.PrintPageEventArgs e )           //deprecated
         {
-            e.Graphics.DrawImage(memoryImage, 0, 0);
+            e.Graphics.DrawImage ( memoryImage , 0 , 0 );
         }
         private void bitmap_print()                         //deprecated
         {
@@ -947,29 +993,19 @@ namespace AgricoveBilling
             }
         }
         //Fetch price of item. Null if item not found. Hence "decimal?"
-        private decimal? fetch_price( string s )
+        private decimal? fetch_price( string s, List<Items> items )
         {
-            using ( var dataContext = new DBConnection () )
-            {
-                var items = dataContext.Items.ToList ();
                 var p = from x in items where x.ItemName == s select ( decimal? ) x.ItemPrice;
                 decimal? result = p.FirstOrDefault ();
                 return result;
-                //dataContext.SaveChanges();
-            }
         }
 
         //fetch unit type of item. returns null if none found
-        private string fetch_itemtype( string s )
+        private string fetch_itemtype( string s , List<Items> items )
         {
-            using ( var dataContext = new DBConnection () )
-            {
-                var items = dataContext.Items.ToList ();
                 var p = from x in items where x.ItemName == s select ( string ) x.ItemUnit;
                 string result = p.FirstOrDefault ();
                 return result;
-                //dataContext.SaveChanges();
-            }
         }
 
         //save to item table
@@ -1037,47 +1073,47 @@ namespace AgricoveBilling
                     ItemID1Name = descBox1.Text ,
                     ItemID1Price = uBox1.Value ,
                     ItemID1Qty = qtyBox1.Value ,
-                    ItemID1Unit = unitBox1.SelectedIndex ,
+                    ItemID1Unit = unitBox1.Text ,
                     ItemID2Name = descBox2.Text ,
                     ItemID2Price = uBox2.Value ,
                     ItemID2Qty = qtyBox2.Value ,
-                    ItemID2Unit = unitBox2.SelectedIndex ,
+                    ItemID2Unit = unitBox2.Text ,
                     ItemID3Name = descBox3.Text ,
                     ItemID3Price = uBox3.Value ,
                     ItemID3Qty = qtyBox3.Value ,
-                    ItemID3Unit = unitBox3.SelectedIndex ,
+                    ItemID3Unit = unitBox3.Text ,
                     ItemID4Name = descBox4.Text ,
                     ItemID4Price = uBox4.Value ,
                     ItemID4Qty = qtyBox4.Value ,
-                    ItemID4Unit = unitBox5.SelectedIndex ,
+                    ItemID4Unit = unitBox5.Text ,
                     ItemID5Name = descBox5.Text ,
                     ItemID5Price = uBox5.Value ,
                     ItemID5Qty = qtyBox5.Value ,
-                    ItemID5Unit = unitBox5.SelectedIndex ,
+                    ItemID5Unit = unitBox5.Text ,
                     ItemID6Name = descBox6.Text ,
                     ItemID6Price = uBox6.Value ,
                     ItemID6Qty = qtyBox6.Value ,
-                    ItemID6Unit = unitBox6.SelectedIndex ,
+                    ItemID6Unit = unitBox6.Text ,
                     ItemID7Name = descBox7.Text ,
                     ItemID7Price = uBox7.Value ,
                     ItemID7Qty = qtyBox7.Value ,
-                    ItemID7Unit = unitBox7.SelectedIndex ,
+                    ItemID7Unit = unitBox7.Text ,
                     ItemID8Name = descBox8.Text ,
                     ItemID8Price = uBox8.Value ,
                     ItemID8Qty = qtyBox8.Value ,
-                    ItemID8Unit = unitBox8.SelectedIndex ,
+                    ItemID8Unit = unitBox8.Text ,
                     ItemID9Name = descBox9.Text ,
                     ItemID9Price = uBox9.Value ,
                     ItemID9Qty = qtyBox9.Value ,
-                    ItemID9Unit = unitBox9.SelectedIndex ,
+                    ItemID9Unit = unitBox9.Text ,
                     ItemID10Name = descBox10.Text ,
                     ItemID10Price = uBox10.Value ,
                     ItemID10Qty = qtyBox10.Value ,
-                    ItemID10Unit = unitBox10.SelectedIndex ,
+                    ItemID10Unit = unitBox10.Text ,
                     ItemID11Name = descBox11.Text ,
                     ItemID11Price = uBox11.Value ,
                     ItemID11Qty = qtyBox11.Value ,
-                    ItemID11Unit = unitBox11.SelectedIndex ,
+                    ItemID11Unit = unitBox11.Text ,
                     DiscountValue = discval.Value ,
                     DiscountType = disctype.SelectedIndex ,
                     TaxRate = txrt.Value ,
@@ -1183,47 +1219,47 @@ namespace AgricoveBilling
             billaddr.Text = inv.BillToAdd;
             descBox1.Text = inv.ItemID1Name;
             qtyBox1.Value = inv.ItemID1Qty;
-            unitBox1.SelectedIndex = inv.ItemID1Unit;
+            unitBox1.Text = inv.ItemID1Unit;
             uBox1.Value = inv.ItemID1Price;                                                  // ordering matters
             descBox2.Text = inv.ItemID2Name;
             qtyBox2.Value = inv.ItemID2Qty;
-            unitBox2.SelectedIndex = inv.ItemID2Unit;
+            unitBox2.Text = inv.ItemID2Unit;
             uBox2.Value = inv.ItemID2Price;
             descBox3.Text = inv.ItemID3Name;
             qtyBox3.Value = inv.ItemID3Qty;
-            unitBox3.SelectedIndex = inv.ItemID3Unit;
+            unitBox3.Text = inv.ItemID3Unit;
             uBox3.Value = inv.ItemID3Price;
             descBox4.Text = inv.ItemID4Name;
             qtyBox4.Value = inv.ItemID4Qty;
-            unitBox4.SelectedIndex = inv.ItemID4Unit;
+            unitBox4.Text = inv.ItemID4Unit;
             uBox4.Value = inv.ItemID4Price;
             descBox5.Text = inv.ItemID5Name;
             qtyBox5.Value = inv.ItemID5Qty;
-            unitBox5.SelectedIndex = inv.ItemID5Unit;
+            unitBox5.Text = inv.ItemID5Unit;
             uBox5.Value = inv.ItemID5Price;
             descBox6.Text = inv.ItemID6Name;
             qtyBox6.Value = inv.ItemID6Qty;
-            unitBox6.SelectedIndex = inv.ItemID6Unit;
+            unitBox6.Text = inv.ItemID6Unit;
             uBox6.Value = inv.ItemID6Price;
             descBox7.Text = inv.ItemID7Name;
             qtyBox7.Value = inv.ItemID7Qty;
-            unitBox7.SelectedIndex = inv.ItemID7Unit;
+            unitBox7.Text = inv.ItemID7Unit;
             uBox7.Value = inv.ItemID7Price;
             descBox8.Text = inv.ItemID8Name;
             qtyBox8.Value = inv.ItemID8Qty;
-            unitBox8.SelectedIndex = inv.ItemID8Unit;
+            unitBox8.Text = inv.ItemID8Unit;
             uBox8.Value = inv.ItemID8Price;
             descBox9.Text = inv.ItemID9Name;
             qtyBox9.Value = inv.ItemID9Qty;
-            unitBox9.SelectedIndex = inv.ItemID9Unit;
+            unitBox9.Text = inv.ItemID9Unit;
             uBox9.Value = inv.ItemID9Price;
             descBox10.Text = inv.ItemID10Name;
             qtyBox10.Value = inv.ItemID10Qty;
-            unitBox10.SelectedIndex = inv.ItemID10Unit;
+            unitBox10.Text = inv.ItemID10Unit;
             uBox10.Value = inv.ItemID10Price;
             descBox11.Text = inv.ItemID11Name;
             qtyBox11.Value = inv.ItemID11Qty;
-            unitBox11.SelectedIndex = inv.ItemID11Unit;
+            unitBox11.Text = inv.ItemID11Unit;
             uBox11.Value = inv.ItemID11Price;
 
             disctype.SelectedIndex = inv.DiscountType;
@@ -1446,7 +1482,7 @@ namespace AgricoveBilling
             }
         }
 
-        // Search result button click  by Stack Overflow KyleMit
+        // Search result button click by Stack Overflow KyleMit
         private void find_gridview_CellContentClick( object sender , DataGridViewCellEventArgs e )
         {
             var senderGrid = ( DataGridView ) sender;
@@ -1565,10 +1601,19 @@ namespace AgricoveBilling
                 int i = Int32.Parse ( ( sender as TextBox ).Tag.ToString () );            //read its array index
                 if ( descBox [ i ].Text.Length > 0 )
                 {
-                    if ( !inv_exists() && fetch_price ( descBox [ i ].Text ) != null && fetch_itemtype ( descBox [ i ].Text ) != null )            //check if there is any existing entry and load the values only if this is a new invoice
+                    if ( !inv_exists () )                           //check if there is any existing entry and load the values only if this is a new invoice
                     {
-                        uBox [ i ].Value = ( decimal ) fetch_price ( descBox [ i ].Text );                 //load price
-                        unitBox [ i ].Text = fetch_itemtype ( descBox [ i ].Text );       //load type
+                        using ( var dataContext = new DBConnection () )
+                        {
+                            var items = dataContext.Items.ToList ();
+                            var price = fetch_price ( descBox [ i ].Text , items );
+                            var unit = fetch_itemtype ( descBox [ i ].Text , items );
+                            if ( price != null && unit != null )
+                            {
+                                uBox [ i ].Value = ( decimal ) price;                 //load price
+                                unitBox [ i ].Text = unit;                            //load type
+                            }
+                        }
                     }
                     if ( qtyBox [ i ].Value == 0 )                   //if qty hasn't been manually changed, load default value of 1
                     {
@@ -2143,7 +2188,7 @@ namespace AgricoveBilling
             textbox_TextChanged ( sender , 2 );
         }
 
-    private void desc_TextChanged( object sender , EventArgs e )
+        private void desc_TextChanged( object sender , EventArgs e )
         {
             TextBox t = new TextBox ();
             t = ( TextBox ) sender;
