@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AgricoveBilling));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label_agri_addr = new System.Windows.Forms.Label();
             this.label_agri_url = new System.Windows.Forms.Label();
             this.label_agri_email = new System.Windows.Forms.Label();
@@ -515,7 +515,7 @@
             this.searchpanel.Controls.Add(this.find_gridview);
             this.searchpanel.Controls.Add(this.line_search_1);
             this.searchpanel.Controls.Add(this.searchbar);
-            this.searchpanel.Location = new System.Drawing.Point(333, 55);
+            this.searchpanel.Location = new System.Drawing.Point(327, 58);
             this.searchpanel.Name = "searchpanel";
             this.searchpanel.Size = new System.Drawing.Size(760, 597);
             this.searchpanel.TabIndex = 100;
@@ -523,21 +523,21 @@
             // find_gridview
             // 
             this.find_gridview.AllowUserToAddRows = false;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.find_gridview.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.find_gridview.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
             this.find_gridview.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
             this.find_gridview.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.find_gridview.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
             this.find_gridview.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.find_gridview.ContextMenuStrip = this.copymenu;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.find_gridview.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.ControlDarkDark;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.find_gridview.DefaultCellStyle = dataGridViewCellStyle4;
             this.find_gridview.Location = new System.Drawing.Point(23, 83);
             this.find_gridview.Name = "find_gridview";
             this.find_gridview.ReadOnly = true;
@@ -1691,7 +1691,7 @@
             this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
             this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
             this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
+            this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 122F));
             this.invoice_table.Controls.Add(this.unitBox11, 2, 11);
             this.invoice_table.Controls.Add(this.unitBox10, 2, 10);
             this.invoice_table.Controls.Add(this.unitBox9, 2, 9);
@@ -2206,9 +2206,9 @@
             this.ver.ForeColor = System.Drawing.Color.DarkSlateGray;
             this.ver.Location = new System.Drawing.Point(922, 15);
             this.ver.Name = "ver";
-            this.ver.Size = new System.Drawing.Size(82, 14);
+            this.ver.Size = new System.Drawing.Size(88, 14);
             this.ver.TabIndex = 102;
-            this.ver.Text = "Ver. 0.7.8 Beta";
+            this.ver.Text = "Ver. 0.7.82 Beta";
             // 
             // AgricoveBilling
             // 

@@ -124,7 +124,6 @@ namespace AgricoveBilling
             form_load ();
             splashForm.SetText ( "Reading Configurations..." );
             initiate_label ();
-            fast_load = false;
 
             //Print
             //printDocument1.PrintPage += new PrintPageEventHandler(printDocument1_PrintPage);
@@ -134,6 +133,7 @@ namespace AgricoveBilling
 
             //printDocument1.DefaultPageSettings.PaperSize = GetPaperSize("A4");
             //
+
             splashForm.SetText ( "Loading Menus..." );
             add_context ( descBox );                           //call context menu adder
 
@@ -142,16 +142,6 @@ namespace AgricoveBilling
             MessageBoxManager.Yes = "Print";                //Turn Yes into a print button using MessageBox manager
             //MessageBoxManager.No = "Nope";
             MessageBoxManager.Register ();
-            
-            //Populate datasrc combobox
-            //datasrc.Items.Add("Invoice");
-            //datasrc.Items.Add("Items");
-            //datasrc.SelectedIndex = 0;
-
-            //Hide the up-down arrows on certain numericupdown controls 
-            discval.Controls [ 0 ].Visible = false;
-            txrt.Controls [ 0 ].Visible = false;
-            paid.Controls [ 0 ].Visible = false;
 
             //find_gridview.Columns.Add(ButtonColumn);                          //this needs to be added dynamically later
             ButtonColumn.Text = "deledit";
@@ -169,6 +159,8 @@ namespace AgricoveBilling
             nudstyle ();
             datagridview_style ( find_gridview );
             ComboColumn.FlatStyle = ButtonColumn.FlatStyle = FlatStyle.Flat;
+
+            fast_load = false;
 
             splashForm.SetText ( "Done" );              //setting the text to "Done" closes the loading screen
 
@@ -318,7 +310,7 @@ namespace AgricoveBilling
                 }
                 else
                 {
-                    i = i + 1;
+                    i = i + 1;              //this counts how many rows have text
                     desc.Enabled = true;
                     bgColors [ v + 1 , 0 ] = SystemColors.ControlLightLight;
 
@@ -337,6 +329,13 @@ namespace AgricoveBilling
             {
                 descBox [ i ].Enabled = true;                                //This makes sure the first descbox stays enabled
                 bgColors [ i + 1 , 0 ] = SystemColors.ControlLightLight;
+                //The rest must also be done here and not on descBox enter otherwise tab functionality cause issues after form load
+                qtyBox [ i ].Enabled = true;
+                bgColors [ i + 1 , 1 ] = SystemColors.ControlLightLight;                //bgcolro index starts one value ahead because it includes header row of table
+                unitBox [ i ].Enabled = true;
+                bgColors [ i + 1 , 2 ] = SystemColors.ControlLightLight;
+                uBox [ i ].Enabled = true;
+                bgColors [ i + 1 , 3 ] = SystemColors.ControlLightLight;
             }
             catch
             { }
@@ -394,7 +393,7 @@ namespace AgricoveBilling
                 }
                 catch
                 {
-                    MessageBox.Show ( "       Database Corrupted    " , "Error" , MessageBoxButtons.OK , MessageBoxIcon.Warning , MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly );                  //Failed to load datacontext. Data in DB doesn't match interface. Extra space to make the messagebox a bit pleasing. Left side needs more space to look symmetrical. DefaultDesktopOnly puts the messagebox above splash screen. (Trick by MikeDub StackOverFlow)
+                    MessageBox.Show ( "       Database Corrupted    " , "Error" , MessageBoxButtons.OK , MessageBoxIcon.Warning , MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly );                  //Failed to load datacontext. Data in DB doesn't match interface. Extra space to make the messagebox a bit pleasing. Left side needs more space to look symmetrical. DefaultDesktopOnly puts the messagebox above splash screen (Trick by MikeDub StackOverFlow)
                     this.Close ();
                 }
                 //dataContext.SaveChanges();                
@@ -704,7 +703,6 @@ namespace AgricoveBilling
             //nud.Font = new Font(FontFamily.GenericSansSerif, 20f, FontStyle.Regular);
             bool isSet = false;
             NW nw = null;
-            nud.Enabled = false;
             nud.VisibleChanged += delegate
             {
                 // NUD children consist of two child windows:
@@ -1584,7 +1582,7 @@ namespace AgricoveBilling
             if ( !fast_load && !history_load )                                                           //will not fire during form load
             {
                 int i = Int32.Parse ( ( sender as TextBox ).Tag.ToString () );            //reading the array index from tag
-
+                /*
                 //as you enter a descbox, its correcponding row gets enabled
                 qtyBox [ i ].Enabled = true;
                 bgColors [ i + 1 , 1 ] = SystemColors.ControlLightLight;                //bgcolro index starts one value ahead because it includes header row of table
@@ -1593,6 +1591,7 @@ namespace AgricoveBilling
                 uBox [ i ].Enabled = true;
                 bgColors [ i + 1 , 3 ] = SystemColors.ControlLightLight;
                 invoice_table.Refresh ();                                    //apply colors
+                */
 
                 descBox [ i ].SelectAll ();                                     //select the existing text
             }
