@@ -8,7 +8,7 @@ Features:
 
 There is no GST billing supprt or inventory management yet.
 
-[Documentation (Wiki)](https://github.com/subhasiscgr/AgricoveBilling/wiki)
+[Documentation (Wiki)](https://github.com/subhasiscgr/AgricoveBilling/wiki) (Incomplete)
 
 # Download
 
