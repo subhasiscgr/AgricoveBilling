@@ -1,14 +1,17 @@
 # AgricoveBilling
 
 Billing system designed for Green Agricove Ltd. 
+
+Features:
 - It allows generation of invoice, printing of invoice, and keeping a history of invoices. 
 - It keeps track of items, item prices, customer details and provides autocomplete suggestions accordingly. 
 
 There is no GST billing supprt or inventory management yet.
 
+# Download
+
 ###### Latest version: 0.7.84 Beta (External release). There is no stable release yet
 
-# Download
 Compiled binary can be downloaded here: [Download](http://www.mediafire.com/file/aqdht1i1rqgrylp/AgricoveBilling.exe/file)
 
 # System Requirements
