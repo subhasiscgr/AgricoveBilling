@@ -8,6 +8,8 @@ Features:
 
 There is no GST billing supprt or inventory management yet.
 
+[Documentation (Wiki)](https://github.com/subhasiscgr/AgricoveBilling/wiki)
+
 # Download
 
 ###### Latest version: 0.7.84 Beta (External release). There is no stable release yet
