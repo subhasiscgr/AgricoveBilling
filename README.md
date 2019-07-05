@@ -15,7 +15,7 @@ VS 2017 Community, Entity Framework Core, and Crystal Reports for Visual Studio
 
 # Changelog
 
-## [0.7.83] - 2019-07-06
+## [0.7.84] - 2019-07-06
 
 - Fixed issues #9, #11, #13, #14
 - Improved loading times
