@@ -515,7 +515,7 @@
             this.searchpanel.Controls.Add(this.find_gridview);
             this.searchpanel.Controls.Add(this.line_search_1);
             this.searchpanel.Controls.Add(this.searchbar);
-            this.searchpanel.Location = new System.Drawing.Point(327, 58);
+            this.searchpanel.Location = new System.Drawing.Point(333, 55);
             this.searchpanel.Name = "searchpanel";
             this.searchpanel.Size = new System.Drawing.Size(760, 597);
             this.searchpanel.TabIndex = 100;
@@ -1691,7 +1691,7 @@
             this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
             this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
             this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 122F));
+            this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 124F));
             this.invoice_table.Controls.Add(this.unitBox11, 2, 11);
             this.invoice_table.Controls.Add(this.unitBox10, 2, 10);
             this.invoice_table.Controls.Add(this.unitBox9, 2, 9);
@@ -2206,9 +2206,9 @@
             this.ver.ForeColor = System.Drawing.Color.DarkSlateGray;
             this.ver.Location = new System.Drawing.Point(922, 15);
             this.ver.Name = "ver";
-            this.ver.Size = new System.Drawing.Size(88, 14);
+            this.ver.Size = new System.Drawing.Size(70, 14);
             this.ver.TabIndex = 102;
-            this.ver.Text = "Ver. 0.7.82 Beta";
+            this.ver.Text = "v0.7.83 Beta";
             // 
             // AgricoveBilling
             // 

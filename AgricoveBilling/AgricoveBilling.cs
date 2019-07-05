@@ -1582,17 +1582,6 @@ namespace AgricoveBilling
             if ( !fast_load && !history_load )                                                           //will not fire during form load
             {
                 int i = Int32.Parse ( ( sender as TextBox ).Tag.ToString () );            //reading the array index from tag
-                /*
-                //as you enter a descbox, its correcponding row gets enabled
-                qtyBox [ i ].Enabled = true;
-                bgColors [ i + 1 , 1 ] = SystemColors.ControlLightLight;                //bgcolro index starts one value ahead because it includes header row of table
-                unitBox [ i ].Enabled = true;
-                bgColors [ i + 1 , 2 ] = SystemColors.ControlLightLight;
-                uBox [ i ].Enabled = true;
-                bgColors [ i + 1 , 3 ] = SystemColors.ControlLightLight;
-                invoice_table.Refresh ();                                    //apply colors
-                */
-
                 descBox [ i ].SelectAll ();                                     //select the existing text
             }
         }
@@ -1738,6 +1727,19 @@ namespace AgricoveBilling
                 {
                     subttllssdisc.Text = ( value * ( 1 - discval.Value / 100 ) ).ToString ( "#,##0.00" );
                 }
+
+                //enable save button here to account for 100% discount
+                value = decimal_parse ( subtotal.Text.ToString () );
+                if ( value == 0 )
+                {
+                    save.Enabled = false;
+                    //print.Enabled = false;
+                }
+                else
+                {
+                    save.Enabled = true;
+                    //print.Enabled = true;
+                }
                 numbox_TextChanged ( sender , 36 );                 //send for edit log
             }
         }
@@ -1762,7 +1764,6 @@ namespace AgricoveBilling
             if ( !fast_load && !history_load )                      //gross total must not fire during history load to ensure original paid value is shown
             {
                 decimal value = 0;
-                value = decimal_parse ( grssttl.Text.ToString () );
 
                 if ( !paid_token )            //value loads automatically only if user hasn't set it manually
                 {
@@ -1782,21 +1783,6 @@ namespace AgricoveBilling
                 else if ( paid_max < value )       //value loads automatically up to the max that user had entered
                 {
                     paid.Value = paid_max;
-                }
-                /*if (paid.Value > value)
-                {
-                    paid.Value = value;
-                }*/
-
-                if ( value == 0 )
-                {
-                    save.Enabled = false;
-                    //print.Enabled = false;
-                }
-                else
-                {
-                    save.Enabled = true;
-                    //print.Enabled = true;
                 }
 
                 balancedue.Text = ( value - paid.Value ).ToString ( "#,##0.00" );
@@ -1913,10 +1899,13 @@ namespace AgricoveBilling
                 if ( searchpanel.Visible )
                 {
                     searchpanel.Visible = false;
-                    if ( balancedue.Text.Length > 0 )
+                    if ( paid.Value > 0 )           //if invoice is filled
                     {
-                        save.Enabled = true;
-                        print.Enabled = true;
+                        if ( inv_exists () )
+                        {
+                            print.Enabled = true;
+                        }
+                        save.Enabled = true;  //It should happen automatically but not if you bo back and forth between result window without loading a new result. Then disc_calc doesn't fire
                     }
                     if ( edit_check == 1 )
                     {
