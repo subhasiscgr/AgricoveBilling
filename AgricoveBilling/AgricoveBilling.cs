@@ -34,9 +34,9 @@ namespace AgricoveBilling
         bool paid_token = false;            //This one determines whether amount paid has been manually entered
         decimal paid_max = 0;               //This one holds the max paid amount that has been manually entered
         ulong edit_check = 0;               //This is a binary number whose each bit represents a field in the form. a bit being 1 means it contains manually entered data. Setting the LSB to 1 and everything else to zero disables it
-        bool recursive = false;             //This flag prevents auto load of price when list is being rearranged
-        bool fast_load = true;              //This flag disables unnecessary events when loading
-        bool history_load = false;          //This disables all auto events except loading of fields that are loaded dynamically
+
+        //the following flag makes sure event binder can't bind multiple instances of same event to a control. 0 means no mode set. 1 means fast load mode. 2 means history mode. 3 means recusrive load mode
+        int toggle_flag = 0;       
 
         const int VK_TAB = 0x09; //Tab key
         const uint KEYEVENTF_KEYUP = 0x0002;
@@ -111,7 +111,7 @@ namespace AgricoveBilling
             thread.SetApartmentState ( ApartmentState.STA );
             thread.Start ();
 
-            fast_load = true;                                                    //make sure unnecessary calculations don't get triggered
+            toggle_events("fast_load", true);                                                   //make sure unnecessary calculations don't get triggered
             splashForm.SetText ( "Loading Indexes..." );                        //this function reports stage of loading
             add_tabindex ();
             splashForm.SetText ( "Loading Arrays..." );
@@ -120,8 +120,10 @@ namespace AgricoveBilling
             add_tag ( unitBox );
             add_tag ( uBox );
             add_tag ( tBox );
-            splashForm.SetText ( "Loading Form..." );
-            form_load ();
+            splashForm.SetText ( "Loading Database..." );
+            populate_list ();                                                    //autocomplete suggestions are loaded
+            splashForm.SetText ( "Loading Defaults..." );
+            cleanform ();
             splashForm.SetText ( "Reading Configurations..." );
             initiate_label ();
 
@@ -144,6 +146,8 @@ namespace AgricoveBilling
             MessageBoxManager.Register ();
 
             //find_gridview.Columns.Add(ButtonColumn);                          //this needs to be added dynamically later
+            //vScrollBar1.Enabled = true;
+
             ButtonColumn.Text = "deledit";
             ButtonColumn.Name = "deledit";
             ButtonColumn.UseColumnTextForButtonValue = true;
@@ -156,11 +160,21 @@ namespace AgricoveBilling
             ComboColumn.Items.Add ( "Piece" );
 
             splashForm.SetText ( "Loading Styles.." );
-            nudstyle ();
+            foreach ( var v in uBox )
+            {
+                nud_style ( v );
+            }
+            foreach ( var v in qtyBox )
+            {
+                nud_style ( v );
+            }
+            nud_style ( discval );
+            nud_style ( txrt );
+            nud_style ( paid );
             datagridview_style ( find_gridview );
             ComboColumn.FlatStyle = ButtonColumn.FlatStyle = FlatStyle.Flat;
 
-            fast_load = false;
+            toggle_events ( "fast_load" , false );
 
             splashForm.SetText ( "Done" );              //setting the text to "Done" closes the loading screen
 
@@ -170,32 +184,20 @@ namespace AgricoveBilling
             this.WindowState = FormWindowState.Normal;
         }
 
-        private void form_load()
-        {
-            //vScrollBar1.Enabled = true;
-            //invno.Text = "#INV" + System.DateTime.Now.Date.ToString("dd") + System.DateTime.Now.Date.ToString("MM") + System.DateTime.Now.Date.ToString("yy");
-            //invdt.Text = System.DateTime.Now.Date.ToString("dd/MM/yyyy");
-            DateTime foo = DateTime.UtcNow;
-            long unixTime = ( ( DateTimeOffset ) foo ).ToUnixTimeSeconds ();
-            invno.Text = "#INV" + unixTime.ToString ();                          //invoice ID is UNIX datetime
-            if ( fast_load )
-            {
-                splashForm.SetText ( "Loading Database..." );
-            }
-            populate_list ();                                                    //autocomplete suggestions are loaded
-            if ( fast_load )
-            {
-                splashForm.SetText ( "Loading Defaults..." );
-            }
-            cleanform ();
-        }
-
         //This cleans all user inputs on the form
         private void cleanform()
         {
+
+            try
+            {
+                splashForm.SetText ( "Clearing Form..." );
+            }
+            catch { }
+            //invno.Text = "#INV" + System.DateTime.Now.Date.ToString("dd") + System.DateTime.Now.Date.ToString("MM") + System.DateTime.Now.Date.ToString("yy");
+            //invdt.Text = System.DateTime.Now.Date.ToString("dd/MM/yyyy");
+
             paid_token = false;
             edit_check = 0;
-            history_load = false;
             search.Enabled = true;                      //Find button stays enabled until user has started filling the invoice
 
             //Save and Print stay disabled. Save is enabled once paid has value, print is enabled when result is loaded from search
@@ -272,10 +274,11 @@ namespace AgricoveBilling
             };
 
             func ( Controls );
-            if ( fast_load )
+            foreach( NumericUpDown n in qtyBox )                    //must reset the decimal places in qty
             {
-                splashForm.SetText ( "Loading Theme..." );
+                n.DecimalPlaces = 3;
             }
+
             disable_rows ();
             this.ActiveControl = descBox1;            //set focus to descbox1
 
@@ -285,32 +288,59 @@ namespace AgricoveBilling
             discval.Value = 0;
             discval.DecimalPlaces = 2;
             discval.Maximum = 99999999;
+
+            DateTime foo = DateTime.UtcNow;
+            long unixTime = ( ( DateTimeOffset ) foo ).ToUnixTimeSeconds ();
+            invno.Text = "#INV" + unixTime.ToString ();                          //invoice ID is UNIX datetime
+
+            invdt.Value = DateTime.Now;
+            ddt.MinDate = invdt.Value;
+
         }
 
         //This disbles all rows in invoice table that are unused and changes the bgcolor of cells to imply which fields are disabled
         private void disable_rows()
         {
-            int i = 0;
+            bool firstblank = true;        //this will get disabled after hitting first blank row        
+
             foreach ( var desc in descBox )
             {
                 var v = Convert.ToInt32 ( desc.Tag.ToString () );
                 if ( desc.Text.Length == 0 )
                 {
-                    desc.Enabled = false;
-                    bgColors [ v + 1 , 0 ] = SystemColors.ButtonFace;
+                    if ( firstblank )
+                    {
+                        desc.Enabled = true;
+                        bgColors [ v + 1 , 0 ] = SystemColors.ControlLightLight;
 
-                    qtyBox [ v ].Enabled = false;
-                    bgColors [ v + 1 , 1 ] = SystemColors.ButtonFace;
+                        qtyBox [ v ].Enabled = true;
+                        bgColors [ v + 1 , 1 ] = SystemColors.ControlLightLight;
 
-                    unitBox [ v ].Enabled = false;
-                    bgColors [ v + 1 , 2 ] = SystemColors.ButtonFace;
+                        unitBox [ v ].Enabled = true;
+                        bgColors [ v + 1 , 2 ] = SystemColors.ControlLightLight;
 
-                    uBox [ v ].Enabled = false;
-                    bgColors [ v + 1 , 3 ] = SystemColors.ButtonFace;
+                        uBox [ v ].Enabled = true;
+                        bgColors [ v + 1 , 3 ] = SystemColors.ControlLightLight;
+
+                        firstblank = false;                                         //all blank rows after this will get disabled
+                    }
+                    else
+                    {
+                        descBox [ v ].Enabled = false;
+                        bgColors [ v + 1 , 0 ] = SystemColors.ButtonFace;
+
+                        qtyBox [ v ].Enabled = false;
+                        bgColors [ v + 1 , 1 ] = SystemColors.ButtonFace;
+
+                        unitBox [ v ].Enabled = false;
+                        bgColors [ v + 1 , 2 ] = SystemColors.ButtonFace;
+
+                        uBox [ v ].Enabled = false;
+                        bgColors [ v + 1 , 3 ] = SystemColors.ButtonFace;
+                    }
                 }
                 else
                 {
-                    i = i + 1;              //this counts how many rows have text
                     desc.Enabled = true;
                     bgColors [ v + 1 , 0 ] = SystemColors.ControlLightLight;
 
@@ -324,22 +354,6 @@ namespace AgricoveBilling
                     bgColors [ v + 1 , 3 ] = SystemColors.ControlLightLight;
                 }
             }
-
-            try
-            {
-                descBox [ i ].Enabled = true;                                //This makes sure the first descbox stays enabled
-                bgColors [ i + 1 , 0 ] = SystemColors.ControlLightLight;
-                //The rest must also be done here and not on descBox enter otherwise tab functionality cause issues after form load
-                qtyBox [ i ].Enabled = true;
-                bgColors [ i + 1 , 1 ] = SystemColors.ControlLightLight;                //bgcolro index starts one value ahead because it includes header row of table
-                unitBox [ i ].Enabled = true;
-                bgColors [ i + 1 , 2 ] = SystemColors.ControlLightLight;
-                uBox [ i ].Enabled = true;
-                bgColors [ i + 1 , 3 ] = SystemColors.ControlLightLight;
-            }
-            catch
-            { }
-
             invoice_table.Refresh ();                    //reloads invoice table design
         }
 
@@ -350,16 +364,19 @@ namespace AgricoveBilling
             {
                 try
                 {
-                    if ( fast_load )
-                    {
-                        splashForm.SetText ( "Loading Items..." );
+                    bool b = false;
+                    try
+                    { 
+                        splashForm.SetText ( "Loading Items..." );                  //try because it will work only during form load
+                        b = true;                                                   //from this point onwards, the value of b will determine whether this is form load
                     }
+                    catch { }
                     var items = dataContext.Items.ToList ();
                     var desc = items.Select ( t => t.ItemName ).ToList ();
                     var c = desc.Count ();
                     foreach ( var descval in desc )
                     {
-                        if ( fast_load )
+                        if ( b )
                         {
                             splashForm.SetText ( "Loading " + c.ToString () + " Items..." );
                         }
@@ -369,7 +386,7 @@ namespace AgricoveBilling
                         }
                         c = c - 1;
                     }
-                    if ( fast_load )
+                    if ( b )
                     {
                         splashForm.SetText ( "Loading Invoices..." );
                     }
@@ -380,7 +397,7 @@ namespace AgricoveBilling
                     foreach ( var name in names )
                     {
                         billname.AutoCompleteCustomSource.Add ( name );
-                        if ( fast_load )
+                        if ( b )
                         {
                             splashForm.SetText ( "Loading " + c.ToString () + " Invoices..." );
                         }
@@ -397,6 +414,252 @@ namespace AgricoveBilling
                     this.Close ();
                 }
                 //dataContext.SaveChanges();                
+            }
+        }
+
+        //this code unloads all events from firing unnecesssarily then reloads it
+        private void toggle_events( string s , bool b )
+        {
+           if ( b && toggle_flag == 0 )                //true means fast load is true. a mode can be enabled only if current mode is 0
+            {
+                if ( s == "fast_load" )
+                {
+                    billname.Enter -= textbox_Enter;
+                    billname.Leave -= billname_Leave;
+                    billname.MouseUp -= textbox_Enter;
+                    billname.TextChanged -= billname_TextChanged;
+                    billaddr.Enter -= textbox_Enter;
+                    billaddr.MouseUp -= textbox_Enter;
+                    billaddr.TextChanged -= billaddr_TextChanged;
+                    invdt.ValueChanged -= datetime_TextChanged;
+                    ddt.ValueChanged -= datetime_TextChanged;
+
+                    foreach ( TextBox t in descBox )
+                    {
+                        t.Leave -= descBox_LostFocus;
+                        t.Enter -= textbox_Enter;
+                        t.MouseUp -= textbox_Enter;
+                        t.TextChanged -= desc_TextChanged;
+                    }
+
+                    foreach ( NumericUpDown n in qtyBox )
+                    {
+                        n.ValueChanged -= qtyBox_ValueChanged;
+                        n.Enter -= numBox_Enter;
+                        n.MouseUp -= numBox_Enter;
+                        n.Leave -= updown_leave;
+                    }
+
+                    foreach ( ComboBox c in unitBox )
+                    {
+                        c.SelectedIndexChanged -= unitBox_SelectedIndexChanged;
+                    }
+
+                    foreach ( NumericUpDown n in uBox )
+                    {
+                        n.ValueChanged -= uBox_ValueChanged;
+                        n.Enter -= numBox_Enter;
+                        n.MouseUp -= numBox_Enter;
+                        n.Leave -= updown_leave;
+                    }
+
+                    subtotal.TextChanged -= disc_calc;
+                    discval.ValueChanged -= disc_calc;
+                    discval.Enter -= numBox_Enter;
+                    discval.Leave -= updown_leave;
+                    discval.MouseUp -= numBox_Enter;
+                    disctype.SelectedIndexChanged -= disctype_SelectedIndexChanged;
+                    subttllssdisc.TextChanged -= txrt_ValueChanged;
+                    txrt.ValueChanged -= txrt_ValueChanged;
+                    txrt.Enter -= numBox_Enter;
+                    txrt.Leave -= updown_leave;
+                    txrt.MouseUp -= numBox_Enter;
+                    paid.ValueChanged -= paid_ValueChanged;
+                    paid.Enter -= numBox_Enter;
+                    paid.Leave -= updown_leave;
+                    paid.MouseUp -= numBox_Enter;
+                    grssttl.TextChanged -= grssttl_TextChanged;
+                    datasrc.SelectedIndexChanged -= Datasrc_SelectedIndexChanged;
+                    search_name_box.TextChanged -= textbox_Enter;
+                    search_inv_box.TextChanged -= textbox_Enter;
+                    dtrange.CheckedChanged -= Dtrange_CheckedChanged;
+                    search_duedt.CheckedChanged -= search_duedt_CheckedChanged;
+
+                    toggle_flag = 1;                                        //current mode set
+                }
+                else if ( s == "history_load" )
+                {
+                    billname.Enter -= textbox_Enter;
+                    billname.Leave -= billname_Leave;
+                    billname.MouseUp -= textbox_Enter;
+                    billname.TextChanged -= billname_TextChanged;
+                    billaddr.Enter -= textbox_Enter;
+                    billaddr.MouseUp -= textbox_Enter;
+                    billaddr.TextChanged -= billaddr_TextChanged;
+
+                    foreach ( TextBox t in descBox )
+                    {
+                        t.Leave -= descBox_LostFocus;
+                        t.Enter -= textbox_Enter;
+                        t.MouseUp -= textbox_Enter;
+                        t.TextChanged -= desc_TextChanged;
+                    }
+
+                    foreach ( NumericUpDown n in qtyBox )
+                    {
+                        n.ValueChanged -= qtyBox_ValueChanged;
+                        n.Enter -= numBox_Enter;
+                        n.MouseUp -= numBox_Enter;
+                        n.Leave -= updown_leave;
+                    }
+
+                    grssttl.TextChanged -= grssttl_TextChanged;
+                    datasrc.SelectedIndexChanged -= Datasrc_SelectedIndexChanged;
+
+                    toggle_flag = 2;                                        //current mode set
+                }
+                else if ( s == "recursive" )
+                {
+                    foreach ( TextBox t in descBox )
+                    {
+                        t.Leave -= descBox_LostFocus;
+                        t.Enter -= textbox_Enter;
+                        t.MouseUp -= textbox_Enter;
+                        t.TextChanged -= desc_TextChanged;
+                    }
+
+                    foreach ( NumericUpDown n in qtyBox )
+                    {
+                        n.ValueChanged -= qtyBox_ValueChanged;
+                        n.Enter -= numBox_Enter;
+                        n.MouseUp -= numBox_Enter;
+                        n.Leave -= updown_leave;
+                    }
+
+                    toggle_flag = 3;                                        //current mode set
+                }
+                else
+                { }
+            }
+            else
+            {
+                if ( s == "fast_load" && toggle_flag == 1 )                 //only the active mode cn be reset
+                {
+                    billname.Enter += textbox_Enter;
+                    billname.Leave += billname_Leave;
+                    billname.MouseUp += textbox_Enter;
+                    billname.TextChanged += billname_TextChanged;
+                    billaddr.Enter += textbox_Enter;
+                    billaddr.MouseUp += textbox_Enter;
+                    billaddr.TextChanged += billaddr_TextChanged;
+                    invdt.ValueChanged += datetime_TextChanged;
+                    ddt.ValueChanged += datetime_TextChanged;
+
+                    foreach ( TextBox t in descBox )
+                    {
+                        t.Leave += descBox_LostFocus;
+                        t.Enter += textbox_Enter;
+                        t.MouseUp += textbox_Enter;
+                        t.TextChanged += desc_TextChanged;
+                    }
+
+                    foreach ( NumericUpDown n in qtyBox )
+                    {
+                        n.ValueChanged += qtyBox_ValueChanged;
+                        n.Enter += numBox_Enter;
+                        n.MouseUp += numBox_Enter;
+                        n.Leave += updown_leave;
+                    }
+
+                    foreach ( NumericUpDown n in uBox )
+                    {
+                        n.ValueChanged += uBox_ValueChanged;
+                        n.Enter += numBox_Enter;
+                        n.MouseUp += numBox_Enter;
+                        n.Leave += updown_leave;
+                    }
+
+                    foreach ( ComboBox c in unitBox )
+                    {
+                        c.SelectedIndexChanged += unitBox_SelectedIndexChanged;
+                    }
+
+                    subtotal.TextChanged += disc_calc;
+                    discval.ValueChanged += disc_calc;
+                    discval.Enter += numBox_Enter;
+                    discval.Leave += updown_leave;
+                    discval.MouseUp += numBox_Enter;
+                    disctype.SelectedIndexChanged += disctype_SelectedIndexChanged;
+                    subttllssdisc.TextChanged += txrt_ValueChanged;
+                    txrt.ValueChanged += txrt_ValueChanged;
+                    txrt.Enter += numBox_Enter;
+                    txrt.Leave += updown_leave;
+                    txrt.MouseUp += numBox_Enter;
+                    paid.ValueChanged += paid_ValueChanged;
+                    paid.Enter += numBox_Enter;
+                    paid.Leave += updown_leave;
+                    paid.MouseUp += numBox_Enter;
+                    grssttl.TextChanged += grssttl_TextChanged;
+                    datasrc.SelectedIndexChanged += Datasrc_SelectedIndexChanged;
+                    search_name_box.TextChanged += textbox_Enter;
+                    search_inv_box.TextChanged += textbox_Enter;
+                    dtrange.CheckedChanged += Dtrange_CheckedChanged;
+                    search_duedt.CheckedChanged += search_duedt_CheckedChanged;
+
+                    toggle_flag = 0;                                        //mode reset
+                }
+                else if ( s == "history_load" && toggle_flag == 2 )
+                {
+                    billname.Enter += textbox_Enter;
+                    billname.Leave += billname_Leave;
+                    billname.MouseUp += textbox_Enter;
+                    billname.TextChanged += billname_TextChanged;
+                    billaddr.Enter += textbox_Enter;
+                    billaddr.MouseUp += textbox_Enter;
+                    billaddr.TextChanged += billaddr_TextChanged;
+
+                    foreach ( TextBox t in descBox )
+                    {
+                        t.Leave += descBox_LostFocus;
+                        t.Enter += textbox_Enter;
+                        t.MouseUp += textbox_Enter;
+                        t.TextChanged += desc_TextChanged;
+                    }
+
+                    foreach ( NumericUpDown n in qtyBox )
+                    {
+                        n.ValueChanged += qtyBox_ValueChanged;
+                        n.Enter += numBox_Enter;
+                        n.MouseUp += numBox_Enter;
+                        n.Leave += updown_leave;
+                    }
+
+                    grssttl.TextChanged += grssttl_TextChanged;
+                    datasrc.SelectedIndexChanged += Datasrc_SelectedIndexChanged;
+
+                    toggle_flag = 0;                                        //mode reset
+                }
+                else if ( s == "recursive" && toggle_flag == 3 )
+                {
+                    foreach ( TextBox t in descBox )
+                    {
+                        t.Leave += descBox_LostFocus;
+                        t.Enter += textbox_Enter;
+                        t.MouseUp += textbox_Enter;
+                        t.TextChanged += desc_TextChanged;
+                    }
+
+                    foreach ( NumericUpDown n in qtyBox )
+                    {
+                        n.ValueChanged += qtyBox_ValueChanged;
+                        n.Enter += numBox_Enter;
+                        n.MouseUp += numBox_Enter;
+                        n.Leave += updown_leave;
+                    }
+                    toggle_flag = 0;                                        //mode reset
+                }
+                else
+                { }
             }
         }
 
@@ -544,19 +807,6 @@ namespace AgricoveBilling
             {
                 ReleaseCapture ();
                 SendMessage ( Handle , WM_NCLBUTTONDOWN , HT_CAPTION , 0 );
-            }
-        }
-
-        //numericupdown style load
-        private void nudstyle()
-        {
-            foreach ( var v in uBox )
-            {
-                nud_style ( v );
-            }
-            foreach ( var v in qtyBox )
-            {
-                nud_style ( v );
             }
         }
 
@@ -894,8 +1144,8 @@ namespace AgricoveBilling
                 {
                     //load data from i+1 to i
                     descBox [ i ].Text = descBox [ i + 1 ].Text;
-                    qtyBox [ i ].Value = qtyBox [ i + 1 ].Value;
                     unitBox [ i ].SelectedIndex = unitBox [ i + 1 ].SelectedIndex;
+                    qtyBox [ i ].Value = qtyBox [ i + 1 ].Value;                //qtybox must be updated after unitbox so that qty decimal places is correct
                     uBox [ i ].Value = uBox [ i + 1 ].Value;
                     tBox [ i ].Text = tBox [ i + 1 ].Text;
 
@@ -903,6 +1153,7 @@ namespace AgricoveBilling
                     descBox [ i + 1 ].Clear ();
                     qtyBox [ i + 1 ].Value = 0;
                     unitBox [ i + 1 ].SelectedIndex = 0;
+                    qtyBox [ i ].DecimalPlaces = 3;             //this must be done after unitbox change
                     uBox [ i + 1 ].Value = 0;
                     tBox [ i + 1 ].Text = "0.00";
 
@@ -917,8 +1168,6 @@ namespace AgricoveBilling
             {
                 return;           //has reached the very end of table
             }
-
-            disable_rows ();            //call code to decide disabled state and bgcolor
         }
 
         //calculate due in runtime
@@ -963,17 +1212,14 @@ namespace AgricoveBilling
         // Auto Load address 
         private void billname_Leave( object sender , EventArgs e )
         {
-            if ( !fast_load && !history_load )                                                                   //will not fire during form load
+            using ( var dataContext = new DBConnection () )
             {
-                using ( var dataContext = new DBConnection () )
+                var invoice = dataContext.Invoice.ToList ();
+                var data = invoice.Where ( x => x.BillToName == billname.Text.ToString () )
+                                .Select ( x => x.BillToAdd ).FirstOrDefault ();
+                if ( data != null )
                 {
-                    var invoice = dataContext.Invoice.ToList ();
-                    var data = invoice.Where ( x => x.BillToName == billname.Text.ToString () )
-                                    .Select ( x => x.BillToAdd ).FirstOrDefault ();
-                    if ( data != null )
-                    {
-                        billaddr.Text = data.ToString ();
-                    }
+                    billaddr.Text = data.ToString ();
                 }
             }
         }
@@ -1265,6 +1511,8 @@ namespace AgricoveBilling
             unitBox11.Text = inv.ItemID11Unit;
             uBox11.Value = inv.ItemID11Price;
 
+            disable_rows ();                        //this enables all the rows that have data
+
             disctype.SelectedIndex = inv.DiscountType;
             discval.Value = inv.DiscountValue;
             txrt.Value = inv.TaxRate;
@@ -1275,49 +1523,46 @@ namespace AgricoveBilling
         //Default gridview load before search
         private void gridview_load( DataGridView d , string s )
         {
-            if ( !fast_load && !history_load )                                               //will not fire during form load
+            using ( var dataContext = new DBConnection () )
             {
-                using ( var dataContext = new DBConnection () )
+                if ( s == "invoice" )
                 {
-                    if ( s == "invoice" )
-                    {
-                        var invoice = dataContext.Invoice.ToList ();
+                    var invoice = dataContext.Invoice.ToList ();
 
-                        var data = invoice
-                                    //.Where( x => x.Due > 0 )
-                                    .Select ( x => new
-                                    {
-                                        x.InvoiceNo ,
-                                        x.InvoiceDt ,
-                                        x.DueDt ,
-                                        x.BillToName ,
-                                        due = calc_due ( x.Paid , x.ItemID1Price , x.ItemID1Qty , x.ItemID2Price , x.ItemID2Qty , x.ItemID3Price , x.ItemID3Qty , x.ItemID4Price , x.ItemID4Qty , x.ItemID5Price , x.ItemID5Qty , x.ItemID6Price , x.ItemID6Qty , x.ItemID7Price , x.ItemID7Qty , x.ItemID8Price , x.ItemID8Qty , x.ItemID9Price , x.ItemID9Qty , x.ItemID10Price , x.ItemID10Qty , x.ItemID11Price , x.ItemID11Qty )
-                                    } ).ToList ();
+                    var data = invoice
+                                //.Where( x => x.Due > 0 )
+                                .Select ( x => new
+                                {
+                                    x.InvoiceNo ,
+                                    x.InvoiceDt ,
+                                    x.DueDt ,
+                                    x.BillToName ,
+                                    due = calc_due ( x.Paid , x.ItemID1Price , x.ItemID1Qty , x.ItemID2Price , x.ItemID2Qty , x.ItemID3Price , x.ItemID3Qty , x.ItemID4Price , x.ItemID4Qty , x.ItemID5Price , x.ItemID5Qty , x.ItemID6Price , x.ItemID6Qty , x.ItemID7Price , x.ItemID7Qty , x.ItemID8Price , x.ItemID8Qty , x.ItemID9Price , x.ItemID9Qty , x.ItemID10Price , x.ItemID10Qty , x.ItemID11Price , x.ItemID11Qty )
+                                } ).ToList ();
 
-                        //Move everything to a sortable list for easy gridview header click
-                        List<invoice_grid_data> datalist = data.Select ( p => new invoice_grid_data () { InvoiceNo = p.InvoiceNo , InvoiceDt = p.InvoiceDt , BillToName = p.BillToName , DueDt = p.DueDt , due = p.due } ).ToList ();
-                        SortableBindingList<invoice_grid_data> sorteddata = new SortableBindingList<invoice_grid_data> ( datalist );
-                        d.Columns.Clear ();
-                        d.Columns.Add ( ButtonColumn );            //need to manually add it here because putting combocolumn at the end was causing issues
-                        d.DataSource = sorteddata;
-                        gridview_format ( d , "invoice" );
-                    }
-                    else if ( s == "items" )
-                    {
-                        var items = dataContext.Items.ToList ();
-                        var data = items.Select ( x => new { x.ItemID , x.ItemName , x.ItemPrice , x.ItemUnit } ).ToList ();
+                    //Move everything to a sortable list for easy gridview header click
+                    List<invoice_grid_data> datalist = data.Select ( p => new invoice_grid_data () { InvoiceNo = p.InvoiceNo , InvoiceDt = p.InvoiceDt , BillToName = p.BillToName , DueDt = p.DueDt , due = p.due } ).ToList ();
+                    SortableBindingList<invoice_grid_data> sorteddata = new SortableBindingList<invoice_grid_data> ( datalist );
+                    d.Columns.Clear ();
+                    d.Columns.Add ( ButtonColumn );            //need to manually add it here because putting combocolumn at the end was causing issues
+                    d.DataSource = sorteddata;
+                    gridview_format ( d , "invoice" );
+                }
+                else if ( s == "items" )
+                {
+                    var items = dataContext.Items.ToList ();
+                    var data = items.Select ( x => new { x.ItemID , x.ItemName , x.ItemPrice , x.ItemUnit } ).ToList ();
 
-                        //Move everything to a sortable list for easy gridview header click
-                        List<items_grid_data> datalist = data.Select ( p => new items_grid_data () { ItemID = p.ItemID , ItemName = p.ItemName , ItemPrice = p.ItemPrice , ItemUnit = p.ItemUnit } ).ToList ();
-                        SortableBindingList<items_grid_data> sorteddata = new SortableBindingList<items_grid_data> ( datalist );
+                    //Move everything to a sortable list for easy gridview header click
+                    List<items_grid_data> datalist = data.Select ( p => new items_grid_data () { ItemID = p.ItemID , ItemName = p.ItemName , ItemPrice = p.ItemPrice , ItemUnit = p.ItemUnit } ).ToList ();
+                    SortableBindingList<items_grid_data> sorteddata = new SortableBindingList<items_grid_data> ( datalist );
 
-                        ComboColumn.DataPropertyName = "ItemUnit";       //DataPropertyName is the name of the column in gridview that combobox is bound to
-                        d.Columns.Clear ();        //if column already exists remove it anyway and add it again to ensure it is the last column. nothing else worked other than a total clear()
-                        d.Columns.Add ( ButtonColumn );        //add button first
-                        d.DataSource = sorteddata;
-                        d.Columns.Add ( ComboColumn );         //add combo at last
-                        gridview_format ( d , "items" );
-                    }
+                    ComboColumn.DataPropertyName = "ItemUnit";       //DataPropertyName is the name of the column in gridview that combobox is bound to
+                    d.Columns.Clear ();        //if column already exists remove it anyway and add it again to ensure it is the last column. nothing else worked other than a total clear()
+                    d.Columns.Add ( ButtonColumn );        //add button first
+                    d.DataSource = sorteddata;
+                    d.Columns.Add ( ComboColumn );         //add combo at last
+                    gridview_format ( d , "items" );
                 }
             }
         }
@@ -1502,10 +1747,10 @@ namespace AgricoveBilling
                                     where x.InvoiceNo == find_gridview.Rows [ e.RowIndex ].Cells [ 1 ].Value.ToString ()
                                     select x ).FirstOrDefault ();
                         edit_check = 1;                             //this must be called before load_data to prevent edit_check from being fired automatically during load
-                        history_load = true;
+                        toggle_events ( "history_load" , true );
                         load_data ( inv );
-                        history_load = false;
                         disable_rows ();
+                        toggle_events ( "history_load" , false );
                         print.Enabled = true;
                         find_Click ( sender , e );
                     }
@@ -1579,214 +1824,185 @@ namespace AgricoveBilling
         //This enables the corresponding row of the currently entered descbox
         private void descBox_Enter( object sender , EventArgs e )
         {
-            if ( !fast_load && !history_load )                                                           //will not fire during form load
-            {
-                int i = Int32.Parse ( ( sender as TextBox ).Tag.ToString () );            //reading the array index from tag
-                descBox [ i ].SelectAll ();                                     //select the existing text
-            }
+            int i = Int32.Parse ( ( sender as TextBox ).Tag.ToString () );            //reading the array index from tag
+            descBox [ i ].SelectAll ();                                     //select the existing text
         }
 
         // if descbox contains data, fetch its info from database. also enable the next row
         private void descBox_LostFocus( object sender , EventArgs e )
         {
-            if ( !recursive && !fast_load && !history_load ) // run code only if reciursive flag false (to prevent overwrite of manually entered data loaded recursively from lower rows. Also will not fire during form load
+            int i = Int32.Parse ( ( sender as TextBox ).Tag.ToString () );            //read its array index
+            if ( descBox [ i ].Text.Length > 0 )
             {
-                int i = Int32.Parse ( ( sender as TextBox ).Tag.ToString () );            //read its array index
-                if ( descBox [ i ].Text.Length > 0 )
+                if ( !inv_exists () )                           //check if there is any existing entry and load the values only if this is a new invoice
                 {
-                    if ( !inv_exists () )                           //check if there is any existing entry and load the values only if this is a new invoice
+                    using ( var dataContext = new DBConnection () )
                     {
-                        using ( var dataContext = new DBConnection () )
+                        var items = dataContext.Items.ToList ();
+                        var price = fetch_price ( descBox [ i ].Text , items );
+                        var unit = fetch_itemtype ( descBox [ i ].Text , items );
+                        if ( price != null && unit != null )
                         {
-                            var items = dataContext.Items.ToList ();
-                            var price = fetch_price ( descBox [ i ].Text , items );
-                            var unit = fetch_itemtype ( descBox [ i ].Text , items );
-                            if ( price != null && unit != null )
-                            {
-                                uBox [ i ].Value = ( decimal ) price;                 //load price
-                                unitBox [ i ].Text = unit;                            //load type
-                            }
+                            uBox [ i ].Value = ( decimal ) price;                 //load price
+                            unitBox [ i ].Text = unit;                            //load type
                         }
                     }
-                    if ( qtyBox [ i ].Value == 0 )                   //if qty hasn't been manually changed, load default value of 1
-                    {
-                        qtyBox [ i ].Value = 1;
-                    }
-                    tBox [ i ].Text = ( qtyBox [ i ].Value * uBox [ i ].Value ).ToString ( "#,##0.00" );          //calculate total value
                 }
-                else
+                if ( qtyBox [ i ].Value == 0 )                   //if qty hasn't been manually changed, load default value of 1
                 {
-                    //if there is nothing on descbox then disable its row
-                    qtyBox [ i ].Value = 0;
-                    unitBox [ i ].SelectedIndex = 0;
-                    uBox [ i ].Value = 0;
-
-                    try
-                    {
-                        if ( descBox [ i + 1 ].Text.Length > 0 )             //if there is more data below
-                        {
-                            recursive = true;                       //set the recursive flag to prevent this current function from being called again and again
-                            recursive_up ( i );                        //raise everything by one row if there are more data below
-                            recursive = false;                      //reset the recursive flag to resume normal operation
-                        }
-                    }
-                    catch { }
+                    qtyBox [ i ].Value = 1;
                 }
-
-                disable_rows ();                    //disable unnecessary rows
+                tBox [ i ].Text = ( qtyBox [ i ].Value * uBox [ i ].Value ).ToString ( "#,##0.00" );          //calculate total value
             }
+            else
+            {
+                //if there is nothing on descbox then disable its row
+                qtyBox [ i ].Value = 0;
+                unitBox [ i ].SelectedIndex = 0;
+                qtyBox [ i ].DecimalPlaces = 3;             //this must be done after unitbox change
+                uBox [ i ].Value = 0;
+
+                try
+                {
+                    if ( descBox [ i + 1 ].Text.Length > 0 )             //if there is more data below
+                    {
+                        toggle_events ( "recursive" , true );                       //set the recursive flag to prevent this current function from being called again and again
+                        recursive_up ( i );                        //raise everything by one row if there are more data below
+                        toggle_events ( "recursive" , false );                      //reset the recursive flag to resume normal operation
+                    }
+                }
+                catch { }
+            }
+            toggle_events ( "fast_load" , true );
+            disable_rows ();
+            toggle_events ( "fast_load" , false );
         }
 
         //quantity changed
         private void qtyBox_ValueChanged( object sender , EventArgs e )
         {
-            if ( !fast_load && !history_load )                                                           //will not fire during form load
-            {
-                int i = Int32.Parse ( ( sender as NumericUpDown ).Tag.ToString () );
-                tBox [ i ].Text = ( qtyBox [ i ].Value * uBox [ i ].Value ).ToString ( "#,##0.00" );          //tostring format to thousand seperator
-                numbox_TextChanged ( sender , ( ulong ) ( i + 13 ) );                                    //set the binary 
-            }
+            int i = Int32.Parse ( ( sender as NumericUpDown ).Tag.ToString () );
+            tBox [ i ].Text = ( qtyBox [ i ].Value * uBox [ i ].Value ).ToString ( "#,##0.00" );          //tostring format to thousand seperator
+            numbox_TextChanged ( sender , ( ulong ) ( i + 13 ) );                                    //set the binary 
         }
 
         //change unit
         private void unitBox_SelectedIndexChanged( object sender , EventArgs e )
         {
-            if ( !fast_load && !history_load )                                                               //will not fire during form load
+            int i = Int32.Parse ( ( sender as ComboBox ).Tag.ToString () );
+            if ( unitBox [ i ].SelectedIndex == 2 )
             {
-                int i = Int32.Parse ( ( sender as ComboBox ).Tag.ToString () );
-                if ( unitBox [ i ].SelectedIndex == 2 )
-                {
-                    qtyBox [ i ].DecimalPlaces = 0;                //pieces can't be in decimal
-                }
-                else
-                {
-                    qtyBox [ i ].DecimalPlaces = 3;
-                }
+                qtyBox [ i ].DecimalPlaces = 0;                //pieces can't be in decimal
+            }
+            else
+            {
+                qtyBox [ i ].DecimalPlaces = 3;
             }
         }
 
         //unit value changed
         private void uBox_ValueChanged( object sender , EventArgs e )
         {
-            if ( !fast_load )                       //this one is enabled during history load to ensure total value gets filled
-            {
-                int i = Int32.Parse ( ( sender as NumericUpDown ).Tag.ToString () );
-                tBox [ i ].Text = ( qtyBox [ i ].Value * uBox [ i ].Value ).ToString ( "#,##0.00" );
-                numbox_TextChanged ( sender , ( ulong ) ( i + 24 ) );
-            }
+            int i = Int32.Parse ( ( sender as NumericUpDown ).Tag.ToString () );
+            tBox [ i ].Text = ( qtyBox [ i ].Value * uBox [ i ].Value ).ToString ( "#,##0.00" );
+            numbox_TextChanged ( sender , ( ulong ) ( i + 24 ) );
         }
 
         //recalculate total upon total value updated
         private void tBox_TextChanged( object sender , EventArgs e )
         {
-            if ( !fast_load )          //this one is enabled during history load to ensure total value gets filled
+            decimal sum = 0;
+            foreach ( var v in tBox )
             {
-                decimal sum = 0;
-                foreach ( var v in tBox )
-                {
-                    sum = sum + decimal_parse ( v.Text.ToString () );
-                }
-                subtotal.Text = sum.ToString ( "#,##0.00" );
+                sum = sum + decimal_parse ( v.Text.ToString () );
             }
+            subtotal.Text = sum.ToString ( "#,##0.00" );
         }
 
         //discount type changed.
         private void disctype_SelectedIndexChanged( object sender , EventArgs e )
         {
-            if ( !fast_load && !history_load )
+            if ( disctype.SelectedIndex == 0 )
             {
-                if ( disctype.SelectedIndex == 0 )
-                {
-                    discval.Value = 0;
-                    discval.DecimalPlaces = 2;
-                    discval.Maximum = 99999999;
-                }
-                else if ( disctype.SelectedIndex == 1 )
-                {
-                    discval.Value = 0;
-                    discval.DecimalPlaces = 0;
-                    discval.Maximum = 100;                          //when in percentage, max should be 100%
-                }
-                disc_calc ( sender , e );
+                discval.Value = 0;
+                discval.DecimalPlaces = 2;
+                discval.Maximum = 99999999;
             }
+            else if ( disctype.SelectedIndex == 1 )
+            {
+                discval.Value = 0;
+                discval.DecimalPlaces = 0;
+                discval.Maximum = 100;                          //when in percentage, max should be 100%
+            }
+            disc_calc ( sender , e );
         }
 
         //calculate discount
         private void disc_calc( object sender , EventArgs e )
         {
-            if ( !fast_load )               //this one is enabled during history load to ensure discount is calculated
+            decimal value = 0;
+            value = decimal_parse ( subtotal.Text.ToString () );
+
+            if ( disctype.SelectedIndex == 0 )
             {
-                decimal value = 0;
-                value = decimal_parse ( subtotal.Text.ToString () );
-
-                if ( disctype.SelectedIndex == 0 )
-                {
-                    subttllssdisc.Text = ( value - discval.Value ).ToString ( "#,##0.00" );
-                }
-                else if ( disctype.SelectedIndex == 1 )
-                {
-                    subttllssdisc.Text = ( value * ( 1 - discval.Value / 100 ) ).ToString ( "#,##0.00" );
-                }
-
-                //enable save button here to account for 100% discount
-                value = decimal_parse ( subtotal.Text.ToString () );
-                if ( value == 0 )
-                {
-                    save.Enabled = false;
-                    //print.Enabled = false;
-                }
-                else
-                {
-                    save.Enabled = true;
-                    //print.Enabled = true;
-                }
-                numbox_TextChanged ( sender , 36 );                 //send for edit log
+                subttllssdisc.Text = ( value - discval.Value ).ToString ( "#,##0.00" );
             }
+            else if ( disctype.SelectedIndex == 1 )
+            {
+                subttllssdisc.Text = ( value * ( 1 - discval.Value / 100 ) ).ToString ( "#,##0.00" );
+            }
+
+            //enable save button here to account for 100% discount
+            value = decimal_parse ( subtotal.Text.ToString () );
+            if ( value == 0 )
+            {
+                save.Enabled = false;
+                //print.Enabled = false;
+            }
+            else
+            {
+                save.Enabled = true;
+                //print.Enabled = true;
+            }
+            numbox_TextChanged ( sender , 36 );                 //send for edit log
         }
 
         //calculate total tax
         private void txrt_ValueChanged( object sender , EventArgs e )
         {
-            if ( !fast_load )                           //this one is enabled during history load to ensure total tax and gross total get calculated
-            {
-                decimal value = 0;
-                value = decimal_parse ( subttllssdisc.Text.ToString () );
+            decimal value = 0;
+            value = decimal_parse ( subttllssdisc.Text.ToString () );
 
-                ttltax.Text = ( value * txrt.Value / 100 ).ToString ( "#,##0.00" );
-                grssttl.Text = ( value * ( 1 + txrt.Value / 100 ) ).ToString ( "#,##0.00" );
-                numbox_TextChanged ( sender , 37 );                 //Send for edit log
-            }
-        }
+            ttltax.Text = ( value * txrt.Value / 100 ).ToString ( "#,##0.00" );
+            grssttl.Text = ( value * ( 1 + txrt.Value / 100 ) ).ToString ( "#,##0.00" );
+            numbox_TextChanged ( sender , 37 );                 //Send for edit log
+    }
 
         //total value changes
         private void grssttl_TextChanged( object sender , EventArgs e )
         {
-            if ( !fast_load && !history_load )                      //gross total must not fire during history load to ensure original paid value is shown
+            decimal value = decimal_parse ( grssttl.Text );
+            if ( !paid_token )            //value loads automatically only if user hasn't set it manually
             {
-                decimal value = 0;
-
-                if ( !paid_token )            //value loads automatically only if user hasn't set it manually
-                {
-                    try
-                    {
-                        paid.Value = value;
-                    }
-                    catch
-                    {
-                        MessageBox.Show ( "      Value out of bounds. Are you Bill Gates?    " );
-                    }
-                }
-                else if ( paid_max >= value )      //value locked to the max that user had entered
+                try
                 {
                     paid.Value = value;
                 }
-                else if ( paid_max < value )       //value loads automatically up to the max that user had entered
+                catch
                 {
-                    paid.Value = paid_max;
+                    MessageBox.Show ( "      Value out of bounds. Are you Bill Gates?    " );
                 }
-
-                balancedue.Text = ( value - paid.Value ).ToString ( "#,##0.00" );
             }
+            else if ( paid_max >= value )      //value locked to the max that user had entered
+            {
+                paid.Value = value;
+            }
+            else if ( paid_max < value )       //value loads automatically up to the max that user had entered
+            {
+                paid.Value = paid_max;
+            }
+
+            balancedue.Text = ( value - paid.Value ).ToString ( "#,##0.00" );
         }
 
         //paid value changed
@@ -1815,27 +2031,21 @@ namespace AgricoveBilling
         //when paid value is auto calculated
         private void paid_ValueChanged( object sender , EventArgs e )
         {
-            if ( !fast_load )
-            {
-                paid_ValueChanged ();
-                numbox_TextChanged ( sender , 38 );       //send for edit log
-            }
+            paid_ValueChanged ();
+            numbox_TextChanged ( sender , 38 );       //send for edit log
         }
 
         //don't allow blank in numericupdown
         private void updown_leave( object sender , EventArgs e )
         {
-            if ( !fast_load && !history_load )                                                                           //will not fire during form load
+            if ( sender.GetType ().ToString () == "System.Windows.Forms.NumericUpDown" )                    //Necessary to avoid collision with disctype combobox
             {
-                if ( sender.GetType ().ToString () == "System.Windows.Forms.NumericUpDown" )                    //Necessary to avoid collision with disctype combobox
+                NumericUpDown obj = new NumericUpDown ();
+                obj = ( NumericUpDown ) sender;
+                if ( obj.Text == "" )
                 {
-                    NumericUpDown obj = new NumericUpDown ();
-                    obj = ( NumericUpDown ) sender;
-                    if ( obj.Text == "" )
-                    {
-                        obj.Value = 0;
-                        obj.Text = obj.Value.ToString ();
-                    }
+                    obj.Value = 0;
+                    obj.Text = obj.Value.ToString ();
                 }
             }
         }
@@ -1885,9 +2095,9 @@ namespace AgricoveBilling
         private void newinv_Click( object sender , EventArgs e )
         {
             Cursor.Current = Cursors.WaitCursor;        //set cursor to busy until form loads
-            fast_load = true;                           //make sure unnecessary events don't get triggered
-            form_load ();
-            fast_load = false;
+            toggle_events ( "fast_load" , true );                          //make sure unnecessary events don't get triggered
+            cleanform ();
+            toggle_events ( "fast_load" , false );
             Cursor.Current = Cursors.Default;
         }
 
@@ -2049,11 +2259,10 @@ namespace AgricoveBilling
             search_fill ( find_gridview );
         }
 
-        //Due date can't be in the past
+        //Due date can't be in the past 
         private void datetime_TextChanged( object sender , EventArgs e )
         {
-            ddt.MinDate = invdt.Value;
-
+            ddt.MinDate = invdt.Value;              //this will fire even during history load
             if ( invdt.Value.Date > ddt.Value.Date )
             {
                 ddt.Value = invdt.Value;

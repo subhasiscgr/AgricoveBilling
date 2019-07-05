@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AgricoveBilling));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label_agri_addr = new System.Windows.Forms.Label();
             this.label_agri_url = new System.Windows.Forms.Label();
             this.label_agri_email = new System.Windows.Forms.Label();
@@ -480,9 +480,10 @@
             this.txrt.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txrt.Location = new System.Drawing.Point(987, 530);
             this.txrt.Name = "txrt";
-            this.txrt.Size = new System.Drawing.Size(99, 16);
+            this.txrt.Size = new System.Drawing.Size(77, 16);
             this.txrt.TabIndex = 36;
             this.txrt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txrt.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.txrt.ValueChanged += new System.EventHandler(this.txrt_ValueChanged);
             this.txrt.Enter += new System.EventHandler(this.numBox_Enter);
             this.txrt.Leave += new System.EventHandler(this.updown_leave);
@@ -523,21 +524,21 @@
             // find_gridview
             // 
             this.find_gridview.AllowUserToAddRows = false;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.find_gridview.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.find_gridview.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.find_gridview.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
             this.find_gridview.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.find_gridview.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
             this.find_gridview.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.find_gridview.ContextMenuStrip = this.copymenu;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.ControlDarkDark;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.find_gridview.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.ControlDarkDark;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.find_gridview.DefaultCellStyle = dataGridViewCellStyle2;
             this.find_gridview.Location = new System.Drawing.Point(23, 83);
             this.find_gridview.Name = "find_gridview";
             this.find_gridview.ReadOnly = true;
@@ -1691,7 +1692,7 @@
             this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
             this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
             this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 124F));
+            this.invoice_table.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 127F));
             this.invoice_table.Controls.Add(this.unitBox11, 2, 11);
             this.invoice_table.Controls.Add(this.unitBox10, 2, 10);
             this.invoice_table.Controls.Add(this.unitBox9, 2, 9);
@@ -2096,10 +2097,11 @@
             0,
             0});
             this.discval.Name = "discval";
-            this.discval.Size = new System.Drawing.Size(85, 16);
+            this.discval.Size = new System.Drawing.Size(63, 16);
             this.discval.TabIndex = 34;
             this.discval.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.discval.ThousandsSeparator = true;
+            this.discval.UpDownAlign = System.Windows.Forms.LeftRightAlignment.Left;
             this.discval.ValueChanged += new System.EventHandler(this.disc_calc);
             this.discval.Enter += new System.EventHandler(this.numBox_Enter);
             this.discval.Leave += new System.EventHandler(this.updown_leave);
@@ -2180,14 +2182,14 @@
             // 
             this.paid.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.paid.DecimalPlaces = 2;
-            this.paid.Location = new System.Drawing.Point(963, 604);
+            this.paid.Location = new System.Drawing.Point(987, 604);
             this.paid.Maximum = new decimal(new int[] {
             1410065407,
             2,
             0,
             0});
             this.paid.Name = "paid";
-            this.paid.Size = new System.Drawing.Size(123, 16);
+            this.paid.Size = new System.Drawing.Size(99, 16);
             this.paid.TabIndex = 101;
             this.paid.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.paid.ThousandsSeparator = true;
@@ -2208,7 +2210,7 @@
             this.ver.Name = "ver";
             this.ver.Size = new System.Drawing.Size(70, 14);
             this.ver.TabIndex = 102;
-            this.ver.Text = "v0.7.83 Beta";
+            this.ver.Text = "v0.7.84 Beta";
             // 
             // AgricoveBilling
             // 
