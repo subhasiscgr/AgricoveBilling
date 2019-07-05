@@ -2,7 +2,7 @@
 
 Billing system designed for Green Agricove Ltd for generating, printing, and keeping a history of invoices. There is no GST billing supprt or inventory management yet.
 
-###### Latest version: 0.7.7 Beta (internal release). There is no stable release yet
+###### Latest version: 0.7.81 Beta (internal release). There is no stable release yet
 
 # Download
 Compiled binary can be downloaded here: [Download](http://www.mediafire.com/file/aqdht1i1rqgrylp/AgricoveBilling.exe/file)
@@ -14,13 +14,18 @@ Windows 10 32bit with .NET 4.6.1
 VS 2017 Community, Entity Framework Core, and Crystal Reports for Visual Studio
 
 # Changelog
-## [0.7.6] - 2017-07-05 
+
+## [0.7.81] - 2019-07-05
+
+- Error message now visible over loading screen
+
+## [0.7.6] - 2019-07-05 
 
 - Optimised some database calls
 - Added loading screen
 - Bring window to front after loading
 
-## [0.7.5] - 2017-07-03
+## [0.7.5] - 2019-07-03
 
 - Shift Tab now working
 - Ability to quantity in decimal
