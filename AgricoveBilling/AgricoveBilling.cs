@@ -394,7 +394,7 @@ namespace AgricoveBilling
                 }
                 catch
                 {
-                    MessageBox.Show ( "       Database Corrupted    " );                  //Failed to load datacontext. Data in DB doesn't match interface. Extra space to make the messagebox a bit pleasing. Left side needs more space to look symmetrical
+                    MessageBox.Show ( "       Database Corrupted    " , "Error" , MessageBoxButtons.OK , MessageBoxIcon.Warning , MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly );                  //Failed to load datacontext. Data in DB doesn't match interface. Extra space to make the messagebox a bit pleasing. Left side needs more space to look symmetrical. DefaultDesktopOnly puts the messagebox above splash screen
                     this.Close ();
                 }
                 //dataContext.SaveChanges();                

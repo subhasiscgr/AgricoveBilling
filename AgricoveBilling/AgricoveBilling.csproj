@@ -293,6 +293,9 @@
   <ItemGroup>
     <Content Include="agricove.ico" />
     <Content Include="cart1.ico" />
+    <None Include="Resources\form_background_2.png" />
+    <None Include="Resources\agricove_logo_big.png" />
+    <None Include="Resources\agricove_text_only.png" />
     <None Include="Resources\form_background.png" />
     <None Include="Resources\agricovefull.png" />
   </ItemGroup>

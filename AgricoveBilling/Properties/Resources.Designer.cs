@@ -63,6 +63,26 @@ namespace AgricoveBilling.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap agricove_logo_big {
+            get {
+                object obj = ResourceManager.GetObject("agricove_logo_big", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap agricove_text_only {
+            get {
+                object obj = ResourceManager.GetObject("agricove_text_only", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap agricove4 {
             get {
                 object obj = ResourceManager.GetObject("agricove4", resourceCulture);
@@ -96,6 +116,16 @@ namespace AgricoveBilling.Properties {
         internal static System.Drawing.Bitmap form_background {
             get {
                 object obj = ResourceManager.GetObject("form_background", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap form_background_2 {
+            get {
+                object obj = ResourceManager.GetObject("form_background_2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
